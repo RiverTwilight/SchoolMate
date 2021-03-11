@@ -1,9 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import Header from "../Header";
-import Drawer from "../Drawer";
-import Catalog from "../Catalog";
-import "./App.scss";
 
 // TODO RSS
 class Layout extends React.Component<
@@ -64,21 +61,9 @@ class Layout extends React.Component<
                     />
                     <title>{showTitle}</title>
                 </Head>
-                {/* <div
-					style={{ display: "inline-block" }}
-					className="header-liner"
-				></div> */}
                 <Header lang={locale} {...this.props} />
                 <main className="main">
-                    <div className="container">
-                        <div className="container-left">
-                            {childrenWithProps}
-                        </div>
-                        <div className="container-right">
-                            <Drawer lang={locale} config={config} />
-                            {catalog && <Catalog catalog={catalog} />}
-                        </div>
-                    </div>
+                    {childrenWithProps}
                 </main>
             </>
         );
