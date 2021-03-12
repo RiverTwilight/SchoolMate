@@ -7,26 +7,23 @@ import {
     withStyles,
     makeStyles,
 } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../../utils/theme";
 
 const styles = (theme: Theme) => {
     return createStyles({
         root: {
             display: "flex",
+            justifyContent: "center",
         },
         content: {
             flexGrow: 1,
-            padding: theme.spacing(2),
+            padding: theme.spacing(1),
             paddingTop: "75px",
             minHeight: "100vh",
             position: "relative",
-        },
-        contentShift: {
-            transition: theme.transitions.create("margin", {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-            marginLeft: 0,
-        },
+            maxWidth: "1000px"
+        }
     })
 }
 
@@ -66,7 +63,9 @@ class Layout extends React.Component<
             }
         );
         return (
-            <>
+            <ThemeProvider
+                theme={theme({})}
+            >
                 <Head>
                     <meta name="description" content={description} />
                     <meta property="og:type" content="website" />
@@ -80,7 +79,7 @@ class Layout extends React.Component<
                     <meta property="og:locale" content="zh_CN" />
                     <meta property="article:author" content={author.name} />
                     <meta property="article:tag" content={author.name} />
-                    <meta property="article:tag" content="云极客" />
+                    <meta property="article:tag" content={showTitle} />
                     <meta name="google-site-verification" content="3yqvRLDwkcm7nwNQ5bSG06I4wQ5ASf23HUtcyZIaz3I" />
                     <meta name="twitter:card" content="summary" />
                     <meta name="viewport" content="viewport-fit=cover" />
@@ -90,11 +89,11 @@ class Layout extends React.Component<
                     />
                     <title>{showTitle}</title>
                 </Head>
-                <Header lang={locale} {...this.props} />
-                <main className={classes.content}>
-                    {childrenWithProps}
+                <main className={classes.root}>
+                    <Header lang={locale} {...this.props} />
+                    <div className={classes.content}>{childrenWithProps}</div>
                 </main>
-            </>
+            </ThemeProvider>
         );
     }
 }

@@ -52,7 +52,9 @@ const MusicItem = ({
         <Card className={classes.root}>
             <CardContent>
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    学生会发起的
+                    由
+                    <Typography variant="inherit" color="primary">学生会</Typography>
+                    发起的
         </Typography>
                 <Typography variant="h5" component="h2">
                     {title}

@@ -13,62 +13,68 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuTwoToneIcon from "@material-ui/icons/MenuTwoTone";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import clsx from "clsx";
+import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 function ElevationScroll(props: Props) {
-	const { children } = props;
+    const { children } = props;
 
-	const trigger = useScrollTrigger({
-		disableHysteresis: true,
-		threshold: 0,
-	});
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 0,
+    });
 
-	return React.cloneElement(children, {
-		elevation: trigger ? 4 : 0,
-	});
+    return React.cloneElement(children, {
+        elevation: trigger ? 4 : 0,
+    });
 }
 
 interface Props {
-	children: React.ReactElement;
+    children: React.ReactElement;
 }
 
-const drawerWidth = 200;
+const drawerWidth = 0;
 
 const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		title: {
-			flexGrow: 1,
-		},
-		appBar: {
-			[theme.breakpoints.up("sm")]: {
-				width: `calc(100% - ${drawerWidth}px)`,
-				marginLeft: drawerWidth,
-			},
-		},
-		menuButton: {
-			marginRight: theme.spacing(2),
-			[theme.breakpoints.up("sm")]: {
-				display: "none",
-			},
-		},
-		// necessary for content to be below app bar
-		toolbar: theme.mixins.toolbar,
-	})
+    createStyles({
+        title: {
+            flexGrow: 1,
+        },
+        appBar: {
+            [theme.breakpoints.up("sm")]: {
+                width: `calc(100% - ${drawerWidth}px)`,
+                marginLeft: drawerWidth,
+            },
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+            [theme.breakpoints.up("sm")]: {
+                display: "none",
+            },
+        },
+        // necessary for content to be below app bar
+        toolbar: theme.mixins.toolbar,
+    })
 );
 
 export default (props: any) => {
-	const { handleLeftDrawerOpen, open, currentPage } = props;
-	const classes = useStyles();
-	const [extraButton, setExtraButton] = React.useState(null);
-
-	return (
-		<ElevationScroll {...props}>
-			<AppBar
-				position="fixed"
-				color="inherit"
-				className={clsx(classes.appBar)}
-			>
-				<Toolbar>
-					{/* <IconButton
+    const { handleLogin, open, currentPage } = props;
+    const classes = useStyles();
+    
+    return (
+        <ElevationScroll {...props}>
+            <AppBar
+                position="fixed"
+                color="inherit"
+                className={clsx(classes.appBar)}
+            >
+                <Toolbar>
+                    {/* <IconButton
 						color="primary"
 						aria-label="open drawer"
 						onClick={handleLeftDrawerOpen}
@@ -77,17 +83,25 @@ export default (props: any) => {
 					>
 						<MenuTwoToneIcon />
 					</IconButton> */}
-					<Typography
-						color="primary"
-						variant="h6"
-						className={classes.title}
-					>
-						{currentPage.text}
-					</Typography>
-					{extraButton}
-				</Toolbar>
-				<Divider />
-			</AppBar>
-		</ElevationScroll>
-	);
+                    <Typography
+                        color="primary"
+                        variant="h6"
+                        className={classes.title}
+                    >
+                        {currentPage.text}
+                    </Typography>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="primary"
+                        onClick={handleLogin}
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                </Toolbar>
+                <Divider />
+            </AppBar>
+        </ElevationScroll>
+    );
 };
