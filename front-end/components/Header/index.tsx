@@ -68,7 +68,7 @@ export default (props: any) => {
 				className={clsx(classes.appBar)}
 			>
 				<Toolbar>
-					<IconButton
+					{/* <IconButton
 						color="primary"
 						aria-label="open drawer"
 						onClick={handleLeftDrawerOpen}
@@ -76,7 +76,7 @@ export default (props: any) => {
 						className={classes.menuButton}
 					>
 						<MenuTwoToneIcon />
-					</IconButton>
+					</IconButton> */}
 					<Typography
 						color="primary"
 						variant="h6"

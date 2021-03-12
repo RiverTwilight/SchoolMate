@@ -1,6 +1,34 @@
 import React from "react";
 import Head from "next/head";
 import Header from "../Header";
+import {
+    createStyles,
+    Theme,
+    withStyles,
+    makeStyles,
+} from "@material-ui/core/styles";
+
+const styles = (theme: Theme) => {
+    return createStyles({
+        root: {
+            display: "flex",
+        },
+        content: {
+            flexGrow: 1,
+            padding: theme.spacing(2),
+            paddingTop: "75px",
+            minHeight: "100vh",
+            position: "relative",
+        },
+        contentShift: {
+            transition: theme.transitions.create("margin", {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+        },
+    })
+}
 
 // TODO RSS
 class Layout extends React.Component<
@@ -12,6 +40,7 @@ class Layout extends React.Component<
         /**目录 */
         catalog?: any[];
         locale?: string;
+        classes: any;
     },
     {
     }
@@ -20,7 +49,7 @@ class Layout extends React.Component<
         super(props);
     }
     render() {
-        const { config, currentPage, catalog, locale } = this.props;
+        const { config, currentPage, catalog, locale, classes } = this.props;
         const { description, author, title } = config;
         const showTitle = `${
             currentPage ? `${currentPage.text} - ` : ""
@@ -62,7 +91,7 @@ class Layout extends React.Component<
                     <title>{showTitle}</title>
                 </Head>
                 <Header lang={locale} {...this.props} />
-                <main className="main">
+                <main className={classes.content}>
                     {childrenWithProps}
                 </main>
             </>
@@ -70,4 +99,4 @@ class Layout extends React.Component<
     }
 }
 
-export default Layout;
+export default withStyles(styles)(Layout);
