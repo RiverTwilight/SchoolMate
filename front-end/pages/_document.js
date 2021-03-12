@@ -22,6 +22,7 @@ export default class extends Document {
 		};
 	}
 	render() {
+        // TODO 百度统计
 		// const { title, description, author } = this.props.config;
 		return (
 			<Html>
@@ -39,10 +40,10 @@ export default class extends Document {
 						httpEquiv="X-UA-Compatible"
 						content="IE=edge,chrome=1"
 					/>
-					<script
+					{/* <script
 						defer
 						src="//hm.baidu.com/hm.js?29ab8ced8f951b925920356991531a45"
-					/>
+					/> */}
 				</Head>
 				<body>
 					<Main />

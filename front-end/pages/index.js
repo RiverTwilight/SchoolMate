@@ -36,46 +36,57 @@ export async function getStaticProps({ locale, locales }) {
     };
 }
 
+/**
+ * 投票项目
+ * @param {string} title 标题
+ * @param {string} subscription 描述
+ * @param {number} id ID
+ */
 const MusicItem = ({
     title,
+    subscription,
+    id
 }) => {
     const classes = useStyles()
     return (
         <Card className={classes.root}>
             <CardContent>
                 <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    Word of the Day
+                    学生会发起的
         </Typography>
                 <Typography variant="h5" component="h2">
                     {title}
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
-                    adjective
-        </Typography>
+                    {subscription}
+                </Typography>
                 <Typography variant="body2" component="p">
-                    well meaning and kindly.
-          <br />
-                    {'"a benevolent smile"'}
+                    {subscription}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">投票</Button>
+                <Link href={`/music/?id=${id}`}>
+                    <Button size="small">投票</Button>
+                </Link>
             </CardActions>
         </Card>
     )
 }
+
+const MOCK_DATA = [
+    {
+        title: "第一周投票",
+        tickets: 4,
+        id: 1
+    }
+]
 
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             channel: "all",
-            data: [
-                {
-                    title: "第一周投票",
-                    tickets: 4
-                }
-            ]
+            data: MOCK_DATA
         };
     }
     componentDidMount() {
@@ -93,7 +104,7 @@ class HomePage extends React.Component {
                 config={siteConfig}
                 locale={locale}
             >
-                {data.length && data.map((item, i) => <MusicItem {...item} />)}
+                {data.length && data.map((item, i) => <MusicItem key={i} {...item} />)}
                 {!data.length && (
                     <Typography align="center" variant="h5" color="textSecondary">
                         暂时没有投票
