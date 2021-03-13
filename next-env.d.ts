@@ -37,6 +37,8 @@ interface ISiteConfig {
     title: string,
     keywords: string[],
     description: string,
+    /** 网站根目录 */
+    root: string,
     author: {
         name: string,
         image?: string,

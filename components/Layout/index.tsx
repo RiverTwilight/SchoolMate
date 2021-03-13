@@ -64,7 +64,7 @@ class Layout extends React.Component<
 	render() {
 		const { config, currentPage, catalog, locale, classes } = this.props;
 		const { openLogin } = this.state;
-		const { description, author, title } = config;
+		const { description, author, title, root } = config;
 		const showTitle = `${
 			currentPage ? `${currentPage.text} - ` : ""
 		}${title}`;
@@ -85,10 +85,7 @@ class Layout extends React.Component<
 					<meta name="description" content={description} />
 					<meta property="og:type" content="website" />
 					<meta property="og:title" content={showTitle} />
-					<meta
-						property="og:url"
-						content="https://ygk-blog.yunser.com"
-					/>
+					<meta property="og:url" content={root} />
 					<meta property="og:site_name" content={showTitle} />
 					<meta property="og:description" content={description} />
 					<meta property="og:locale" content="zh_CN" />
@@ -110,7 +107,7 @@ class Layout extends React.Component<
 				<Header
 					loginInfo={checkLogin()}
 					handleLogin={this.handleLogin}
-					lang={locale}
+					locale={locale}
 					{...this.props}
 				/>
 				<Login onClose={this.handleLoginClose} open={openLogin} />

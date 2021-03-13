@@ -70,7 +70,7 @@ const MusicItem = ({ title, subscription, id }) => {
 			</CardContent>
 			<CardActions>
 				<Link href={`/music?id=${id}`}>
-					<Button variant="outline" size="large">
+					<Button variant="outlined" size="large">
 						投票
 					</Button>
 				</Link>
