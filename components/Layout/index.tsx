@@ -107,15 +107,15 @@ class Layout extends React.Component<
 					/>
 					<title>{showTitle}</title>
 				</Head>
+				<Header
+					loginInfo={checkLogin()}
+					onClose={this.handleLoginClose}
+					handleLogin={this.handleLogin}
+					lang={locale}
+					{...this.props}
+				/>
+				<Login open={openLogin} />
 				<main className={classes.root}>
-					<Header
-						loginInfo={checkLogin()}
-						onClose={this.handleLoginClose}
-						handleLogin={this.handleLogin}
-						lang={locale}
-						{...this.props}
-					/>
-					<Login open={openLogin} />
 					<div className={classes.content}>{childrenWithProps}</div>
 				</main>
 			</ThemeProvider>

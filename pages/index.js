@@ -88,7 +88,7 @@ class HomePage extends React.Component {
 		};
 	}
 	async componentDidMount() {
-		const res = fetch(`http://localhost:3000/api/getMusicList`)
+		const res = fetch(`http://localhost:4000/api/getMusicList`)
 			.then((res) => res.json())
 			.then((data) => {
 				this.setState({ data: data.list });
