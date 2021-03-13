@@ -1,9 +1,9 @@
 import * as React from "react";
 import Logo from "../../static/logo.svg";
 import LogoLarge from "../../static/logo&title-small.svg";
-import Text from "../../utils/i18n";
+import Text from "../../front-end/utils/i18n";
 import { nav } from "../../data/i18n.json";
-import ActiveLink from "../../utils/AcitiveLink";
+import ActiveLink from "../../front-end/utils/AcitiveLink";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";

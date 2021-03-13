@@ -8,7 +8,7 @@ import {
     makeStyles,
 } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../../utils/theme";
+import theme from "../../front-end/utils/theme";
 
 const styles = (theme: Theme) => {
     return createStyles({
