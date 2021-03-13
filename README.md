@@ -12,4 +12,4 @@
 
 </div>
 
-为成都外国语学校开发的一站式校园生活服务网站。基于 Typescript + React + MaterialUI + NodeJS + ExpressJS 制作。
+为成都外国语学校开发的一站式校园生活服务网站。基于 Typescript + NextJS + MaterialUI + 搭建。

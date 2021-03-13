@@ -109,12 +109,11 @@ class Layout extends React.Component<
 				</Head>
 				<Header
 					loginInfo={checkLogin()}
-					onClose={this.handleLoginClose}
 					handleLogin={this.handleLogin}
 					lang={locale}
 					{...this.props}
 				/>
-				<Login open={openLogin} />
+				<Login onClose={this.handleLoginClose} open={openLogin} />
 				<main className={classes.root}>
 					<div className={classes.content}>{childrenWithProps}</div>
 				</main>
