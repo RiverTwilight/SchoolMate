@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, createRef, useRef } from "react";
 import Layout from "../../components/Layout";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,25 +19,23 @@ import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
+import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 
-const MOCK_DATA = [
-	{
-		playUrl: "",
+const useStyles = makeStyles({
+	audio: {
+		display: "none",
 	},
-];
+});
 
 export async function getServerSideProps(context) {
 	const { id } = context.query;
 	const config = await import(`../../data/config.json`);
 
-	// const detail = await fetch(``)
-
 	return {
 		props: {
 			siteConfig: config.default,
 			id,
-			data: MOCK_DATA,
 		},
 	};
 }
@@ -47,9 +45,38 @@ export async function getServerSideProps(context) {
  */
 
 const Music = ({ id, siteConfig, locale, title }) => {
-	const [songlist, setSonglist] = useState(MOCK_DATA);
+	const audioDom = useRef<HTMLAudioElement>(null);
+	const classes = useStyles();
+	const [songlist, setSonglist] = useState([]);
+	const [currentAudio, setCurrentAudio] = useState(0);
+	const [onPlay, setOnPlay] = useState(false);
+	useEffect(() => {
+		const res = fetch(`/api/getMusicDetail`)
+			.then((res) => res.json())
+			.then((data) => {
+				setSonglist(data.musics);
+			});
+	}, []);
+
 	const handleClick = (songId) => {
 		// TODO 音乐试听
+
+		
+		if (songId !== currentAudio) {
+			setCurrentAudio(songId);
+			audioDom.current.load();
+		}
+		
+		if (onPlay) {
+			audioDom.current.pause();
+		} else {
+			audioDom.current.play();
+		}
+		setOnPlay(!onPlay);
+		console.log(onPlay, currentAudio);
+	};
+	const handleAudioEnded = () => {
+		setOnPlay(false);
 	};
 	return (
 		<Layout
@@ -62,15 +89,19 @@ const Music = ({ id, siteConfig, locale, title }) => {
 		>
 			<List component={Paper} aria-label="music list">
 				{songlist.map((song, i) => (
-					<ListItem button>
-						<ListItemText primary="天后 - Joker Xue" />
+					<ListItem key={song.name} button>
+						<ListItemText primary={song.name} />
 						<ListItemSecondaryAction>
 							<IconButton
 								edge="end"
 								aria-label="delete"
 								onClick={() => handleClick(i)}
 							>
-								<PlayArrowTwoToneIcon />
+								{onPlay && currentAudio === i ? (
+									<PauseCircleFilledTwoToneIcon />
+								) : (
+									<PlayArrowTwoToneIcon />
+								)}
 							</IconButton>
 							<IconButton
 								edge="end"
@@ -83,6 +114,20 @@ const Music = ({ id, siteConfig, locale, title }) => {
 					</ListItem>
 				))}
 			</List>
+			{songlist.length && (
+				<audio
+					onEnded={handleAudioEnded}
+					className={classes.audio}
+					controls={true}
+					ref={audioDom}
+				>
+					<source
+						src={songlist[currentAudio].playUrl}
+						type="audio/mpeg"
+					/>
+					Your browser does not support the audio tag.
+				</audio>
+			)}
 		</Layout>
 	);
 };
