@@ -1,12 +1,5 @@
 import React, { useState, useEffect, createRef, useRef } from "react";
 import Layout from "../../components/Layout";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -117,6 +110,7 @@ const MusicItem = ({
 
 const Music = ({ id, siteConfig, locale, title }) => {
     const [songlist, setSonglist] = useState([]);
+    const [currentAudio, setCurrentAuido] = useState(0)
     useEffect(() => {
         fetch(`/api/getMusicDetail?id=${id}`)
             .then((res) => res.json())

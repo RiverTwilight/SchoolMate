@@ -1,3 +1,5 @@
+import sql from "./db"
+
 const MOCK_DATA = {
 	title: "dfsaf",
 	musics: [
