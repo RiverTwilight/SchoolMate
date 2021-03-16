@@ -140,7 +140,7 @@ class Layout extends React.Component<
                     lang={locale}
                     {...this.props}
                 />
-                <Login onClose={this.handleLoginClose} open={openLogin} />
+                <Login cbUrl={"/"} onClose={this.handleLoginClose} open={openLogin} />
                 <main className={classes.root}>
                     <div className={classes.content}>{childrenWithProps}</div>
                 </main>

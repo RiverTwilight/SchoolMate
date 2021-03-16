@@ -43,7 +43,7 @@ export async function getServerSideProps(context) {
 }
 
 /**
- * 投票详情
+ * 用户中心
  */
 
 const User = ({ id, siteConfig, locale, title }) => {

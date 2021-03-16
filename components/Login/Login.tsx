@@ -25,14 +25,16 @@ import MD5 from "md5";
 import Axios from 'axios';
 
 class Login extends React.Component<
-    {},
+    {
+        cbUrl: string
+    },
     {
         username: string;
         password: string;
         remember: boolean;
         xcode: string;
         showPassword: boolean;
-        classNum: number;
+        classNum: unknown;
         grade: number;
         tel: number | string;
     }
@@ -51,26 +53,30 @@ class Login extends React.Component<
         };
     }
     login() {
-        const { username, password, remember } = this.state;
+        const { username, grade, classNum, tel, password, remember } = this.state
+        const { cbUrl } = this.props
         Axios({
             method: "post",
             url: "/api/login",
             withCredentials: false,
             data: {
-                username: username,
-                token: String(MD5(username + String(MD5(password)))),
+                username,
+                classNum,
+                grade,
+                tel,
+                password
             },
         })
             .then((response) => {
                 var json = JSON.parse(response.request.response);
                 switch (json.code) {
                     case 201:
-                        // window.snackbar({ message: "邮箱或密码错误" });
+                        window.snackbar({ message: "账号或密码错误" });
                         break;
                     case 200:
                         var data = JSON.stringify(json.data);
                         setUserInfo(json.token, data, remember);
-                        window.location.href = "/user";
+                        window.location.href = cbUrl;
                         break;
                 }
             })
@@ -86,15 +92,17 @@ class Login extends React.Component<
             showPassword: !this.state.showPassword,
         });
     };
-    handleGradeChange = (_, value) => {
+    handleGradeChange = (e) => {
         this.setState({
-            grade: value
+            grade: e.target.value
         })
     };
-    handleClassChange = (_, value) => {
-        debugger;
+    handleClassChange = (e: React.ChangeEvent<{
+        name?: string;
+        value: unknown;
+    }>) => {
         this.setState({
-            classNum: value
+            classNum: e.target.value
         })
     };
 
@@ -179,7 +187,7 @@ class Login extends React.Component<
                                     tel: e.target.value,
                                 });
                             }}
-                            value={username}
+                            value={tel}
                             id="tel"
                             startAdornment={
                                 <InputAdornment position="start">
@@ -240,13 +248,13 @@ class Login extends React.Component<
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button
+                    {/* <Button
                         onClick={() => {
                             window.open("/user/forget");
                         }}
                     >
                         忘记密码
-					</Button>
+					</Button> */}
                     <Button onClick={this.login.bind(this)}>登录</Button>
                 </DialogActions>
             </>
@@ -258,7 +266,7 @@ const LoginDialog = (props: any) => {
     return (
         <Dialog {...props}>
             <DialogTitle id="simple-dialog-title">登录</DialogTitle>
-            <Login />
+            <Login cbUrl={props.cbUrl} />
         </Dialog>
     );
 };

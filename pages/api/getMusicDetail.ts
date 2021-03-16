@@ -1,4 +1,4 @@
-import sql from "./db"
+import sql from "../../utils/db"
 
 const MOCK_DATA = {
 	title: "dfsaf",
