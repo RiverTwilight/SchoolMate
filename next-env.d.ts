@@ -13,7 +13,8 @@ type userInfoFromLocal = {
     grade: string;
     class: string;
     username: string;
-    tel: number | string
+    tel: number | string;
+    admin: boolean
 }
 
 interface userInfoFromCloud extends userInfoFromLocal {

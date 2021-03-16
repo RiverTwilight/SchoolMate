@@ -1,3 +1,4 @@
+import sql from "../../../utils/db"
 
 export default (req, res) => {
 	res.status(200).json({ 

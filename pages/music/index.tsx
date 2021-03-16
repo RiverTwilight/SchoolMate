@@ -6,6 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import InboxIcon from "@material-ui/icons/Inbox";
@@ -14,6 +15,10 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { getUserInfo } from "../../utils/userInfo"
+
+const isAdmin: boolean = getUserInfo().admin;
 
 const useStyles = makeStyles({
     audio: {
@@ -36,6 +41,7 @@ export async function getServerSideProps(context: { query: { id: any; }; }) {
 const MusicItem = ({
     name,
     index,
+    id,
     currentIndex,
     playUrl,
     handlePlayIndexChange
@@ -44,6 +50,7 @@ const MusicItem = ({
     name: string,
     playUrl: string,
     index: number,
+    id: number,
     currentIndex: number,
     handlePlayIndexChange: (index: number) => void
 }) => {
@@ -77,6 +84,17 @@ const MusicItem = ({
         setOnPlay(true)
     }
 
+    const handleDelete = () => {
+        // TODO 删除歌曲
+        fetch(`/api/music/deleteMusic?id=${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                switch (data.code) {
+
+                }
+            });
+    }
+
     return (
         <>
             <ListItem button>
@@ -93,13 +111,20 @@ const MusicItem = ({
                                 <PlayArrowTwoToneIcon />
                             )}
                     </IconButton>
-                    <IconButton
+                    {!isAdmin && <IconButton
                         edge="end"
                         aria-label="delete"
                         onClick={handleClick}
                     >
                         <ThumbUpAltTwoToneIcon />
-                    </IconButton>
+                    </IconButton>}
+                    {isAdmin && <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={handleDelete}
+                    >
+                        <CloseOutlinedIcon />
+                    </IconButton>}
                 </ListItemSecondaryAction>
             </ListItem>
             <audio
@@ -147,6 +172,7 @@ const Music = ({ id, siteConfig, locale, title }) => {
             <List component={Paper} aria-label="music list">
                 {songlist.map((song, i) => <MusicItem
                     index={i}
+                    id={id}
                     currentIndex={currentAudio}
                     handlePlayIndexChange={setCurrentAuido}
                     playUrl={song.playUrl}
