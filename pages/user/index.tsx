@@ -46,11 +46,7 @@ export async function getServerSideProps(context) {
  * 投票详情
  */
 
-const Music = ({ id, siteConfig, locale, title }) => {
-	const [songlist, setSonglist] = useState(MOCK_DATA);
-	const handleClick = (songId) => {
-		// TODO 音乐试听
-	};
+const User = ({ id, siteConfig, locale, title }) => {
 	return (
 		<Layout
 			currentPage={{
@@ -60,31 +56,9 @@ const Music = ({ id, siteConfig, locale, title }) => {
 			locale={locale}
 			config={siteConfig}
 		>
-			<List component={Paper} aria-label="music list">
-				{songlist.map((song, i) => (
-					<ListItem button>
-						<ListItemText primary="天后 - Joker Xue" />
-						<ListItemSecondaryAction>
-							<IconButton
-								edge="end"
-								aria-label="delete"
-								onClick={() => handleClick(i)}
-							>
-								<PlayArrowTwoToneIcon />
-							</IconButton>
-							<IconButton
-								edge="end"
-								aria-label="delete"
-								onClick={() => handleClick(i)}
-							>
-								<ThumbUpAltTwoToneIcon />
-							</IconButton>
-						</ListItemSecondaryAction>
-					</ListItem>
-				))}
-			</List>
+
 		</Layout>
 	);
 };
 
-export default Music;
+export default User;

@@ -3,7 +3,21 @@
 
 
 interface Window {
-    scrollListener: any
+    scrollListener: any;
+    snackbar: (config: {
+        message: string
+    }) => void;
+}
+
+type userInfoFromLocal = {
+    grade: string;
+    class: string;
+    username: string;
+    tel: number | string
+}
+
+interface userInfoFromCloud extends userInfoFromLocal {
+    token: string;
 }
 
 interface ICurrentPage {
@@ -19,19 +33,6 @@ type dictionary = {
 };
 
 type lang = 'zh' | 'en' | 'jp'
-
-type IPost = {
-    slug: string,
-    defaultTitle: string,
-    frontmatter: {
-        date: string,
-        /** 目录 */
-        categories?: string[]
-    },
-    id: number,
-    /** 文章 */
-    markdownBody?: string
-}
 
 interface ISiteConfig {
     title: string,
@@ -50,4 +51,4 @@ interface ISiteConfig {
 declare module '*.svg' {
     const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
     export default content;
-  }
+}

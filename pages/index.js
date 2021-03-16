@@ -88,6 +88,9 @@ class HomePage extends React.Component {
 		};
 	}
 	async componentDidMount() {
+        window.snackbar({
+            message: "dsafasdf"
+        })
 		const res = fetch(`/api/getMusicList`)
 			.then((res) => res.json())
 			.then((data) => {
