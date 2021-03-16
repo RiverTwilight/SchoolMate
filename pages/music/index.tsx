@@ -35,17 +35,32 @@ export async function getServerSideProps(context: { query: { id: any; }; }) {
 
 const MusicItem = ({
     name,
-    playUrl
+    index,
+    currentIndex,
+    playUrl,
+    handlePlayIndexChange
+
 }: {
     name: string,
-    playUrl: string
+    playUrl: string,
+    index: number,
+    currentIndex: number,
+    handlePlayIndexChange: (index: number) => void
 }) => {
     const audioDom = useRef<HTMLAudioElement>(null);
     const classes = useStyles();
     const [onPlay, setOnPlay] = useState(false);
 
+    useEffect(() => {
+        if (currentIndex !== index) {
+            audioDom.current.pause();
+        }
+    }, [currentIndex])
+
     const handleClick = () => {
         setOnPlay(!onPlay);
+
+        handlePlayIndexChange(index)
 
         if (onPlay) {
             audioDom.current.pause();
@@ -72,7 +87,7 @@ const MusicItem = ({
                         aria-label="delete"
                         onClick={handleClick}
                     >
-                        {onPlay ? (
+                        {onPlay && currentIndex === index ? (
                             <PauseCircleFilledTwoToneIcon />
                         ) : (
                                 <PlayArrowTwoToneIcon />
@@ -110,7 +125,8 @@ const MusicItem = ({
 
 const Music = ({ id, siteConfig, locale, title }) => {
     const [songlist, setSonglist] = useState([]);
-    const [currentAudio, setCurrentAuido] = useState(0)
+    const [currentAudio, setCurrentAuido] = useState(0);
+
     useEffect(() => {
         fetch(`/api/getMusicDetail?id=${id}`)
             .then((res) => res.json())
@@ -123,13 +139,16 @@ const Music = ({ id, siteConfig, locale, title }) => {
         <Layout
             currentPage={{
                 text: title || "起床铃投票",
-                path: "/music/" + id,
+                path: `/music?id=${id}`,
             }}
             locale={locale}
             config={siteConfig}
         >
             <List component={Paper} aria-label="music list">
                 {songlist.map((song, i) => <MusicItem
+                    index={i}
+                    currentIndex={currentAudio}
+                    handlePlayIndexChange={setCurrentAuido}
                     playUrl={song.playUrl}
                     name={song.name}
                     key={song.name}

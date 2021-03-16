@@ -15,6 +15,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 
 const useStyles = makeStyles({
     audio: {
@@ -95,7 +96,7 @@ const MusicItem = ({
                         aria-label="delete"
                         onClick={handleDelete}
                     >
-                        <ThumbUpAltTwoToneIcon />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
