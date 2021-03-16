@@ -26,7 +26,6 @@ import { Grade } from "../../data/school.json";
 class Login extends React.Component<
 	{},
 	{
-		statu: "login" | "signin";
 		username: string;
 		password: string;
 		remember: boolean;
@@ -47,7 +46,6 @@ class Login extends React.Component<
 			remember: false,
 			tel: "",
 			xcode: "",
-			statu: "login",
 			showPassword: false,
 		};
 	}
@@ -99,7 +97,18 @@ class Login extends React.Component<
 			showPassword: !this.state.showPassword,
 		});
 	};
-	handleGradeChange = (value) => {};
+	handleGradeChange = (_, value) => {
+        this.setState({
+            grade: value
+        })
+    };
+	handleClassChange = (_, value) => {
+        debugger;
+        this.setState({
+            classNum: value
+        })
+    };
+
 	render() {
 		const {
 			password,
@@ -114,12 +123,12 @@ class Login extends React.Component<
 			<>
 				<DialogContent>
 					<FormControl>
-						<InputLabel id="demo-simple-select-label">
+						<InputLabel id="grade-label">
 							年级
 						</InputLabel>
 						<Select
-							labelId="demo-simple-select-label"
-							id="demo-simple-select"
+							labelId="grade-label"
+							id="grade"
 							value={grade}
 							onChange={this.handleGradeChange}
 						>
@@ -131,14 +140,14 @@ class Login extends React.Component<
 						</Select>
 					</FormControl>
 					<FormControl>
-						<InputLabel id="demo-simple-select-label">
+						<InputLabel id="class-label">
 							班级
 						</InputLabel>
 						<Select
-							labelId="demo-simple-select-label"
-							id="demo-simple-select"
+							labelId="class-label"
+							id="class"
 							value={classNum}
-							onChange={this.handleGradeChange}
+							onChange={this.handleClassChange}
 						>
 							{Array(
 								Grade.filter((g) => g.value === grade)[0].class

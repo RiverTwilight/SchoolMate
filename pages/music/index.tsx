@@ -52,6 +52,8 @@ const MusicItem = ({
     const [onPlay, setOnPlay] = useState(false);
 
     const handleClick = () => {
+        setOnPlay(!onPlay);
+
         if (onPlay) {
             audioDom.current.pause();
         } else {
