@@ -1,12 +1,34 @@
-const MOCK_DATA = [
-	{
-		title: "第一周投票",
-		tickets: 4,
-		subscription: "快来为起床铃投票",
-		id: 1,
-	},
-];
+import sql from "../../../utils/db"
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default (req, res) => {
-	res.status(200).json({ list: MOCK_DATA });
+type Data = {
+    message: string;
+    data?: any
+}
+
+/**
+ * 获取投票列表
+ * @param {string} id 投票ID
+ */
+
+export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+    try {
+        const { id } = req.query;
+
+        const result = await sql.get('music', ["*"], {
+            where: {
+                id,
+            }
+        })
+
+        res.status(200).json({
+            message: "获取成功",
+            data: result
+        });
+    } catch (err) {
+        res.status(201).json({
+            message: "操作失败"
+        });
+    }
+
 };

@@ -26,13 +26,16 @@
 
 存放所有投票session
 
-* id: session id
-* musics: 歌曲，用JSON格式存储
+* **id**: session id
+* **title**: 投票标题
+* musics: 歌曲，用JSON格式存储。statu: 0正常 1删除 2中标
 ```json
 [
     {
         "id": 0,
-        "playUrl": "..."
+        "playUrl": "...",
+        "vote": 5,
+        "statu": 0 
     }
 ]
 ```
