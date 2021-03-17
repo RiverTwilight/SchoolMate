@@ -73,9 +73,10 @@ const del = (table, condition) => {
 /**
  * 
  * @param {string} table 数据表名称
- * @param {*} keys 
+ * @param {*[]} keys 
  * @param {{
  *     order?: string,
+ *     where?: *
  *     sort?: 'DESC' | 'ASEC'
  * }} config 
  */
