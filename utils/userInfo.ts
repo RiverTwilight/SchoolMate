@@ -1,5 +1,5 @@
 import { AES, enc } from "crypto-js";
-const SECRET = "0412";
+const SECRET = "35284";
 
 //设置cookie
 function setCookie(cname: any, cvalue: any, exdays: any) {
