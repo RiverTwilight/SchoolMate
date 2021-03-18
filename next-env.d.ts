@@ -21,6 +21,12 @@ interface userInfoFromCloud extends userInfoFromLocal {
     token: string;
 }
 
+interface IMusics {
+    id: number;
+    playUrl: string;
+    statu: number;
+}
+
 interface ICurrentPage {
     text: string,
     path: string

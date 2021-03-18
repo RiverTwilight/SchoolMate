@@ -3,33 +3,45 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
     message: string;
+    currentVote?: number
 }
 
 /**
- * 结束某个投票
- * @param {string} id 投票ID
- * @param {string} userID 用户ID
- * @param {string} token 用户TOKEN
+ * 给一首歌曲投票
+ * @param {string} musicId 音乐ID
+ * @param {string} id 投票session ID
  */
-
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
-        const { id, newData, userID, token } = req.query;
+        const { musicId, id } = req.query;
 
-        // TODO 验证是否为管理员
-
-        const update = await sql.update('music', newData, {
+        const originData: string = await sql.get('music', ['musics'], {
             where: {
-                id,
-            }
+                id: id
+            },
+            order: "AESC"
+        })
+
+        const targetData: IMusics[] = JSON.parse(originData[0]);
+
+        var currentVote = 0;
+
+        const update = await sql.update('music', {
+            musics: JSON.stringify(targetData, (key, value)=>{
+                if(value.id === musicId){
+                    currentVote = value.vote + 1
+                    return currentVote
+                }
+            })
         })
 
         res.status(200).json({
-            message: "更新成功"
+            message: "投票成功",
+            currentVote
         });
     } catch (err) {
         res.status(201).json({
-            message: "操作失败"
+            message: "投票失败"
         });
     }
 
