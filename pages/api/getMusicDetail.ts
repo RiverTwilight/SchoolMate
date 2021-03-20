@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import sql from "./db"
 
 type Data = {
 	title: string;
@@ -31,6 +32,14 @@ const MOCK_DATA = {
 	],
 };
 
-export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
+export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+	console.log(req);
+	const musicData = await sql.get("music", "*", {
+		where: {
+			key: "id",
+			value: "id",
+		},
+	});
+	console.log(musicData)
 	res.status(200).json(MOCK_DATA);
 };

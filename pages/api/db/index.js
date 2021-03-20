@@ -7,7 +7,7 @@ var pool = mysql.createPool({
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,
 	password: process.env.PASS,
-	socketPath: "/var/lib/mysql/mysql.sock",
+	// socketPath: "/var/lib/mysql/mysql.sock",
     database: "ygkapi",
     connectTimeout  : 60 * 60 * 1000,
     acquireTimeout  : 60 * 60 * 1000,
@@ -76,7 +76,11 @@ const del = (table, condition) => {
  * @param {*} keys 
  * @param {{
  *     order?: string,
- *     sort?: 'DESC' | 'ASEC'
+ *     sort?: 'DESC' | 'ASEC',
+ *     where?: {{
+ *          key: string,
+ *          value: string
+ *     }}
  * }} config 
  */
 const get = (table, keys, config) => {

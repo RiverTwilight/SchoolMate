@@ -21,12 +21,6 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 
-const MOCK_DATA = [
-	{
-		playUrl: "",
-	},
-];
-
 export async function getServerSideProps(context) {
 	const { id } = context.query;
 	const config = await import(`../../data/config.json`);
@@ -37,7 +31,6 @@ export async function getServerSideProps(context) {
 		props: {
 			siteConfig: config.default,
 			id,
-			data: MOCK_DATA,
 		},
 	};
 }
@@ -54,36 +47,12 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	return (
 		<Layout
 			currentPage={{
-				text: title || "起床铃投票",
-				path: "/music/" + id,
+				text: "用户中心",
+				path: "/user",
 			}}
 			locale={locale}
 			config={siteConfig}
-		>
-			<List component={Paper} aria-label="music list">
-				{songlist.map((song, i) => (
-					<ListItem button>
-						<ListItemText primary="天后 - Joker Xue" />
-						<ListItemSecondaryAction>
-							<IconButton
-								edge="end"
-								aria-label="delete"
-								onClick={() => handleClick(i)}
-							>
-								<PlayArrowTwoToneIcon />
-							</IconButton>
-							<IconButton
-								edge="end"
-								aria-label="delete"
-								onClick={() => handleClick(i)}
-							>
-								<ThumbUpAltTwoToneIcon />
-							</IconButton>
-						</ListItemSecondaryAction>
-					</ListItem>
-				))}
-			</List>
-		</Layout>
+		></Layout>
 	);
 };
 
