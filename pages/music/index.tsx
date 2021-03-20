@@ -17,24 +17,133 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
-import AlarmOnIcon from "@material-ui/icons/AlarmOn";
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { getUserInfo } from "../../utils/userInfo"
+
+const isAdmin: boolean = getUserInfo().admin;
 
 const useStyles = makeStyles({
-	audio: {
-		display: "none",
-	},
+    audio: {
+        display: "none",
+    },
 });
 
-export async function getServerSideProps(context) {
-	const { id } = context.query;
-	const config = await import(`../../data/config.json`);
+export async function getServerSideProps(context: { query: { id: any; }; }) {
+    const { id } = context.query;
+    const config = await import(`../../data/config.json`);
 
-	return {
-		props: {
-			siteConfig: config.default,
-			id,
-		},
-	};
+    return {
+        props: {
+            siteConfig: config.default,
+            id,
+        },
+    };
+}
+
+const MusicItem = ({
+    name,
+    index,
+    id,
+    currentIndex,
+    playUrl,
+    handlePlayIndexChange
+
+}: {
+    name: string,
+    playUrl: string,
+    index: number,
+    id: number,
+    currentIndex: number,
+    handlePlayIndexChange: (index: number) => void
+}) => {
+    const audioDom = useRef<HTMLAudioElement>(null);
+    const classes = useStyles();
+    const [onPlay, setOnPlay] = useState(false);
+
+    useEffect(() => {
+        if (currentIndex !== index) {
+            audioDom.current.pause();
+        }
+    }, [currentIndex])
+
+    const handleClick = () => {
+        setOnPlay(!onPlay);
+
+        handlePlayIndexChange(index)
+
+        if (onPlay) {
+            audioDom.current.pause();
+        } else {
+            audioDom.current.play();
+        }
+    };
+
+    const handleAudioEnded = () => {
+        setOnPlay(false);
+    };
+
+    const handleAudioPlay = () => {
+        setOnPlay(true)
+    }
+
+    const handleDelete = () => {
+        // TODO 删除歌曲
+        fetch(`/api/music/deleteMusic?id=${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                switch (data.code) {
+
+                }
+            });
+    }
+
+    return (
+        <>
+            <ListItem button>
+                <ListItemText primary={name} />
+                <ListItemSecondaryAction>
+                    <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={handleClick}
+                    >
+                        {onPlay && currentIndex === index ? (
+                            <PauseCircleFilledTwoToneIcon />
+                        ) : (
+                                <PlayArrowTwoToneIcon />
+                            )}
+                    </IconButton>
+                    {!isAdmin && <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={handleClick}
+                    >
+                        <ThumbUpAltTwoToneIcon />
+                    </IconButton>}
+                    {isAdmin && <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={handleDelete}
+                    >
+                        <CloseOutlinedIcon />
+                    </IconButton>}
+                </ListItemSecondaryAction>
+            </ListItem>
+            <audio
+                onEnded={handleAudioEnded}
+                onPlay={handleAudioPlay}
+                className={classes.audio}
+                controls={true}
+                ref={audioDom}
+            >
+                <source
+                    src={playUrl}
+                    type="audio/mpeg"
+                />
+					Your browser does not support the audio tag.
+                </audio>
+        </>
+    )
 }
 
 /**
@@ -42,102 +151,39 @@ export async function getServerSideProps(context) {
  */
 
 const Music = ({ id, siteConfig, locale, title }) => {
-	const audioDom = useRef<HTMLAudioElement>(null);
-	const classes = useStyles();
-	const [detail, setDetail] = useState({
-		title: "未命名",
-		musics: [],
-	});
-	const [currentAudio, setCurrentAudio] = useState(0);
-	const [onPlay, setOnPlay] = useState(false);
-	useEffect(() => {
-		const res = fetch(`/api/getMusicDetail`)
-			.then((res) => res.json())
-			.then((data) => {
-				setDetail(data);
-			});
-	}, []);
+    const [songlist, setSonglist] = useState([]);
+    const [currentAudio, setCurrentAuido] = useState(0);
 
-	const handlePlay = (songId) => {
-		if (songId !== currentAudio) {
-			setCurrentAudio(songId);
-			audioDom.current.load();
-		}
+    useEffect(() => {
+        fetch(`/api/getMusicDetail?id=${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setSonglist(data.musics);
+            });
+    }, [id]);
 
-		if (onPlay) {
-			audioDom.current.pause();
-		} else {
-			audioDom.current.play();
-		}
-		setOnPlay(!onPlay);
-		console.log(onPlay, currentAudio);
-	};
-	const handleAudioEnded = () => {
-		setOnPlay(false);
-	};
-	const handleVote = (songId) => {
-		// TODO vote
-	};
-	return (
-		<Layout
-			currentPage={{
-				text: title || `${detail.title} - 起床铃投票`,
-				path: "/music/" + id,
-			}}
-			locale={locale}
-			config={siteConfig}
-		>
-			<Typography variant="body1">{detail.description}</Typography>
-			<Chip
-				color="primary"
-				icon={<AlarmOnIcon />}
-				label="进行中 - 还有3天结束"
-			/>
-			<Chip icon={<AlarmOnIcon />} label="投票已结束" />
-			<br />
-			<br />
-			<List component={Paper} aria-label="music list">
-				{detail.musics.map((song, i) => (
-					<ListItem key={song.name} button>
-						<ListItemText primary={song.name} />
-						<ListItemSecondaryAction>
-							<IconButton
-								edge="end"
-								aria-label="delete"
-								onClick={() => handlePlay(i)}
-							>
-								{onPlay && currentAudio === i ? (
-									<PauseCircleFilledTwoToneIcon />
-								) : (
-									<PlayArrowTwoToneIcon />
-								)}
-							</IconButton>
-							<Button
-								aria-label="delete"
-								startIcon={<ThumbUpAltTwoToneIcon />}
-							>
-								3
-							</Button>
-						</ListItemSecondaryAction>
-					</ListItem>
-				))}
-			</List>
-			{detail.musics.length && (
-				<audio
-					onEnded={handleAudioEnded}
-					className={classes.audio}
-					controls={true}
-					ref={audioDom}
-				>
-					<source
-						src={detail.musics[currentAudio].playUrl}
-						type="audio/mpeg"
-					/>
-					Your browser does not support the audio tag.
-				</audio>
-			)}
-		</Layout>
-	);
+    return (
+        <Layout
+            currentPage={{
+                text: title || "起床铃投票",
+                path: `/music?id=${id}`,
+            }}
+            locale={locale}
+            config={siteConfig}
+        >
+            <List component={Paper} aria-label="music list">
+                {songlist.map((song, i) => <MusicItem
+                    index={i}
+                    id={id}
+                    currentIndex={currentAudio}
+                    handlePlayIndexChange={setCurrentAuido}
+                    playUrl={song.playUrl}
+                    name={song.name}
+                    key={song.name}
+                />)}
+            </List>
+        </Layout>
+    );
 };
 
 export default Music;

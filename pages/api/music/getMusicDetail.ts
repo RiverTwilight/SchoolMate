@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import sql from "./db"
+import sql from "../../../utils/db"
 
 type Data = {
 	title: string;

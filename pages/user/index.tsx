@@ -36,14 +36,10 @@ export async function getServerSideProps(context) {
 }
 
 /**
- * 投票详情
+ * 用户中心
  */
 
-const Music = ({ id, siteConfig, locale, title }) => {
-	const [songlist, setSonglist] = useState(MOCK_DATA);
-	const handleClick = (songId) => {
-		// TODO 音乐试听
-	};
+const User = ({ id, siteConfig, locale, title }) => {
 	return (
 		<Layout
 			currentPage={{
@@ -56,4 +52,4 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	);
 };
 
-export default Music;
+export default User;
