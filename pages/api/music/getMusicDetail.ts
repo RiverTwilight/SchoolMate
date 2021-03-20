@@ -34,12 +34,12 @@ const MOCK_DATA = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	console.log(req);
-	const musicData = await sql.get("music", "*", {
-		where: {
-			key: "id",
-			value: "id",
-		},
-	});
-	console.log(musicData)
+	// const musicData = await sql.get("music", "*", {
+	// 	where: {
+	// 		key: "id",
+	// 		value: "id",
+	// 	},
+	// });
+	// console.log(musicData)
 	res.status(200).json(MOCK_DATA);
 };
