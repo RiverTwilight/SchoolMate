@@ -42,10 +42,10 @@ export async function getServerSideProps({ locale, locales }) {
 /**
  * 投票项目
  * @param {string} title 标题
- * @param {string} subscription 描述
+ * @param {string} description 描述
  * @param {number} id ID
  */
-const MusicItem = ({ title, subscription, id }) => {
+const MusicItem = ({ title, description, id }) => {
 	const classes = useStyles();
 	return (
 		<Card className={classes.root}>
@@ -65,7 +65,7 @@ const MusicItem = ({ title, subscription, id }) => {
 					{title}
 				</Typography>
 				<Typography variant="body2" component="p">
-					{subscription}
+					{description}
 				</Typography>
 			</CardContent>
 			<CardActions>
@@ -88,10 +88,10 @@ class HomePage extends React.Component {
 		};
 	}
 	async componentDidMount() {
-		fetch(`/api/getMusicList`)
+		fetch(`/api/music/getMusicList`)
 			.then((res) => res.json())
 			.then((data) => {
-				this.setState({ data: data.list });
+				this.setState({ data: data.data.list });
 			});
 	}
 	render() {
