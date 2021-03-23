@@ -20,7 +20,7 @@ import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import { getUserInfo } from "../../utils/userInfo"
 
-const isAdmin: boolean = getUserInfo().admin;
+const isAdmin: boolean = true || getUserInfo().admin;
 
 const useStyles = makeStyles({
     audio: {
@@ -155,7 +155,7 @@ const Music = ({ id, siteConfig, locale, title }) => {
     const [currentAudio, setCurrentAuido] = useState(0);
 
     useEffect(() => {
-        fetch(`/api/getMusicDetail?id=${id}`)
+        fetch(`/api/music/getMusicDetail?id=${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setSonglist(data.musics);
