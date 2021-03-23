@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import sql from "../../../utils/db"
 
 var Mock = require('mockjs');
-var Random = Mock.Random
+const env = process.env.NODE_ENV
 
 type Data = {
     title: string;
@@ -36,24 +36,22 @@ type Data = {
 // };
 
 const MOCK_DATA = Mock.mock({
-    title: Random.cparagraph(1),
-    description: Random.cparagraph(15),
-    // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
+    title: '@cparagraph(1)',
+    description: '@cparagraph(15)',
     'musics|1-8': [{
-        // 属性 id 是一个自增数，起始值为 1，每次增 1
         'id|+1': 1,
-        playUrl: Random.url('http', 'nuysoft.com'),
-        name: Random.string(5)
+        playUrl: "url('http', 'nuysoft.com')",
+        'name': '@string(5)'
     }]
 })
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    // const musicData = await sql.get("music", "*", {
-    //     where: {
-    //         key: "id",
-    //         value: "id",
-    //     },
-    // });
-    // console.log(musicData)
-    res.status(200).json(MOCK_DATA);
+    const musicData = env === "development" ? MOCK_DATA : await sql.get("music", ["*"], {
+        where: {
+            key: "id",
+            value: "id",
+        },
+    });
+    console.log(musicData)
+    res.status(200).json(musicData);
 };

@@ -1,7 +1,6 @@
 import sql from "../../../utils/db"
 import type { NextApiRequest, NextApiResponse } from 'next'
 var Mock = require('mockjs');
-var Random = Mock.Random
 const env = process.env.NODE_ENV
 
 type Data = {
@@ -23,6 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
                 'id|+1': 1,
                 'description': '@cparagraph(2)',
                 'title': '@cparagraph(1)',
+                'statu': '@character("01")'
             }]
         }) : await sql.get('music', ["*"], {
             where: {
