@@ -4,7 +4,7 @@
     "description": "A Responsive, Fast, i18n and Markdown Blog base on Next.js.",
     "main": "index.js",
     "scripts": {
-        "dev": "next",
+        "dev": "NODE_ENV=production && next",
         "build": "next build && next export",
         "start": "next start -p 4000"
     },

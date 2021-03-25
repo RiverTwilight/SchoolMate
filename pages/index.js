@@ -95,7 +95,7 @@ class HomePage extends React.Component {
         fetch(`/api/music/getMusicList`)
             .then((res) => res.json())
             .then((data) => {
-                this.setState({ data: data.data.list });
+                this.setState({ data: data.data });
             });
     }
     render() {
@@ -111,7 +111,7 @@ class HomePage extends React.Component {
                 locale={locale}
             >
                 <Grid container spacing={3}>
-                    {data.length &&
+                    {!!data.length &&
                         data.map((item, i) => (
                             <Grid xs={12} sm={6} item>
                                 <MusicItem key={i} {...item} />
@@ -119,7 +119,7 @@ class HomePage extends React.Component {
                         ))}
                 </Grid>
 
-                {data.length === 0 && (
+                {!!!data.length && (
                     <Typography
                         align="center"
                         variant="h5"
