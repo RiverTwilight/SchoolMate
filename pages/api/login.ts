@@ -11,7 +11,9 @@ type Data = {
  * 登录
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { name, tel } = req.query;
+    const { name, tel, token } = req.query;
+
+    var originToken = generateToken(name, tel);
 
     const data = await sql.get("user", ["*"], {
         where: {
@@ -19,6 +21,13 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             tel
         }
     })
+
+    if (data.token === "") {
+        
+        await sql.insert("user", {
+            token: originToken
+        })
+    }
 
     if (!!data.length) {
         res.status(200).json({
