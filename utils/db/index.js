@@ -1,14 +1,14 @@
 var mysql = require("mysql");
 
 // Load enviroment varible
-require('dotenv').config()
+// require('dotenv').config()
 
 var pool = mysql.createPool({
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,
-	password: process.env.PASS,
+	password: process.env.DB_PASS,
 	// socketPath: "/var/lib/mysql/mysql.sock",
-    database: "ygkapi",
+    database: "cflsgxmate",
     connectTimeout  : 60 * 60 * 1000,
     acquireTimeout  : 60 * 60 * 1000,
     timeout         : 60 * 60 * 1000,

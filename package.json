@@ -4,7 +4,7 @@
     "description": "A Responsive, Fast, i18n and Markdown Blog base on Next.js.",
     "main": "index.js",
     "scripts": {
-        "dev": "next",
+        "dev": "NODE_ENV=production && next",
         "build": "next build && next export",
         "start": "next start -p 4000"
     },
@@ -14,11 +14,11 @@
         "@material-ui/core": "^4.11.3",
         "@material-ui/icons": "^4.11.2",
         "@svgr/webpack": "^5.5.0",
-        "dotenv": "^8.2.0",
         "axios": "^0.21.1",
         "crypto-js": "^4.0.0",
         "glob": "^7.1.6",
         "md5": "^2.3.0",
+        "mockjs": "^1.1.0",
         "mysql": "^2.18.1",
         "next": "^10.0.0",
         "react": "^16.13.1",

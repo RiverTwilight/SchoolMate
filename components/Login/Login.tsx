@@ -23,6 +23,20 @@ import { Grade } from "../../data/school.json";
 import { setUserInfo } from "../../utils/userInfo";
 import MD5 from "md5";
 import Axios from 'axios';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
+
+const styles = createStyles((theme) => ({
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
+}))
 
 class Login extends React.Component<
     {
