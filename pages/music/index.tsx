@@ -115,7 +115,6 @@ const MusicItem = ({
 						)}
 					</IconButton>
 					<Button
-						edge="end"
 						aria-label="vote"
 						onClick={handleClick}
 						startIcon={<ThumbUpAltTwoToneIcon />}
