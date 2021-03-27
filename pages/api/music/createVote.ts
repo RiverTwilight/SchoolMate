@@ -2,34 +2,41 @@ import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
+	/**
+	 * 新的投票ID
+	 */
+	id?: unknown;
 	message: string;
 };
 
 /**
  * 创建投票
- * @param {string} id 投票ID
- * @param {string} userID 用户ID
- * @param {string} token 用户TOKEN
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	try {
-		const { title, deadline, description } = req.body;
-		console.log(JSON.parse(req.body));
+		const { title, deadline, description } = JSON.parse(req.body);
+
+		const { token } = req.cookies;
 
 		// TODO 验证是否为管理员
 
-		const add = await sql.insert("music", {
+		const add = await sql.insert("music_votes", {
 			title,
 			deadline,
+			description,
 		});
 
+		console.log(add);
+
 		res.status(200).json({
-			message: "投票已结束",
-		});
+			message: "创建成功",
+			id: add.insertId,
+        });
+        
 	} catch (err) {
-		res.status(201).json({
-			message: "操作失败",
+		res.status(301).json({
+			message: err,
 		});
 	}
 };

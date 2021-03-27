@@ -53,13 +53,9 @@ const CreateVote = ({ id, siteConfig, locale, title }) => {
 				parseFormData(["title", "deadline", "description"], formData)
 			),
 		})
-			.then(function (response) {
-				if (response.ok) {
-					console.log(response.json());
-				}
-			})
-			.then(function (data) {
-				console.log(data);
+			.then((res) => res.json())
+			.then((data) => {
+				
 			})
 			.catch(function (error) {
 				console.warn(error);
