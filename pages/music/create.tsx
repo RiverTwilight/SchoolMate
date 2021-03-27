@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import Paper from "@material-ui/core/Paper";
+import InputLabel from "@material-ui/core/InputLabel";
 
-export async function getServerSideProps(context) {
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		container: {
+			padding: theme.spacing(2),
+		},
+	})
+);
+
+export async function getStaticProps(context) {
 	const config = await import(`../../data/config.json`);
-
-	// const detail = await fetch(``)
 
 	return {
 		props: {
@@ -25,10 +33,25 @@ export async function getServerSideProps(context) {
 const CreateVote = ({ id, siteConfig, locale, title }) => {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		fetch("/music/createVote", {
+		//@ts-expect-error
+		const formData = new FormData(e.target);
+		const parseFormData = (
+			keys: string[],
+			formData: FormData
+		): {
+			[key: string]: unknown;
+		} => {
+			var res = {};
+			keys.forEach((key) => {
+				res[key] = formData.get(key) || "";
+			});
+			return res;
+		};
+		fetch("/api/music/createVote", {
 			method: "POST",
-			//@ts-expect-error
-			body: new FormData(e.target),
+			body: JSON.stringify(
+				parseFormData(["title", "deadline", "description"], formData)
+			),
 		})
 			.then(function (response) {
 				if (response.ok) {
@@ -42,6 +65,8 @@ const CreateVote = ({ id, siteConfig, locale, title }) => {
 				console.warn(error);
 			});
 	};
+	const today = new Date();
+	const classes = useStyles();
 	return (
 		<Layout
 			currentPage={{
@@ -51,21 +76,46 @@ const CreateVote = ({ id, siteConfig, locale, title }) => {
 			locale={locale}
 			config={siteConfig}
 		>
-			<form onSubmit={handleSubmit}>
-				<TextField
-					required
-					defaultValue="第一周起床铃投票"
-					type="text"
-					name="title"
-				></TextField>
-				<TextField type="text" name="describe"></TextField>
-				<TextField type="date" required name="deadline"></TextField>
+			<Paper
+				component={"form"}
+				className={classes.container}
+				//@ts-expect-error
+				onSubmit={handleSubmit}
+			>
+				<FormControl fullWidth>
+					<TextField
+						required
+						defaultValue="第一周起床铃投票"
+						type="text"
+						label="投票名称"
+						name="title"
+					></TextField>
+				</FormControl>
+				<FormControl fullWidth>
+					<TextField
+						type="text"
+						label="描述（可选）"
+						rows={3}
+						multiline
+						name="describe"
+					></TextField>
+				</FormControl>
+				<FormControl fullWidth>
+					<TextField
+						label="截止日期"
+						defaultValue={`${
+							today.getMonth() + 1
+						}-${today.getDate()}-${today.getFullYear()}`}
+						type="date"
+						name="deadline"
+					></TextField>
+				</FormControl>
 				<br />
 				<br />
 				<Button variant="contained" color="primary" type="submit">
 					确定
 				</Button>
-			</form>
+			</Paper>
 		</Layout>
 	);
 };
