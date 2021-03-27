@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default (props: any) => {
-	const { handleLogin, open, currentPage, loginInfo } = props;
+	const { handleLogin, open, currentPage, userData } = props;
 	const classes = useStyles();
 
 	return (
@@ -96,7 +96,7 @@ export default (props: any) => {
 						size="large"
 						onClick={handleLogin}
 					>
-						{loginInfo ? loginInfo.name : "登录"}
+						{!!userData ? userData.name : "登录"}
 					</Button>
 				</Toolbar>
 				<Divider />

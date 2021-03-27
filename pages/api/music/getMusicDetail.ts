@@ -1,19 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import sql from "../../../utils/db"
+import sql from "../../../utils/db";
 
-var Mock = require('mockjs');
-const env = process.env.NODE_ENV
+// var Mock = require("mockjs");
+// const env = process.env.NODE_ENV;
 
 type Data = {
-    title: string;
-    description: string;
-    /** 0.正在进行 1.已结束 */
-    statu: number;
-    musics: {
-        name: string;
-        playUrl: string;
-        id: number;
-    }[];
+	musicData?: {
+		title: string;
+		description: string;
+		/** 0.正在进行 1.已结束 */
+		statu: number;
+		musics: {
+			name: string;
+			playUrl: string;
+			id: number;
+		}[];
+    };
+    message: string
 };
 
 // const MOCK_DATA = {
@@ -35,23 +38,24 @@ type Data = {
 //     ],
 // };
 
-const MOCK_DATA = Mock.mock({
-    title: '@cparagraph(1)',
-    description: '@cparagraph(15)',
-    'musics|1-8': [{
-        'id|+1': 1,
-        playUrl: "url('http', 'nuysoft.com')",
-        'name': '@string(5)'
-    }]
-})
+// const MOCK_DATA = Mock.mock({
+//     title: '@cparagraph(1)',
+//     description: '@cparagraph(15)',
+//     'musics|1-8': [{
+//         'id|+1': 1,
+//         playUrl: "url('http', 'nuysoft.com')",
+//         'name': '@string(5)'
+//     }]
+// })
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const musicData = env === "development" ? MOCK_DATA : await sql.get("music", ["*"], {
-        where: {
-            key: "id",
-            value: "id",
-        },
-    });
-    console.log(musicData)
-    res.status(200).json(musicData);
+	const { id: musicId } = req.query;
+	const musicData = await sql.get("music_votes", ["*"], {
+        where: { key: "id", value: musicId },
+		limit: 1,
+	});
+	res.status(200).json({
+		musicData: musicData[0],
+		message: "Get successfully",
+	});
 };

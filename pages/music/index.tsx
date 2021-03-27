@@ -155,15 +155,15 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
 		title: "未命名",
-		musics: [],
+		musics: "{}",
 	});
 	const [currentAudio, setCurrentAudio] = useState(0);
 	const [onPlay, setOnPlay] = useState(false);
 	useEffect(() => {
-		const res = fetch(`/api/music/getMusicDetail`)
+		const res = fetch(`/api/music/getMusicDetail?id=${id}`)
 			.then((res) => res.json())
 			.then((data) => {
-				setDetail(data);
+				setDetail(data.musicData);
 			});
 	}, []);
 
@@ -187,6 +187,7 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	const handleVote = (songId) => {
 		// TODO vote
 	};
+	const musics = JSON.parse(detail.musics).list;
 	return (
 		<Layout
 			currentPage={{
@@ -196,29 +197,34 @@ const Music = ({ id, siteConfig, locale, title }) => {
 			locale={locale}
 			config={siteConfig}
 		>
-			<Typography variant="body1">{detail.description}</Typography>
-			<Chip
-				color="primary"
-				icon={<AlarmOnIcon />}
-				label="进行中 - 还有3天结束"
-			/>
-			<Chip icon={<AlarmOnIcon />} label="投票已结束" />
+			<Typography variant="body1">{detail.title}</Typography>
+			{detail.statu == 0 ? (
+				<Chip
+					color="primary"
+					icon={<AlarmOnIcon />}
+					label="进行中 - 还有3天结束"
+				/>
+			) : (
+				<Chip icon={<AlarmOnIcon />} label="投票已结束" />
+			)}
 			<br />
 			<br />
-			<List component={Paper} aria-label="music list">
-				{detail.musics.map((song, i) => (
-					<MusicItem
-						index={i}
-						id={id}
-						vote={song.vote}
-						currentIndex={currentAudio}
-						handlePlayIndexChange={setCurrentAudio}
-						playUrl={song.playUrl}
-						name={song.name}
-						key={song.name}
-					/>
-				))}
-			</List>
+			{!!musics && (
+				<List component={Paper} aria-label="music list">
+					{musics.map((song, i) => (
+						<MusicItem
+							index={i}
+							id={id}
+							vote={song.vote}
+							currentIndex={currentAudio}
+							handlePlayIndexChange={setCurrentAudio}
+							playUrl={song.playUrl}
+							name={song.name}
+							key={song.name}
+						/>
+					))}
+				</List>
+			)}
 		</Layout>
 	);
 };

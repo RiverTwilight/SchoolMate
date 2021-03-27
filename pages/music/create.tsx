@@ -50,13 +50,17 @@ const CreateVote = ({ id, siteConfig, locale, title }) => {
 		fetch("/api/music/createVote", {
 			method: "POST",
 			body: JSON.stringify(
-				parseFormData(["title", "deadline", "description"], formData)
+				Object.assign(
+					{ musics: "{}" },
+					parseFormData(
+						["title", "deadline", "description"],
+						formData
+					)
+				)
 			),
 		})
 			.then((res) => res.json())
-			.then((data) => {
-				
-			})
+			.then((data) => {})
 			.catch(function (error) {
 				console.warn(error);
 			});

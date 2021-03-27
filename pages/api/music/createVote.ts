@@ -15,7 +15,7 @@ type Data = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	try {
-		const { title, deadline, description } = JSON.parse(req.body);
+		const { musics, title, deadline, description } = JSON.parse(req.body);
 
 		const { token } = req.cookies;
 
@@ -24,10 +24,9 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		const add = await sql.insert("music_votes", {
 			title,
 			deadline,
+			musics,
 			description,
 		});
-
-		console.log(add);
 
 		res.status(200).json({
 			message: "创建成功",

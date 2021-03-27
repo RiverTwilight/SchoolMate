@@ -77,6 +77,7 @@ const del = (table, condition) => {
  * @param {{
  *     order?: string,
  *     where?: *
+ *     limit?: number
  *     sort?: 'DESC' | 'ASEC'
  * }} config 
  */
