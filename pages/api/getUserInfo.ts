@@ -10,8 +10,10 @@ type Data = {
  * 登录
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { token } = req.cookies;
-    
+    const { TOKEN: token } = req.cookies;
+	
+	console.log(token);
+
 	if (!!!token) {
 		res.status(205).json({
 			message: "A token is required",
@@ -21,18 +23,21 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     
 	const data = await sql.get("user", ["*"], {
 		where: {
-			token,
+			key: "token",
+			value: `'${token}'`
 		},
+		limit: 1
 	});
 
-	if (!!data.length) {
+	if (!!!data.length) {
 		res.status(200).json({
 			message: "用户不存在",
 		});
 	}
 
 	res.status(200).json({
-		user: data,
+		user: data[0],
 		message: "登录成功",
 	});
 };
+ 

@@ -47,4 +47,4 @@ const getUserInfo = (): (userInfoFromLocal | null) => {
 	return data;
 };
 
-export { getUserInfo, removeUserInfo, setUserInfo };
+export { getUserInfo, removeUserInfo, setUserInfo, setCookie, clearCookie };

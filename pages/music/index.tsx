@@ -191,13 +191,13 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	return (
 		<Layout
 			currentPage={{
-				text: title || `${detail.title} - 起床铃投票`,
+				text: title || `起床铃投票`,
 				path: "/music/" + id,
 			}}
 			locale={locale}
 			config={siteConfig}
 		>
-			<Typography variant="body1">{detail.title}</Typography>
+			<Typography variant="h5">{detail.title}</Typography>
 			{detail.statu == 0 ? (
 				<Chip
 					color="primary"

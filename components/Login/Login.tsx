@@ -20,269 +20,266 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import CallIcon from "@material-ui/icons/Call";
 import { Grade } from "../../data/school.json";
-import { setUserInfo } from "../../utils/userInfo";
+import { setCookie, clearCookie } from "../../utils/userInfo";
 import MD5 from "md5";
-import Axios from 'axios';
-import { createStyles, withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { green } from '@material-ui/core/colors';
+import Axios from "axios";
+import { createStyles, withStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { green } from "@material-ui/core/colors";
 
 const styles = createStyles((theme) => ({
-    buttonProgress: {
-        color: green[500],
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginTop: -12,
-        marginLeft: -12,
-    },
-}))
+	buttonProgress: {
+		color: green[500],
+		position: "absolute",
+		top: "50%",
+		left: "50%",
+		marginTop: -12,
+		marginLeft: -12,
+	},
+}));
 
 class Login extends React.Component<
-    {
-        cbUrl: string
-    },
-    {
-        username: string;
-        password: string;
-        remember: boolean;
-        xcode: string;
-        showPassword: boolean;
-        classNum: unknown;
-        grade: number;
-        tel: number | string;
-    }
-    > {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            username: "",
-            password: /*'123456',*/ "",
-            grade: 2019,
-            classNum: 8,
-            remember: false,
-            tel: "",
-            xcode: "",
-            showPassword: false,
-        };
-    }
-    login() {
-        const { username, grade, classNum, tel, password, remember } = this.state
-        const { cbUrl } = this.props
-        Axios({
-            method: "post",
-            url: "/api/login",
-            withCredentials: false,
-            data: {
-                username,
-                classNum,
-                grade,
-                tel,
-                password
-            },
-        })
-            .then((response) => {
+	{
+		cbUrl: string;
+	},
+	{
+		name: string;
+		password: string;
+		remember: boolean;
+		xcode: string;
+		showPassword: boolean;
+		classNum: unknown;
+		grade: number;
+		tel: number | string;
+	}
+> {
+	constructor(props: any) {
+		super(props);
+		this.state = {
+			name: "",
+			password: /*'123456',*/ "",
+			grade: 2019,
+			classNum: 8,
+			remember: false,
+			tel: "",
+			xcode: "",
+			showPassword: false,
+		};
+	}
+	login() {
+		const { name, grade, classNum, tel, password, remember } = this.state;
+		const { cbUrl } = this.props;
+		Axios({
+			method: "post",
+			url: "/api/login",
+			withCredentials: false,
+			data: {
+				name,
+				classNum,
+				grade,
+				tel,
+				password,
+			},
+		})
+			.then((response) => {
                 var json = JSON.parse(response.request.response);
-                switch (json.code) {
-                    case 201:
-                        window.snackbar({ message: "账号或密码错误" });
-                        break;
-                    case 200:
-                        var data = JSON.stringify(json.data);
-                        setUserInfo(json.token, data, remember);
-                        window.location.href = cbUrl;
-                        break;
-                }
-            })
-            .catch((e) => {
-                window.snackbar({ message: e });
-            })
-            .then(() => {
-                // window.loadHide();
-            });
-    }
-    handleClickShowPassword = () => {
-        this.setState({
-            showPassword: !this.state.showPassword,
-        });
-    };
-    handleGradeChange = (e) => {
-        this.setState({
-            grade: e.target.value
-        })
-    };
-    handleClassChange = (e: React.ChangeEvent<{
-        name?: string;
-        value: unknown;
-    }>) => {
-        this.setState({
-            classNum: e.target.value
-        })
-    };
+				switch (response.status) {
+					case 202:
+						window.snackbar({ message: "用户不存在，请联系网站管理员" });
+						break;
+					case 200:
+						setCookie("TOKEN", json.token, 10);
+						window.location.href = cbUrl;
+						break;
+				}
+			})
+			.catch((e) => {
+				window.snackbar({ message: e });
+			})
+			.then(() => {
+				// window.loadHide();
+			});
+	}
+	handleClickShowPassword = () => {
+		this.setState({
+			showPassword: !this.state.showPassword,
+		});
+	};
+	handleGradeChange = (e) => {
+		this.setState({
+			grade: e.target.value,
+		});
+	};
+	handleClassChange = (
+		e: React.ChangeEvent<{
+			name?: string;
+			value: unknown;
+		}>
+	) => {
+		this.setState({
+			classNum: e.target.value,
+		});
+	};
 
-    render() {
-        const {
-            password,
-            username,
-            grade,
-            classNum,
-            tel,
-            remember,
-            showPassword,
-        } = this.state;
-        return (
-            <>
-                <DialogContent>
-                    <FormControl>
-                        <InputLabel id="grade-label">
-                            年级
-						</InputLabel>
-                        <Select
-                            labelId="grade-label"
-                            id="grade"
-                            value={grade}
-                            onChange={this.handleGradeChange}
-                        >
-                            {Grade.map(({ value, text }) => (
-                                <MenuItem key={value} value={value}>
-                                    {text}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl>
-                        <InputLabel id="class-label">
-                            班级
-						</InputLabel>
-                        <Select
-                            labelId="class-label"
-                            id="class"
-                            value={classNum}
-                            onChange={this.handleClassChange}
-                        >
-                            {Array(
-                                Grade.filter((g) => g.value === grade)[0].class
-                            )
-                                .fill(0)
-                                .map((_, i) => (
-                                    <MenuItem key={i} value={i}>
-                                        {`${i}班`}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
-                    <br />
-                    <br />
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="username">姓名</InputLabel>
-                        <Input
-                            onChange={(e) => {
-                                this.setState({
-                                    username: e.target.value,
-                                });
-                            }}
-                            value={username}
-                            id="username"
-                            placeholder="你的真实姓名"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <AccountCircle />
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                    <br></br>
-                    <br></br>
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="username">电话</InputLabel>
-                        <Input
-                            onChange={(e) => {
-                                this.setState({
-                                    tel: e.target.value,
-                                });
-                            }}
-                            value={tel}
-                            id="tel"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <CallIcon />
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                    <br></br>
-                    <br></br>
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="password">密码</InputLabel>
-                        <Input
-                            onChange={(e) => {
-                                this.setState({
-                                    password: e.target.value,
-                                });
-                            }}
-                            placeholder="初始密码为123456"
-                            value={password}
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <VpnKeyIcon />
-                                </InputAdornment>
-                            }
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={this.handleClickShowPassword}
-                                    >
-                                        {showPassword ? (
-                                            <Visibility />
-                                        ) : (
-                                                <VisibilityOff />
-                                            )}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={remember}
-                                onChange={(e) => {
-                                    this.setState({
-                                        remember: e.target.checked,
-                                    });
-                                }}
-                                name="remember"
-                                color="primary"
-                            />
-                        }
-                        label="下次自动登录"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    {/* <Button
+	render() {
+		const {
+			password,
+			name,
+			grade,
+			classNum,
+			tel,
+			remember,
+			showPassword,
+		} = this.state;
+		return (
+			<>
+				<DialogContent>
+					<FormControl>
+						<InputLabel id="grade-label">年级</InputLabel>
+						<Select
+							labelId="grade-label"
+							id="grade"
+							value={grade}
+							onChange={this.handleGradeChange}
+						>
+							{Grade.map(({ value, text }) => (
+								<MenuItem key={value} value={value}>
+									{text}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl>
+						<InputLabel id="class-label">班级</InputLabel>
+						<Select
+							labelId="class-label"
+							id="class"
+							value={classNum}
+							onChange={this.handleClassChange}
+						>
+							{Array(
+								Grade.filter((g) => g.value === grade)[0].class
+							)
+								.fill(0)
+								.map((_, i) => (
+									<MenuItem key={i} value={i}>
+										{`${i}班`}
+									</MenuItem>
+								))}
+						</Select>
+					</FormControl>
+					<br />
+					<br />
+					<FormControl fullWidth>
+						<InputLabel htmlFor="name">姓名</InputLabel>
+						<Input
+							onChange={(e) => {
+								this.setState({
+									name: e.target.value,
+								});
+							}}
+							value={name}
+							id="name"
+							placeholder="你的真实姓名"
+							startAdornment={
+								<InputAdornment position="start">
+									<AccountCircle />
+								</InputAdornment>
+							}
+						/>
+					</FormControl>
+					<br></br>
+					<br></br>
+					<FormControl fullWidth>
+						<InputLabel htmlFor="tel">电话</InputLabel>
+						<Input
+							onChange={(e) => {
+								this.setState({
+									tel: e.target.value,
+								});
+							}}
+							value={tel}
+							id="tel"
+							startAdornment={
+								<InputAdornment position="start">
+									<CallIcon />
+								</InputAdornment>
+							}
+						/>
+					</FormControl>
+					<br></br>
+					<br></br>
+					<FormControl fullWidth>
+						<InputLabel htmlFor="password">密码</InputLabel>
+						<Input
+							onChange={(e) => {
+								this.setState({
+									password: e.target.value,
+								});
+							}}
+							placeholder="初始密码为123456"
+							value={password}
+							id="password"
+							type={showPassword ? "text" : "password"}
+							startAdornment={
+								<InputAdornment position="start">
+									<VpnKeyIcon />
+								</InputAdornment>
+							}
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton
+										aria-label="toggle password visibility"
+										onClick={this.handleClickShowPassword}
+									>
+										{showPassword ? (
+											<Visibility />
+										) : (
+											<VisibilityOff />
+										)}
+									</IconButton>
+								</InputAdornment>
+							}
+						/>
+					</FormControl>
+					<FormControlLabel
+						control={
+							<Checkbox
+								checked={remember}
+								onChange={(e) => {
+									this.setState({
+										remember: e.target.checked,
+									});
+								}}
+								name="remember"
+								color="primary"
+							/>
+						}
+						label="下次自动登录"
+					/>
+				</DialogContent>
+				<DialogActions>
+					{/* <Button
                         onClick={() => {
                             window.open("/user/forget");
                         }}
                     >
                         忘记密码
 					</Button> */}
-                    <Button onClick={this.login.bind(this)}>登录</Button>
-                </DialogActions>
-            </>
-        );
-    }
+					<Button onClick={this.login.bind(this)}>登录</Button>
+				</DialogActions>
+			</>
+		);
+	}
 }
 
 const LoginDialog = (props: any) => {
-    return (
-        <Dialog {...props}>
-            <DialogTitle id="simple-dialog-title">登录</DialogTitle>
-            <Login cbUrl={props.cbUrl} />
-        </Dialog>
-    );
+	return (
+		<Dialog {...props}>
+			<DialogTitle id="simple-dialog-title">登录</DialogTitle>
+			<Login cbUrl={props.cbUrl} />
+		</Dialog>
+	);
 };
 
 export default LoginDialog;

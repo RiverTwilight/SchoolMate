@@ -146,7 +146,7 @@ class Layout extends React.Component<
 					<title>{showTitle}</title>
 				</Head>
 				<Header
-					user={userData}
+					userData={userData}
 					handleLogin={this.handleLogin}
 					lang={locale}
 					{...this.props}

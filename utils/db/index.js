@@ -28,7 +28,7 @@ const update = (table, data, condition) => {
 	var insertSql = Object.keys(data)
 		.map((key) => `${key} = '${data[key]}'`)
 		.join(" ");
-	var sql = `UPDATE ${table} SET ${insertSql} WHERE ${condition.key} = '${condition.value}' `;
+	var sql = `UPDATE ${table} SET ${insertSql} WHERE (${condition.key}) = (${condition.value}) `;
 	console.log(sql);
 	return new Promise((resolve, reject) => {
 		query(sql, (err, rows) => {
@@ -58,7 +58,7 @@ const insert = (table, data) => {
 };
 
 const del = (table, condition) => {
-	var sql = `DELETE FROM ${table} WHERE ${condition.where.key} = '${condition.where.value}' `;
+	var sql = `DELETE FROM ${table} WHERE (${condition.where.key}) = (${condition.where.value}) `;
 	console.log(sql);
 	return new Promise((resolve, reject) => {
 		query(sql, (err, rows) => {
@@ -96,7 +96,7 @@ const get = (table, keys, config) => {
 		configSql += {
 			order: `ORDER BY ${config[key]} ${config.sort} `,
 			limit: `LIMIT ${config[key]} `,
-			where: `WHERE ${config.where.key} = '${config.where.value}'`
+			where: `WHERE (${config.where.key}) = (${config.where.value}) `
 		}[key] || ""
 	});
 	var sql = `SELECT ${getSql} FROM ${table} ${configSql}`;
