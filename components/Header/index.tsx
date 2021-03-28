@@ -18,6 +18,7 @@ import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import { useRouter } from "next/router";
 
 function ElevationScroll(props: Props) {
 	const { children } = props;
@@ -63,6 +64,15 @@ const useStyles = makeStyles((theme: Theme) =>
 export default (props: any) => {
 	const { handleLogin, open, currentPage, userData } = props;
 	const classes = useStyles();
+	const router = useRouter();
+
+	const handleClickUser = () => {
+		if (!!userData) {
+			router.push("/user");
+		} else {
+			handleLogin && handleLogin();
+		}
+	};
 
 	return (
 		<ElevationScroll {...props}>
@@ -94,7 +104,7 @@ export default (props: any) => {
 						aria-haspopup="true"
 						startIcon={<AccountCircle />}
 						size="large"
-						onClick={handleLogin}
+						onClick={handleClickUser}
 					>
 						{!!userData ? userData.name : "登录"}
 					</Button>

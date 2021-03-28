@@ -19,9 +19,6 @@ import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTw
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
-import { getUserInfo } from "../../utils/userInfo";
-
-const isAdmin: boolean = true || getUserInfo().admin;
 
 const useStyles = makeStyles({
 	audio: {
@@ -150,7 +147,22 @@ const MusicItem = ({
  * 投票详情
  */
 
-const Music = ({ id, siteConfig, locale, title }) => {
+const Page = ({ id, siteConfig, locale, title }) => {
+	return (
+		<Layout
+			currentPage={{
+				text: title || `起床铃投票`,
+				path: "/music/" + id,
+			}}
+			locale={locale}
+			config={siteConfig}
+		>
+			<Music id={id} />
+		</Layout>
+	);
+};
+
+const Music = ({ userData, id }: { id: number }) => {
 	const audioDom = useRef<HTMLAudioElement>(null);
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
@@ -159,6 +171,7 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	});
 	const [currentAudio, setCurrentAudio] = useState(0);
 	const [onPlay, setOnPlay] = useState(false);
+
 	useEffect(() => {
 		const res = fetch(`/api/music/getMusicDetail?id=${id}`)
 			.then((res) => res.json())
@@ -189,14 +202,7 @@ const Music = ({ id, siteConfig, locale, title }) => {
 	};
 	const musics = JSON.parse(detail.musics).list;
 	return (
-		<Layout
-			currentPage={{
-				text: title || `起床铃投票`,
-				path: "/music/" + id,
-			}}
-			locale={locale}
-			config={siteConfig}
-		>
+		<>
 			<Typography variant="h5">{detail.title}</Typography>
 			{detail.statu == 0 ? (
 				<Chip
@@ -225,8 +231,8 @@ const Music = ({ id, siteConfig, locale, title }) => {
 					))}
 				</List>
 			)}
-		</Layout>
+		</>
 	);
 };
 
-export default Music;
+export default Page;

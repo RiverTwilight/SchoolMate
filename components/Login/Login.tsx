@@ -19,12 +19,12 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import CallIcon from "@material-ui/icons/Call";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { createStyles, withStyles } from "@material-ui/core/styles";
 import { Grade } from "../../data/school.json";
-import { setCookie, clearCookie } from "../../utils/userInfo";
+import { setCookie, clearCookie } from "../../utils/cookies";
 import MD5 from "md5";
 import Axios from "axios";
-import { createStyles, withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { green } from "@material-ui/core/colors";
 
 const styles = createStyles((theme) => ({

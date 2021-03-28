@@ -21,16 +21,12 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 
-export async function getServerSideProps(context) {
-	const { id } = context.query;
+export async function getStaticProps(context) {
 	const config = await import(`../../data/config.json`);
-
-	// const detail = await fetch(``)
 
 	return {
 		props: {
 			siteConfig: config.default,
-			id,
 		},
 	};
 }

@@ -1,6 +1,3 @@
-import { AES, enc } from "crypto-js";
-const SECRET = "35284";
-
 //设置cookie
 function setCookie(cname: any, cvalue: any, exdays: any) {
 	var d = new Date();
@@ -31,20 +28,4 @@ const removeUserInfo = () => {
 	sessionStorage.userInfo && sessionStorage.removeItem("userInfo");
 };
 
-const setUserInfo = (token: string, data: any, remember: any) => {
-	const encryptedData = AES.encrypt(data, SECRET);
-	setCookie("TOKEN", token, 30);
-	sessionStorage.setItem("userInfo", String(encryptedData));
-};
-
-const getUserInfo = (): (userInfoFromLocal | null) => {
-	const dataStr = sessionStorage.userInfo || getCookie("userInfo");
-	if (!dataStr) return null;
-	const data: userInfoFromLocal = JSON.parse(
-		enc.Utf8.stringify(AES.decrypt(dataStr, SECRET))
-	);
-
-	return data;
-};
-
-export { getUserInfo, removeUserInfo, setUserInfo, setCookie, clearCookie };
+export { setCookie, clearCookie, getCookie };

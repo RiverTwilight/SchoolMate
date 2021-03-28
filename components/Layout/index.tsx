@@ -56,7 +56,6 @@ const styles = (theme: Theme) => {
 	});
 };
 
-// TODO RSS
 class Layout extends React.Component<
 	{
 		/**网站配置 */
@@ -110,7 +109,7 @@ class Layout extends React.Component<
 			this.props.children,
 			(child) => {
 				// checking isValidElement is the safe way and avoids a typescript error too
-				const props = { locale };
+				const props = { locale, userData };
 				if (React.isValidElement(child)) {
 					return React.cloneElement(child, props);
 				}
