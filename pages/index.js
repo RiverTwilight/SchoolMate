@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import Text from "../utils/i18n";
@@ -83,43 +83,36 @@ const MusicItem = ({ title, description, id, statu }) => {
     );
 };
 
-class HomePage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            channel: "all",
-            data: [],
-        };
-    }
-    async componentDidMount() {
-        fetch(`/api/music/getMusicList`)
-            .then((res) => res.json())
-            .then((data) => {
-                this.setState({ data: data.data });
-            });
-    }
-    render() {
-        const { siteConfig, locale } = this.props;
-        const { data } = this.state;
-        return (
-            <Layout
-                currentPage={{
-                    text: "成高生活圈",
-                    path: "/",
-                }}
-                config={siteConfig}
-                locale={locale}
-            >
-                <Grid container spacing={3}>
-                    {!!data.length &&
-                        data.map((item, i) => (
-                            <Grid xs={12} sm={6} item>
-                                <MusicItem key={i} {...item} />
-                            </Grid>
-                        ))}
-                </Grid>
+const HomePage = ({ userData }) => {
 
-                {!!!data.length && (
+    const [data, setData] = useState([]);
+    console.log(data)
+
+    //See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
+    useEffect(() => {
+        (async () => {
+            const res = await fetcher(`/api/music/getMusicList`)
+            setData(res.data)
+        })()
+    }, [])
+
+    return (
+        <>
+            {userData && !!userData.isAdmin && (
+                <Link href="/music/create">
+                    <Button color="primary" variant="contained">创建投票</Button>
+                </Link>
+            )}
+            <Grid container spacing={3}>
+                {!!data.length &&
+                    data.map((item, i) => (
+                        <Grid xs={12} sm={6} item>
+                            <MusicItem key={i} {...item} />
+                        </Grid>
+                    ))}
+            </Grid>
+            {
+                !!!data.length && (
                     <Typography
                         align="center"
                         variant="h5"
@@ -127,10 +120,21 @@ class HomePage extends React.Component {
                     >
                         暂时没有投票
                     </Typography>
-                )}
-            </Layout>
-        );
-    }
+                )
+            }
+        </>
+    );
 }
 
-export default HomePage;
+const Page = ({ siteConfig, locale }) => (
+    <Layout
+        currentPage={{
+            text: "成高生活圈",
+            path: "/",
+        }}
+        config={siteConfig}
+        locale={locale}
+    ><HomePage /></Layout>
+
+)
+export default Page;

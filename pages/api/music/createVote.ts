@@ -5,8 +5,8 @@ type Data = {
 	/**
 	 * 新的投票ID
 	 */
-	id?: unknown;
-	message: string;
+    id?: unknown;
+    message: string;
 };
 
 /**
@@ -14,28 +14,41 @@ type Data = {
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	try {
-		const { musics, title, deadline, description } = JSON.parse(req.body);
+    try {
+        const { musics, title, deadline, description } = JSON.parse(req.body);
 
-		const { token } = req.cookies;
+        const { TOKEN: token } = req.cookies;
 
-		// TODO 验证是否为管理员
+        const identify = await sql.get("user", ["isAdmin"], {
+            where: {
+                key: "token",
+                value: `"${token}"`
+            }
+        })
 
-		const add = await sql.insert("music_votes", {
-			title,
-			deadline,
-			musics,
-			description,
-		});
+        if (!!!identify.length) {
+            res.status(205).json({
+                message: "需要管理员权限"
+            });
+        }
 
-		res.status(200).json({
-			message: "创建成功",
-			id: add.insertId,
+        const add = await sql.insert("music_votes", {
+            title,
+            deadline,
+            musics,
+            description,
         });
-        
-	} catch (err) {
-		res.status(301).json({
-			message: err,
-		});
-	}
+
+        console.log(add)
+
+        res.status(200).json({
+            message: "创建成功",
+            id: add.insertId,
+        });
+
+    } catch (err) {
+        res.status(301).json({
+            message: err,
+        });
+    }
 };

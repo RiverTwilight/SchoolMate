@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,6 +32,7 @@ export async function getStaticProps(context) {
  */
 
 const CreateVote = ({ userData }) => {
+    const router = useRouter()
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //@ts-expect-error
@@ -59,8 +61,25 @@ const CreateVote = ({ userData }) => {
                 )
             ),
         })
-            .then((res) => res.json())
-            .then((data) => { })
+            .then((res) => {
+                switch (res.status) {
+                    case 301:
+                        window.snackbar({
+                            message: "服务器错误"
+                        });
+                        break;
+                    case 205:
+                         window.snackbar({
+                            message: res.json().message
+                        });
+                        break;
+                    case 200:
+                        return res.json()
+                }
+            })
+            .then((data) => {
+                router.push(`/music?id=${data.id}`)
+            })
             .catch(function (error) {
                 console.warn(error);
             });
@@ -89,7 +108,7 @@ const CreateVote = ({ userData }) => {
                     label="描述（可选）"
                     rows={3}
                     multiline
-                    name="describe"
+                    name="description"
                 ></TextField>
             </FormControl>
             <FormControl fullWidth>
