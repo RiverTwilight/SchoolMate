@@ -38,7 +38,6 @@ const User = ({ userData }) => {
         clearCookie("TOKEN");
         location.href = "/"
     }
-    console.log(userData)
     const classes = useStyles();
     return (
         <Card className={classes.root}>

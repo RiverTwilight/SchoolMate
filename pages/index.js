@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import Layout from "../components/Layout";
-import Link from "next/link";
 import Text from "../utils/i18n";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
