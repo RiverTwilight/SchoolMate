@@ -129,7 +129,7 @@ const HomePage = ({ userData }) => {
 const Page = ({ siteConfig, locale }) => (
     <Layout
         currentPage={{
-            text: "成高生活圈",
+            text: "首页",
             path: "/",
         }}
         config={siteConfig}
