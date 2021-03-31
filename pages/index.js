@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Link from "next/link";
 import Layout from "../components/Layout";
 import Link from "next/link";
 import Text from "../utils/i18n";
