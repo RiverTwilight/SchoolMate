@@ -70,6 +70,7 @@ const AddMusic = ({ userData }) => {
                         break;
                     case 205:
                         window.snackbar({
+                            //@ts-expect-error
                             message: res.json().message
                         });
                         break;
