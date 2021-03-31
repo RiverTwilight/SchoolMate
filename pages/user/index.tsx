@@ -1,51 +1,89 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import IconButton from "@material-ui/core/IconButton";
-import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
-import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { clearCookie } from "../../utils/cookies";
 
 export async function getStaticProps(context) {
-	const config = await import(`../../data/config.json`);
+    const config = await import(`../../data/config.json`);
 
-	return {
-		props: {
-			siteConfig: config.default,
-		},
-	};
+    return {
+        props: {
+            siteConfig: config.default,
+        },
+    };
 }
+
+const useStyles = makeStyles({
+    root: {
+        maxWidth: 345,
+    },
+    media: {
+        height: 140,
+    },
+});
+
 
 /**
  * 用户中心
  */
+const User = ({ userData }) => {
+    const handleQuit = () => {
+        clearCookie("TOKEN");
+        location.href = "/"
+    }
+    console.log(userData)
+    const classes = useStyles();
+    return (
+        <Card className={classes.root}>
+            <CardActionArea>
+                <CardMedia
+                    className={classes.media}
+                    image="/static/images/cards/contemplative-reptile.jpg"
+                    title="Contemplative Reptile"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {userData ? userData.name : "用户名"} - {""}
+                        <Typography gutterBottom variant="subtitle1" component="span">
+                            {userData ? `高${userData.grade}${['一', '二', '三', '四', '五', '六', '七', '八'][userData.class - 1]}班` : '高2019级八班'}
+                        </Typography>
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {userData ? userData.tel : "12345678910"}
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+            <CardActions>
+                <Button size="small" color="primary">
+                    修改密码
+        </Button>
+                <Button size="small" color="primary" onClick={handleQuit}>退出
+        </Button>
+            </CardActions>
+        </Card>
+    )
+}
 
-const User = ({ id, siteConfig, locale, title }) => {
-	return (
-		<Layout
-			currentPage={{
-				text: "用户中心",
-				path: "/user",
-			}}
-			locale={locale}
-			config={siteConfig}
-		></Layout>
-	);
+const Page = ({ id, siteConfig, locale, title }) => {
+    return (
+        <Layout
+            currentPage={{
+                text: "用户中心",
+                path: "/user",
+            }}
+            locale={locale}
+            config={siteConfig}
+        >
+            <User />
+        </Layout>
+    );
 };
 
-export default User;
+export default Page;

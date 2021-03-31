@@ -162,6 +162,7 @@ const Page = ({ id, siteConfig, locale, title }) => {
 	);
 };
 
+//@ts-expect-error
 const Music = ({ userData, id }: { id: number }) => {
 	const audioDom = useRef<HTMLAudioElement>(null);
 	const classes = useStyles();

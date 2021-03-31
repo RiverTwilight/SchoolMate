@@ -47,7 +47,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	});
 };
 
-const generateToken = (name: unknown, tel: unknown): string => {
-	//@ts-expect-error
-	return sha256(name + tel).toString();
+const generateToken = (name: string, tel: string): string => {
+	return sha256(name + tel) + "";
 };
