@@ -18,9 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const config = await import(`../../data/config.json`);
-    const { id } = context.query
+    console.log(context)
+    const { id } = context.query;
     return {
         props: {
             siteConfig: config.default,
@@ -30,7 +31,7 @@ export async function getStaticProps(context) {
 }
 
 /**
- * 创建投票
+ * 歌曲投稿
  */
 
 const AddMusic = ({ userData, id }) => {
@@ -40,7 +41,7 @@ const AddMusic = ({ userData, id }) => {
         //@ts-expect-error
         const formData = new FormData(e.target);
         //api /pages/api/uploadMusic
-        fetch("/api/music/AddMusic", {
+        fetch("/api/music/uploadMusic", {
             method: "POST",
             body: JSON.stringify(
                 Object.assign(
@@ -105,7 +106,7 @@ const AddMusic = ({ userData, id }) => {
     );
 };
 
-const Page = ({ id, siteConfig, locale, title }) => (
+const Page = ({ id, siteConfig, locale }) => (
     <Layout
         currentPage={{
             text: "歌曲投稿",

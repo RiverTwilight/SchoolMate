@@ -20,21 +20,29 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         const { TOKEN: token } = req.cookies;
 
         // TODO 判断重复投票
-        const identify = await sql.get("user", ["isAdmin"], {
+        const identify = await sql.get("music_votes", ["musics"], {
             where: {
-                key: "token",
-                value: `"${token}"`
+                key: "id",
+                value: `"${id}"`
             }
-        })
-
-        const add = await sql.insert("music_votes", {
-            title,
-            deadline,
-            musics,
-            description,
         });
 
-        console.log(add)
+        const originMusics = JSON.parse(identify[0]);
+
+        console.log(originMusics)
+
+        for(let i in originMusics){
+            console.log(i);
+        }
+
+        // const add = await sql.insert("music_votes", {
+        //     title,
+        //     deadline,
+        //     musics,
+        //     description,
+        // });
+
+        // console.log(add)
 
         res.status(200).json({
             message: "投稿成功",
