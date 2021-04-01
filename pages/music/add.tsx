@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
 import { useRouter } from 'next/router'
+import parseFormData from "../../utils/parseFormData"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,10 +20,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export async function getStaticProps(context) {
     const config = await import(`../../data/config.json`);
-
+    const { id } = context.query
     return {
         props: {
             siteConfig: config.default,
+            id
         },
     };
 }
@@ -31,31 +33,20 @@ export async function getStaticProps(context) {
  * 创建投票
  */
 
-const AddMusic = ({ userData }) => {
+const AddMusic = ({ userData, id }) => {
     const router = useRouter()
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //@ts-expect-error
         const formData = new FormData(e.target);
-        const parseFormData = (
-            keys: string[],
-            formData: FormData
-        ): {
-            [key: string]: unknown;
-        } => {
-            var res = {};
-            keys.forEach((key) => {
-                res[key] = formData.get(key) || "";
-            });
-            return res;
-        };
+        //api /pages/api/uploadMusic
         fetch("/api/music/AddMusic", {
             method: "POST",
             body: JSON.stringify(
                 Object.assign(
-                    { musics: "{}" },
+                    { id },
                     parseFormData(
-                        ["title", "deadline", "description"],
+                        ["musicUrl", "reason"],
                         formData
                     )
                 )
@@ -66,12 +57,6 @@ const AddMusic = ({ userData }) => {
                     case 301:
                         window.snackbar({
                             message: "服务器错误"
-                        });
-                        break;
-                    case 205:
-                        window.snackbar({
-                            //@ts-expect-error
-                            message: res.json().message
                         });
                         break;
                     case 200:
@@ -101,6 +86,14 @@ const AddMusic = ({ userData }) => {
                     rows={3}
                     multiline
                     name="description"
+                ></TextField>
+            </FormControl>
+            <FormControl fullWidth>
+                <TextField
+                    type="url"
+                    label="歌曲平台链接或文件直链"
+                    name="musicUrl"
+                    helperText="可通过分享-复制链接获得，目前仅支持QQ音乐"
                 ></TextField>
             </FormControl>
             <br />

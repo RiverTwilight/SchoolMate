@@ -1,8 +1,6 @@
 import * as React from "react";
 import Logo from "../../static/logo.svg";
-import LogoLarge from "../../static/logo&title-small.svg";
-import Text from "../../utils/i18n";
-import { nav } from "../../data/i18n.json";
+import Hidden from '@material-ui/core/Hidden';
 import ActiveLink from "../../utils/AcitiveLink";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -21,68 +19,68 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { useRouter } from "next/router";
 
 function ElevationScroll(props: Props) {
-	const { children } = props;
+    const { children } = props;
 
-	const trigger = useScrollTrigger({
-		disableHysteresis: true,
-		threshold: 0,
-	});
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 0,
+    });
 
-	return React.cloneElement(children, {
-		elevation: trigger ? 4 : 0,
-	});
+    return React.cloneElement(children, {
+        elevation: trigger ? 4 : 0,
+    });
 }
 
 interface Props {
-	children: React.ReactElement;
+    children: React.ReactElement;
 }
 
 const drawerWidth = 0;
 
 const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		title: {
-			flexGrow: 1,
-		},
-		appBar: {
-			[theme.breakpoints.up("sm")]: {
-				width: `calc(100% - ${drawerWidth}px)`,
-				marginLeft: drawerWidth,
-			},
-		},
-		menuButton: {
-			marginRight: theme.spacing(2),
-			[theme.breakpoints.up("sm")]: {
-				display: "none",
-			},
-		},
-		// necessary for content to be below app bar
-		toolbar: theme.mixins.toolbar,
-	})
+    createStyles({
+        title: {
+            flexGrow: 1,
+        },
+        appBar: {
+            [theme.breakpoints.up("sm")]: {
+                width: `calc(100% - ${drawerWidth}px)`,
+                marginLeft: drawerWidth,
+            },
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+            [theme.breakpoints.up("sm")]: {
+                display: "none",
+            },
+        },
+        // necessary for content to be below app bar
+        toolbar: theme.mixins.toolbar,
+    })
 );
 
 export default (props: any) => {
-	const { handleLogin, open, currentPage, userData } = props;
-	const classes = useStyles();
-	const router = useRouter();
+    const { handleLogin, open, currentPage, userData } = props;
+    const classes = useStyles();
+    const router = useRouter();
 
-	const handleClickUser = () => {
-		if (!!userData) {
-			router.push("/user");
-		} else {
-			handleLogin && handleLogin();
-		}
-	};
+    const handleClickUser = () => {
+        if (!!userData) {
+            router.push("/user");
+        } else {
+            handleLogin && handleLogin();
+        }
+    };
 
-	return (
-		<ElevationScroll {...props}>
-			<AppBar
-				position="fixed"
-				color="inherit"
-				className={clsx(classes.appBar)}
-			>
-				<Toolbar>
-					{/* <IconButton
+    return (
+        <ElevationScroll {...props}>
+            <AppBar
+                position="fixed"
+                color="inherit"
+                className={clsx(classes.appBar)}
+            >
+                <Toolbar>
+                    {/* <IconButton
 						color="primary"
 						aria-label="open drawer"
 						onClick={handleLeftDrawerOpen}
@@ -91,26 +89,34 @@ export default (props: any) => {
 					>
 						<MenuTwoToneIcon />
 					</IconButton> */}
-					<Typography
-						color="primary"
-						variant="h6"
-						className={classes.title}
-					>
-						{currentPage.text}
-					</Typography>
-					<Button
-						aria-label="account of current user"
-						aria-controls="primary-search-account-menu"
-						aria-haspopup="true"
-						startIcon={<AccountCircle />}
-						size="large"
-						onClick={handleClickUser}
-					>
-						{!!userData ? userData.name : "登录"}
-					</Button>
-				</Toolbar>
-				<Divider />
-			</AppBar>
-		</ElevationScroll>
-	);
+                    <Logo></Logo>
+                    <Typography
+                        color="primary"
+                        variant="h6"
+                        className={classes.title}
+                    >
+                        {currentPage.text}
+                        {/* {""}
+                        <Hidden xsDown>
+                            <ActiveLink activeClassName="" href="/">
+                                <Button size="large">投票</Button>
+                            </ActiveLink>
+                        </Hidden> */}
+
+                    </Typography>
+                    <Button
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        startIcon={<AccountCircle />}
+                        size="large"
+                        onClick={handleClickUser}
+                    >
+                        {!!userData ? userData.name : "登录"}
+                    </Button>
+                </Toolbar>
+                <Divider />
+            </AppBar>
+        </ElevationScroll>
+    );
 };
