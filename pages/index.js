@@ -11,33 +11,32 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: "inline-block",
-        margin: "0 2px",
-        transform: "scale(0.8)",
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
+	root: {
+		minWidth: 275,
+	},
+	bullet: {
+		display: "inline-block",
+		margin: "0 2px",
+		transform: "scale(0.8)",
+	},
+	title: {
+		fontSize: 14,
+	},
+	pos: {
+		marginBottom: 12,
+	},
 });
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export async function getServerSideProps({ locale, locales }) {
-    const config = await import(`../data/config.json`);
+export async function getServerSideProps() {
+	const config = await import(`../data/config.json`);
 
-    return {
-        props: {
-            siteConfig: config.default,
-            locale,
-        },
-    };
+	return {
+		props: {
+			siteConfig: config.default,
+		},
+	};
 }
 
 /**
@@ -47,94 +46,96 @@ export async function getServerSideProps({ locale, locales }) {
  * @param {number} id ID
  */
 const MusicItem = ({ title, description, id, statu }) => {
-    const classes = useStyles();
-    return (
-        <Card className={classes.root}>
-            <CardContent>
-                <Typography
-                    className={classes.title}
-                    color="textSecondary"
-                    gutterBottom
-                >
-                    由
+	const classes = useStyles();
+	return (
+		<Card className={classes.root}>
+			<CardContent>
+				<Typography
+					className={classes.title}
+					color="textSecondary"
+					gutterBottom
+				>
+					由
 					<Typography variant="inherit" color="primary">
-                        学生会
+						学生会
 					</Typography>
 					发起的
 				</Typography>
-                <Typography variant="h5" component="h2">
-                    {title}
-                </Typography>
-                <Typography variant="body2" component="p">
-                    {description}
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Link href={`/music?id=${id}`}>
-                    <Button disabled={statu != 0} variant="outlined" size="large">
-                        {{
-                            '0': '投票',
-                            '1': '已结束'
-                        }[statu]}
-                    </Button>
-                </Link>
-            </CardActions>
-        </Card>
-    );
+				<Typography variant="h5" component="h2">
+					{title}
+				</Typography>
+				<Typography variant="body2" component="p">
+					{description}
+				</Typography>
+			</CardContent>
+			<CardActions>
+				<Link href={`/music?id=${id}`}>
+					<Button
+						disabled={statu != 0}
+						variant="outlined"
+						size="large"
+					>
+						{
+							{
+								0: "投票",
+								1: "已结束",
+							}[statu]
+						}
+					</Button>
+				</Link>
+			</CardActions>
+		</Card>
+	);
 };
 
 const HomePage = ({ userData }) => {
+	const [data, setData] = useState([]);
+	console.log(data);
 
-    const [data, setData] = useState([]);
-    console.log(data)
+	//See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
+	useEffect(() => {
+		(async () => {
+			const res = await fetcher(`/api/music/getMusicList`);
+			setData(res.data);
+		})();
+	}, []);
 
-    //See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
-    useEffect(() => {
-        (async () => {
-            const res = await fetcher(`/api/music/getMusicList`)
-            setData(res.data)
-        })()
-    }, [])
-
-    return (
-        <>
-            {userData && !!userData.isAdmin && (
-                <Link href="/music/create">
-                    <Button color="primary" variant="contained">创建投票</Button>
-                </Link>
-            )}
-            <Grid container spacing={3}>
-                {!!data.length &&
-                    data.map((item, i) => (
-                        <Grid xs={12} sm={6} item>
-                            <MusicItem key={i} {...item} />
-                        </Grid>
-                    ))}
-            </Grid>
-            {
-                !!!data.length && (
-                    <Typography
-                        align="center"
-                        variant="h5"
-                        color="textSecondary"
-                    >
-                        暂时没有投票
-                    </Typography>
-                )
-            }
-        </>
-    );
-}
+	return (
+		<>
+			{userData && !!userData.isAdmin && (
+				<Link href="/music/create">
+					<Button color="primary" variant="contained">
+						创建投票
+					</Button>
+				</Link>
+			)}
+			<Grid container spacing={3}>
+				{!!data.length &&
+					data.map((item, i) => (
+						<Grid xs={12} sm={6} item>
+							<MusicItem key={i} {...item} />
+						</Grid>
+					))}
+			</Grid>
+			{!!!data.length && (
+				<Typography align="center" variant="h5" color="textSecondary">
+					暂时没有投票
+				</Typography>
+			)}
+		</>
+	);
+};
 
 const Page = ({ siteConfig, locale }) => (
-    <Layout
-        currentPage={{
-            text: "首页",
-            path: "/",
-        }}
-        config={siteConfig}
-        locale={locale}
-    ><HomePage /></Layout>
-
-)
+	<Layout
+		currentPage={{
+			text: "首页",
+			path: "/",
+		}}
+		config={siteConfig}
+		locale={locale}
+	>
+		<HomePage />
+	</Layout>
+);
 export default Page;

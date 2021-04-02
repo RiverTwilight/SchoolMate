@@ -23,9 +23,5 @@ module.exports = {
         // your project has type errors.
         // !! WARN !!
         ignoreBuildErrors: true,
-    },
-    i18n: {
-        locales: ["en-US", "zh-CN"],
-        defaultLocale: "zh-CN",
-    },
+    }
 }
