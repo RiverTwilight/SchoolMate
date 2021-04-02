@@ -243,7 +243,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                     ))}
                 </List>
             )}
-            <Link href={`/music/add?id=${id}`}>
+            <Link href={`/music/add?id=${id}&title=${detail.title}`}>
                 <Fab className={classes.addBtn} color="primary" aria-label="add">
                     <AddIcon />
                 </Fab>

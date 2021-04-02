@@ -1,5 +1,6 @@
 import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
+import url2id from "../../../utils/url2id"
 
 type Data = {
 	/**
@@ -20,7 +21,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const { TOKEN: token } = req.cookies;
 
-        // TODO 判断重复投票
         // TODO parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
         const identify = await sql.get("music_votes", ["musics"], {
             where: {
@@ -31,18 +31,31 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const originMusics = JSON.parse(identify[0].musics);
 
-        console.log(originMusics);
-
-
-        for (let i of originMusics.list) {
-            console.log(i);
-            if(i.title){
-                
+        
+        for (let i of originMusics) {
+            if (i.voterToken === token) {
+                res.status(204).json({
+                    message: "重复投稿",
+                    id
+                });
+                break;
             }
         }
+        
+        const musicId = url2id(musicUrl);
+
+        if (!musicId) {
+            res.status(205).json({
+                message: "链接不合法",
+                id
+            });
+        }
+
+        const playUrl = `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`;
 
         const newMusic = {
             musicUrl,
+            playUrl,
             reason,
             artist,
             title,

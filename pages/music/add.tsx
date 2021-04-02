@@ -21,11 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export async function getServerSideProps(context) {
     const config = await import(`../../data/config.json`);
     console.log(context)
-    const { id } = context.query;
+    const { id, title } = context.query;
     return {
         props: {
             siteConfig: config.default,
-            id
+            id,
+            title
         },
     };
 }
@@ -34,7 +35,7 @@ export async function getServerSideProps(context) {
  * 歌曲投稿
  */
 
-const AddMusic = ({ userData, id }) => {
+const AddMusic = ({ userData, id, title }) => {
     const router = useRouter()
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -80,6 +81,7 @@ const AddMusic = ({ userData, id }) => {
             //@ts-expect-error
             onSubmit={handleSubmit}
         >
+            {title}
             <FormControl fullWidth>
                 <TextField
                     type="text"
@@ -108,7 +110,7 @@ const AddMusic = ({ userData, id }) => {
                     type="url"
                     label="歌曲平台链接或文件直链"
                     name="musicUrl"
-                    helperText="可通过分享-复制链接获得，目前仅支持QQ音乐"
+                    helperText="可通过分享-复制链接获得，目前仅支持网易云音乐"
                 ></TextField>
             </FormControl>
             <br />
@@ -120,16 +122,16 @@ const AddMusic = ({ userData, id }) => {
     );
 };
 
-const Page = ({ id, siteConfig, locale }) => (
+const Page = (props) => (
     <Layout
         currentPage={{
             text: "歌曲投稿",
             path: "/music/add",
         }}
-        locale={locale}
-        config={siteConfig}
+        locale={props.locale}
+        config={props.siteConfig}
     >
-        <AddMusic id={id} />
+        <AddMusic {...props} />
     </Layout>
 )
 
