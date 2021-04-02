@@ -47,7 +47,7 @@ const AddMusic = ({ userData, id }) => {
                 Object.assign(
                     { id },
                     parseFormData(
-                        ["musicUrl", "reason"],
+                        ["musicUrl", "reason", "title", "artist"],
                         formData
                     )
                 )
@@ -65,7 +65,7 @@ const AddMusic = ({ userData, id }) => {
                 }
             })
             .then((data) => {
-                router.push(`/music?id=${data.id}`)
+                // router.push(`/music?id=${data.id}`)
             })
             .catch(function (error) {
                 console.warn(error);
@@ -87,6 +87,20 @@ const AddMusic = ({ userData, id }) => {
                     rows={3}
                     multiline
                     name="description"
+                ></TextField>
+            </FormControl>
+            <FormControl fullWidth>
+                <TextField
+                    type="text"
+                    label="歌曲名称"
+                    name="title"
+                ></TextField>
+            </FormControl>
+            <FormControl fullWidth>
+                <TextField
+                    type="text"
+                    label="歌手"
+                    name="artist"
                 ></TextField>
             </FormControl>
             <FormControl fullWidth>
@@ -115,7 +129,7 @@ const Page = ({ id, siteConfig, locale }) => (
         locale={locale}
         config={siteConfig}
     >
-        <AddMusic />
+        <AddMusic id={id} />
     </Layout>
 )
 

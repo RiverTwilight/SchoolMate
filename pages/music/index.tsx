@@ -47,17 +47,19 @@ export async function getServerSideProps(context: { query: { id: any } }) {
 }
 
 const MusicItem = ({
-    name,
+    title,
     index,
     id,
     currentIndex,
     playUrl,
     vote,
+    isAdmin,
     handlePlayIndexChange,
 }: {
-    name: string;
+    title: string;
     vote: number;
     playUrl: string;
+    isAdmin: boolean;
     index: number;
     id: number;
     currentIndex: number;
@@ -106,7 +108,7 @@ const MusicItem = ({
     return (
         <>
             <ListItem button>
-                <ListItemText primary={name} />
+                <ListItemText primary={title} />
                 <ListItemSecondaryAction>
                     <IconButton
                         edge="end"
@@ -171,7 +173,7 @@ const Page = ({ id, siteConfig, locale, title }) => {
 };
 
 //@ts-expect-error
-const Music = ({ userData, id }: { id: number }) => {
+const Music = ({ userData = {}, id }: { id: number }) => {
     const audioDom = useRef<HTMLAudioElement>(null);
     const classes = useStyles();
     const [detail, setDetail] = useState({
@@ -209,7 +211,7 @@ const Music = ({ userData, id }: { id: number }) => {
     const handleVote = (songId) => {
         // TODO vote
     };
-    const musics = JSON.parse(detail.musics).list;
+    const musics = JSON.parse(detail.musics);
     return (
         <>
             <Typography variant="h5">{detail.title}</Typography>
@@ -224,23 +226,24 @@ const Music = ({ userData, id }: { id: number }) => {
                 )}
             <br />
             <br />
-            {!!musics && (
+            {!!musics.length && (
                 <List component={Paper} aria-label="music list">
                     {musics.map((song, i) => (
                         <MusicItem
+                            isAdmin={userData.isAdmin}
                             index={i}
                             id={id}
                             vote={song.vote}
                             currentIndex={currentAudio}
                             handlePlayIndexChange={setCurrentAudio}
                             playUrl={song.playUrl}
-                            name={song.name}
-                            key={song.name}
+                            title={song.title}
+                            key={song.title}
                         />
                     ))}
                 </List>
             )}
-            <Link href="/music/add">
+            <Link href={`/music/add?id=${id}`}>
                 <Fab className={classes.addBtn} color="primary" aria-label="add">
                     <AddIcon />
                 </Fab>

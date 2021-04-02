@@ -53,7 +53,7 @@ const CreateVote = ({ userData }) => {
             method: "POST",
             body: JSON.stringify(
                 Object.assign(
-                    { musics: "{}" },
+                    { musics: "[]" },
                     parseFormData(
                         ["title", "deadline", "description"],
                         formData
