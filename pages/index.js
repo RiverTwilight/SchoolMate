@@ -129,7 +129,7 @@ const HomePage = ({ userData }) => {
 						</Grid>
 					))}
 			</Grid>
-			{typeof data === "Array" && !!!data.length && (
+			{JSON.stringify(data) === "[]" && (
 				<Typography align="center" variant="h5" color="textSecondary">
 					暂时没有投票
 				</Typography>

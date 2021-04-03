@@ -242,7 +242,7 @@ class Login extends React.Component<
 							}
 						/>
 					</FormControl>
-					<FormControlLabel
+					{/* <FormControlLabel
 						control={
 							<Checkbox
 								checked={remember}
@@ -256,7 +256,7 @@ class Login extends React.Component<
 							/>
 						}
 						label="下次自动登录"
-					/>
+					/> */}
 				</DialogContent>
 				<DialogActions>
 					{/* <Button

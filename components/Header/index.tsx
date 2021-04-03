@@ -81,15 +81,17 @@ export default (props: any) => {
 				className={clsx(classes.appBar)}
 			>
 				<Toolbar>
-					<IconButton
-						color="primary"
-						aria-label="open drawer"
-						// onClick={handleLeftDrawerOpen}
-						edge="start"
-						className={classes.menuButton}
-					>
-						{/* <MenuTwoToneIcon /> */}
-					</IconButton>
+					<Hidden xsDown>
+						<IconButton
+							color="primary"
+							aria-label="open drawer"
+							// onClick={handleLeftDrawerOpen}
+							edge="start"
+							className={classes.menuButton}
+						>
+							{/* <MenuTwoToneIcon /> */}
+						</IconButton>
+					</Hidden>
 					<Hidden smUp>
 						<Logo></Logo>
 					</Hidden>

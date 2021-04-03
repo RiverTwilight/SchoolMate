@@ -35,9 +35,11 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		});
 	}
 
-	res.status(200).json({
+	return res.status(200).json({
 		user: data[0],
 		message: "登录成功",
 	});
+
+	console.log(222)
 };
  

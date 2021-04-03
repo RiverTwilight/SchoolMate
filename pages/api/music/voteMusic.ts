@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
     message: string;
-    currentVote?: number
+    currentMusics?: any
 }
 
 /**
@@ -15,33 +15,42 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         const { musicId, id } = req.query;
 
-        const originData: string = await sql.get('music', ['musics'], {
-            where: {
-                id: id
-            },
-            order: "AESC"
-        })
+        
+		const { TOKEN: token } = req.cookies;
 
-        const targetData: IMusics[] = JSON.parse(originData[0]);
+        // TODO 防止重复投票
+		const identify = await sql.get("music_votes", ["musics"], {
+			where: {
+				key: "id",
+				value: `"${id}"`,
+			},
+		});
+
+        const originMusics = JSON.parse(identify[0].musics);
+        
+        console.log(originMusics)
 
         var currentVote = 0;
 
-        const update = await sql.update('music', {
-            musics: JSON.stringify(targetData, (key, value) => {
-                if (value.id === musicId) {
-                    currentVote = value.vote + 1
-                    return currentVote
-                }
-            })
-        }, {
-            where: {
-                id,
+        for(var i in originMusics){
+            if(i == musicId){
+                console.log(originMusics[i].vote)
+                currentVote = originMusics[i].vote + 1;
+                originMusics[i].vote = currentVote;
+                break;
             }
+        }
+
+        const update = await sql.update('music_votes', {
+            musics: JSON.stringify(originMusics)
+        }, {
+            key: "id", 
+            value: `'${id}'`
         })
 
         res.status(200).json({
             message: "投票成功",
-            currentVote
+            currentMusics: originMusics
         });
     } catch (err) {
         res.status(201).json({

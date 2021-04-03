@@ -1,14 +1,14 @@
 import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import url2id from "../../../utils/url2id"
+import url2id from "../../../utils/url2id";
 
 type Data = {
 	/**
 	 * 新的投票ID
 	 */
-    id?: unknown;
-    message?: string;
-    newMusic?: any
+	id?: unknown;
+	message?: string;
+	newMusic?: any;
 };
 
 /**
@@ -16,73 +16,84 @@ type Data = {
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    try {
-        const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
+	try {
+		const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
 
-        const { TOKEN: token } = req.cookies;
+		const { TOKEN: token } = req.cookies;
 
-        // TODO parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
-        const identify = await sql.get("music_votes", ["musics"], {
-            where: {
-                key: "id",
-                value: `"${id}"`
-            }
-        });
+		// TODO parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
+		const identify = await sql.get("music_votes", ["musics"], {
+			where: {
+				key: "id",
+				value: `"${id}"`,
+			},
+		});
 
-        const originMusics = JSON.parse(identify[0].musics);
+		const originMusics = JSON.parse(identify[0].musics);
 
-        
-        for (let i of originMusics) {
-            if (i.voterToken === token) {
-                res.status(204).json({
-                    message: "重复投稿",
-                    id
-                });
-                break;
-            }
-        }
-        
-        const musicId = url2id(musicUrl);
-
-        if (!musicId) {
-            res.status(205).json({
-                message: "链接不合法",
-                id
+		if (originMusics.map((item) => item.voterToken).includes(token)) {
+			console.log("重复");
+			return res.status(204).json({
+				message: "重复投稿",
+				id,
             });
-        }
+		}
 
-        const playUrl = `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`;
+		// for (let i of originMusics) {
+		//     if (i.voterToken === token) {
+		//         console.log("重复")
+		//         res.status(204).json({
+		//             message: "重复投稿",
+		//             id
+		//         });
+		//         break;
+		//     }
+		// }
 
-        const newMusic = {
-            musicUrl,
-            playUrl,
-            reason,
-            artist,
-            title,
-            vote: 0,
-            voterToken: token
-        }
+		const musicId = url2id(musicUrl);
 
-        originMusics.push(newMusic)
+		if (!musicId) {
+			return res.status(204).json({
+				message: "链接不合法",
+				id,
+			});
+		}
 
-        const add = await sql.update("music_votes", {
-            musics: JSON.stringify(originMusics)
-        }, {
-            key: "id",
-            value: id
-        });
+		const playUrl = `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`;
 
-        console.log(add)
+		const newMusic = {
+			musicUrl,
+			playUrl,
+			reason,
+			artist,
+			title,
+			vote: 0,
+			voterToken: token,
+		};
 
-        res.status(200).json({
-            message: "投稿成功",
-            newMusic,
-            id
-        });
+		originMusics.push(newMusic);
 
-    } catch (err) {
-        res.status(301).json({
-            message: err,
-        });
-    }
+		const add = await sql.update(
+			"music_votes",
+			{
+				musics: JSON.stringify(originMusics),
+			},
+			{
+				key: "id",
+				value: id,
+			}
+		);
+
+		console.log(add);
+
+		res.status(200).json({
+			message: "投稿成功",
+			newMusic,
+			id,
+		});
+	} catch (err) {
+		res.status(301).json({
+			message: err,
+		});
+	}
 };
