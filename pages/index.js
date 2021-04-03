@@ -88,6 +88,7 @@ const MusicItem = ({ title, description, id, statu }) => {
 	);
 };
 
+// TODO 骨架屏占位
 const HomePage = ({ userData }) => {
 	const [data, setData] = useState([]);
 	console.log(data);
@@ -138,4 +139,5 @@ const Page = ({ siteConfig, locale }) => (
 		<HomePage />
 	</Layout>
 );
+
 export default Page;
