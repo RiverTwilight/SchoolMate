@@ -9,6 +9,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import Skeleton from "react-loading-skeleton";
 
 const useStyles = makeStyles({
 	root: {
@@ -24,6 +25,9 @@ const useStyles = makeStyles({
 	},
 	pos: {
 		marginBottom: 12,
+	},
+	actions: {
+		display: "flex",
 	},
 });
 
@@ -90,7 +94,9 @@ const MusicItem = ({ title, description, id, statu }) => {
 
 // TODO 骨架屏占位
 const HomePage = ({ userData }) => {
-	const [data, setData] = useState([]);
+	const [data, setData] = useState({
+		isLoading: true,
+	});
 	console.log(data);
 
 	//See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
@@ -100,16 +106,21 @@ const HomePage = ({ userData }) => {
 			setData(res.data);
 		})();
 	}, []);
+	
+	const classes = useStyles()
 
 	return (
 		<>
-			{userData && !!userData.isAdmin && (
-				<Link href="/music/create">
-					<Button color="primary" variant="contained">
-						创建投票
-					</Button>
-				</Link>
-			)}
+			<div className={classes.actions}>
+				{userData && !!userData.isAdmin && (
+					<Link href="/music/create">
+						<Button color="primary" variant="contained">
+							创建投票
+						</Button>
+					</Link>
+				)}
+			</div>
+
 			<Grid container spacing={3}>
 				{!!data.length &&
 					data.map((item, i) => (
@@ -118,10 +129,19 @@ const HomePage = ({ userData }) => {
 						</Grid>
 					))}
 			</Grid>
-			{!!!data.length && (
+			{typeof data === "Array" && !!!data.length && (
 				<Typography align="center" variant="h5" color="textSecondary">
 					暂时没有投票
 				</Typography>
+			)}
+			{!!data.isLoading && (
+				<Grid xs={12} sm={6} item>
+					{Array(4)
+						.fill(0)
+						.map(() => (
+							<Skeleton />
+						))}
+				</Grid>
 			)}
 		</>
 	);

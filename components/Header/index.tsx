@@ -102,7 +102,7 @@ export default (props: any) => {
 						variant="h6"
 						className={classes.title}
 					>
-						{currentPage.text}
+						&nbsp;{currentPage.text}
 						{/* {""}
                         <Hidden xsDown>
                             <ActiveLink activeClassName="" href="/">

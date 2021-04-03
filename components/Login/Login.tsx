@@ -23,7 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import { Grade } from "../../data/school.json";
 import { setCookie, clearCookie } from "../../utils/cookies";
-import MD5 from "md5";
+import sha256 from "crypto-js/sha256";
 import Axios from "axios";
 import { green } from "@material-ui/core/colors";
 
@@ -78,14 +78,14 @@ class Login extends React.Component<
 				classNum,
 				grade,
 				tel,
-				password,
+				password: sha256(password) + "",
 			},
 		})
 			.then((response) => {
                 var json = JSON.parse(response.request.response);
 				switch (response.status) {
 					case 202:
-						window.snackbar({ message: "用户不存在，请联系网站管理员" });
+						window.snackbar({ message: json.message });
 						break;
 					case 200:
 						setCookie("TOKEN", json.token, 10);
