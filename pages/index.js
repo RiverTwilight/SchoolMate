@@ -99,7 +99,7 @@ const HomePage = ({ userData }) => {
 	});
 	console.log(data);
 
-	//See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
+	// See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
 	useEffect(() => {
 		(async () => {
 			const res = await fetcher(`/api/music/getMusicList`);

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    <img width="180" src="https://i.loli.net/2021/03/13/3NBGFWbsQ2TRz5I.png">
+    <img width="180" src="https://cflsgx-mate.vercel.app/static/logo.svg">
   </a>
 </p>
 
@@ -17,6 +17,10 @@
 ## 贡献
 
 欢迎你提交代码。
+
+```
+npm run dev
+```
 
 ### 数据库结构
 
