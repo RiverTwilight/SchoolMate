@@ -52,9 +52,9 @@ npm run dev
 
 * id
 * grade 年级
-* classNum 班级
+* class 班级
 * name 名字
-* tel 电话
+* tel 考号
 * token 用户令牌，首次登陆后激活
 
 ## LICENSE

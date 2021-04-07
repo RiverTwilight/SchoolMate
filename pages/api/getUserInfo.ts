@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	});
 
 	if (!!!data.length) {
-		res.status(200).json({
+		return res.status(200).json({
 			message: "用户不存在",
 		});
 	}

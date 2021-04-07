@@ -13,23 +13,25 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { name, tel, token, password, grade, classNum } = req.body;
 
-	var originToken = generateToken(name, tel);
+	var originToken = generateToken(name, classNum, grade);
 
 	const condition = {
-		key: "name, tel, class, grade",
-		value: `'${name}', '${tel}', '${classNum}', '${grade}'`,
+		key: "name, class, grade",
+		value: `'${name}', '${classNum}', '${grade}'`,
 	};
 
 	const data = await sql.get("user", ["*"], {
-		where: condition,
-		limit: 1,
+		where: condition
 	});
 
+
+
 	if (!!!data.length) {
-		res.status(202).json({
+		return res.status(202).json({
 			message: "用户不存在",
 		});
-		return;
+    }else if(data.length >= 2){
+        data = data.filter(user => user.tel === tel)
 	}
 
 	if (data[0].password === password) {
@@ -55,6 +57,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	}
 };
 
-const generateToken = (name: string, tel: string): string => {
-	return sha256(name + tel) + "";
+const generateToken = (name: string, classNum: string, grade: number): string => {
+	return sha256(name + grade + classNum) + "";
 };

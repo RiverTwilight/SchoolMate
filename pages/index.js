@@ -9,7 +9,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Skeleton from "react-loading-skeleton";
+import Loader from "../components/Loader";
 
 const useStyles = makeStyles({
 	root: {
@@ -139,7 +139,7 @@ const HomePage = ({ userData }) => {
 					{Array(4)
 						.fill(0)
 						.map(() => (
-							<Skeleton />
+							<Loader />
 						))}
 				</Grid>
 			)}
