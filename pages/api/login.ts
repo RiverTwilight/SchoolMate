@@ -24,8 +24,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		where: condition
 	});
 
-
-
 	if (!!!data.length) {
 		return res.status(202).json({
 			message: "用户不存在",
@@ -35,6 +33,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	}
 
 	if (data[0].password === password) {
+        console.log(data)
 		if (data[0].token == "") {
 			console.log("初始化登录");
 			await sql.update(

@@ -162,8 +162,8 @@ class Login extends React.Component<
 							)
 								.fill(0)
 								.map((_, i) => (
-									<MenuItem key={i} value={i}>
-										{`${i}班`}
+									<MenuItem key={i + 1} value={i + 1}>
+										{`${i + 1}班`}
 									</MenuItem>
 								))}
 						</Select>

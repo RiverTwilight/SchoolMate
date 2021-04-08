@@ -12,13 +12,10 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { TOKEN: token } = req.cookies;
 	
-	console.log(token);
-
 	if (!!!token) {
-		res.status(205).json({
+		return res.status(205).json({
 			message: "A token is required",
         });
-        return
     }
     
 	const data = await sql.get("user", ["*"], {
@@ -39,7 +36,5 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		user: data[0],
 		message: "登录成功",
 	});
-
-	console.log(222)
 };
  

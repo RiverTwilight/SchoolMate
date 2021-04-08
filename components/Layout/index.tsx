@@ -44,6 +44,7 @@ const styles = (theme: Theme) => {
 		root: {
 			display: "flex",
 			justifyContent: "center",
+            background: "#f6f6f6"
 		},
 		content: {
 			flexGrow: 1,
@@ -124,7 +125,7 @@ class Layout extends React.Component<
 					<meta property="og:title" content={showTitle} />
 					<meta
 						property="og:url"
-						content="https://ygk-blog.yunser.com"
+						content="https://cflsgx-mate.vercel.app"
 					/>
 					<meta property="og:site_name" content={showTitle} />
 					<meta property="og:description" content={description} />

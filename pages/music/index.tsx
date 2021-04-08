@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "../../components/Layout";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -24,7 +24,8 @@ import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
 import Axios from "axios";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
 	audio: {
 		display: "none",
 	},
@@ -33,7 +34,10 @@ const useStyles = makeStyles({
 		bottom: "20px",
 		position: "fixed",
 	},
-});
+    container: {
+        padding: theme.spacing(2)
+    }
+}));
 
 export async function getServerSideProps(context: { query: { id: any } }) {
 	const { id } = context.query;
@@ -234,23 +238,23 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 	const musics = JSON.parse(detail.musics);
 	return (
 		<>
-			<Typography variant="h5">{detail.title}</Typography>
-			{!!detail.description && (
-				<Typography variant="body1">{detail.description}</Typography>
-			)}
-			{detail.statu == 0 ? (
-				<Chip
-					color="primary"
-					icon={<AlarmOnIcon />}
-					label={`进行中 - 截止日期：${
-						detail.deadline.split("T")[0]
-					}`}
-				/>
-			) : (
-				<Chip icon={<AlarmOnIcon />} label="投票已结束" />
-			)}
-			<br />
-			<br />
+            <Paper className={classes.container}>
+                <Typography variant="h5">{detail.title}</Typography>
+                {!!detail.description && (
+                    <Typography variant="body1">{detail.description}</Typography>
+                )}
+                {detail.statu == 0 ? (
+                    <Chip
+                        color="primary"
+                        icon={<AlarmOnIcon />}
+                        label={`进行中 - 截止日期：${
+                            detail.deadline.split("T")[0]
+                        }`}
+                    />
+                ) : (
+                    <Chip icon={<AlarmOnIcon />} label="投票已结束" />
+                )}
+            </Paper>
 			{!!musics.length && (
 				<List component={Paper} aria-label="music list">
 					{musics.map((song, i) => (

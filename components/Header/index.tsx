@@ -2,6 +2,7 @@ import * as React from "react";
 import Logo from "../../static/logo.svg";
 import Hidden from "@material-ui/core/Hidden";
 import ActiveLink from "../../utils/AcitiveLink";
+import Link from "next/link";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
@@ -81,19 +82,19 @@ export default (props: any) => {
 				className={clsx(classes.appBar)}
 			>
 				<Toolbar>
-					<Hidden xsDown>
-						<IconButton
-							color="primary"
-							aria-label="open drawer"
-							// onClick={handleLeftDrawerOpen}
-							edge="start"
-							className={classes.menuButton}
-						>
-							{/* <MenuTwoToneIcon /> */}
-						</IconButton>
-					</Hidden>
+                    <IconButton
+                        color="primary"
+                        aria-label="open drawer"
+                        // onClick={handleLeftDrawerOpen}
+                        edge="start"
+                        className={classes.menuButton}
+                    >
+                        <MenuTwoToneIcon />
+                    </IconButton>
 					<Hidden smUp>
-						<Logo></Logo>
+						<Link href="/">
+                            <Logo></Logo>
+                        </Link>
 					</Hidden>
 					<Hidden xsDown>
 						<img src="/static/image/200x50.png"></img>
