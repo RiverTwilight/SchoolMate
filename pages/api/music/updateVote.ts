@@ -14,14 +14,15 @@ type Data = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
-        const { id, newData, userID, token } = req.query;
+        const { id, newData } = req.query;
+
+        const { TOKEN: token } = req.cookies
 
         // SAFE 验证是否为管理员
 
         const update = await sql.update('music', newData, {
-            where: {
-                id,
-            }
+            key: "id",
+            value: id
         })
 
         res.status(200).json({

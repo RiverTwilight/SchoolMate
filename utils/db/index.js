@@ -27,7 +27,7 @@ function query(sql, callback) {
 const update = (table, data, condition) => {
 	var insertSql = Object.keys(data)
 		.map((key) => `${key} = '${data[key]}'`)
-		.join(" ");
+		.join(", ");
 	var sql = `UPDATE ${table} SET ${insertSql} WHERE (${condition.key}) = (${condition.value}) `;
 	console.log(sql);
 	return new Promise((resolve, reject) => {

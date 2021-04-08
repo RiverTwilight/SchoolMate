@@ -37,11 +37,10 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             deadline,
             musics,
             description,
+            votedUser: "[]"
         });
 
-        console.log(add)
-
-        res.status(200).json({
+        return res.status(200).json({
             message: "创建成功",
             id: add.insertId,
         });
