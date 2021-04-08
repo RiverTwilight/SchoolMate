@@ -8,11 +8,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-import InboxIcon from "@material-ui/icons/Inbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
@@ -38,7 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
         container: {
             padding: theme.spacing(2)
         }
-    }));
+    }
+    ));
 
 export async function getServerSideProps(context: { query: { id: any } }) {
     const { id } = context.query;
@@ -231,7 +229,6 @@ const Music = ({ userData = {}, id }: { id: number }) => {
         Axios.get(
             `/api/music/voteMusic?id=${id}&musicId=${musicId}&userId=${userData.id}`
         ).then((data) => {
-            console.log(data)
             switch (data.status) {
                 case 201:
                     window.snackbar({

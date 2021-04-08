@@ -1,66 +1,107 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MailIcon from '@material-ui/icons/Mail';
+import MenuIcon from '@material-ui/icons/Menu';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 interface DrawerProps {
-	config: any;
-	lang: string;
+
 }
 
 interface DrawerState {
-	copyrightFixed: boolean;
-	drawerWidth: number;
-	drawerLeft: number;
-	copyrightTop: number;
+    open: boolean
 }
 
-/**
- * PC端右侧部公共菜单
- */
+const drawerWidth = 240;
 
-export default class extends React.Component<DrawerProps, DrawerState> {
-	drawer: any;
-	copyright: any;
-	constructor(props: Readonly<DrawerProps>) {
-		super(props);
-		this.state = {
-			copyrightFixed: false,
-			drawerWidth: 296,
-			drawerLeft: 0,
-			copyrightTop: 0,
-		};
-	}
-	componentDidMount() {
-		// window.innerWidth >= 640 && window.addEventListener('scroll', () => {
-		//     const t = document.documentElement.scrollTop || document.body.scrollTop;
-		//     console.log(t)
-		//     if (t > 500) {
-		//         this.setState({ copyrightFixed: true })
-		//     } else {
-		//         this.setState({ copyrightFixed: false })
-		//     }
-		// })
-		//将初始状态保存以便固定
-		var toTop =
-			document.documentElement.scrollTop || document.body.scrollTop;
-		this.setState({
-			drawerLeft: this.drawer.getBoundingClientRect().left,
-			drawerWidth: this.drawer.getBoundingClientRect().width,
-			copyrightTop: this.copyright.getBoundingClientRect().top + toTop,
-		});
-	}
-	render() {
-		const { lang } = this.props;
-		const {
-			copyrightFixed,
-			drawerWidth,
-			drawerLeft,
-			copyrightTop,
-		} = this.state;
-		const drawerStyle = copyrightFixed
-			? {
-					left: drawerLeft,
-					width: drawerWidth + "px",
-			  }
-			: {};
-		return <div></div>;
-	}
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    drawer: {
+        [theme.breakpoints.up('sm')]: {
+            width: drawerWidth,
+            flexShrink: 0,
+        },
+    },
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+    },        // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+}));
+
+
+const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
+    const classes = useStyles();
+    const theme = useTheme();
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
+    
+    const drawer = (
+        <div>
+            <div className={classes.toolbar} />
+            <Divider />
+            <List>
+                {['起床铃投票'].map((text, index) => (
+                    <ListItem button key={text}>
+                        <ListItemIcon>{<InboxIcon />}</ListItemIcon>
+                        <ListItemText primary={text} />
+                    </ListItem>
+                ))}
+            </List>
+        </div>
+    );
+
+    return (
+        <nav className={classes.drawer} aria-label="mailbox folders">
+            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+            <Hidden smUp implementation="css">
+                <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+                <Drawer
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                >
+                    {drawer}
+                </Drawer>
+            </Hidden>
+        </nav>
+    );
 }
+
+export default LeftMenu

@@ -52,7 +52,7 @@ const styles = (theme: Theme) => {
 			paddingTop: "75px",
 			minHeight: "100vh",
 			position: "relative",
-			maxWidth: "1000px",
+            maxWidth: "1000px",
 		},
 	});
 };

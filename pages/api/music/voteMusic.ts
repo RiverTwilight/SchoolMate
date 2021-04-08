@@ -17,7 +17,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const { TOKEN: token } = req.cookies;
 
-        // TODO 防止重复投票
         const identify = await sql.get("music_votes", ["musics, votedUser"], {
             where: {
                 key: "id",
@@ -27,7 +26,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const votedUser = JSON.parse(identify[0].votedUser);
 
-        console.log(votedUser, userId)
         if (votedUser.includes(parseInt(userId))) {
             return res.status(201).json({
                 message: "重复投票",
@@ -60,7 +58,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
     } catch (err) {
         res.status(201).json({
-            message: "投票失败:" + err,
+            message: "投票失败：服务器错误",
         });
     }
 
