@@ -1,38 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import React from "react";
+import Divider from "@material-ui/core/Divider";
+import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import GitHubIcon from '@material-ui/icons/GitHub';
 
-interface DrawerProps {
-
-}
+interface DrawerProps {}
 
 interface DrawerState {
-    open: boolean
+    open: boolean;
 }
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: "flex",
     },
     drawer: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up("sm")]: {
             width: drawerWidth,
             flexShrink: 0,
         },
@@ -43,10 +34,9 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },        // necessary for content to be below app bar
+    }, // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
 }));
-
 
 const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
     const classes = useStyles();
@@ -54,19 +44,32 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-    
+
     const drawer = (
         <div>
             <div className={classes.toolbar} />
             <Divider />
             <List>
-                {['起床铃投票'].map((text, index) => (
+                {["起床铃投票"].map((text, index) => (
                     <ListItem button key={text}>
                         <ListItemIcon>{<InboxIcon />}</ListItemIcon>
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}
             </List>
+            <Divider />
+			<List>
+				{[{
+					link: "https://github.com/rivertwilight/cflsgxmate",
+					text: "开放源代码",
+					icon: <GitHubIcon />
+				}].map((item, index) => (
+                    <ListItem component="a" button href={item.link} key={index}>
+                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemText primary={item.text} />
+                    </ListItem>
+                ))}
+			</List>
         </div>
     );
 
@@ -76,7 +79,7 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
             <Hidden smUp implementation="css">
                 <Drawer
                     variant="temporary"
-                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    anchor={theme.direction === "rtl" ? "right" : "left"}
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
                     classes={{
@@ -102,6 +105,6 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
             </Hidden>
         </nav>
     );
-}
+};
 
-export default LeftMenu
+export default LeftMenu;

@@ -6,11 +6,9 @@ import {
 	createStyles,
 	Theme,
 	withStyles,
-	makeStyles,
 } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../../utils/theme";
-import checkLogin from "../../utils/checkLogin";
 import Snackbar from "@material-ui/core/Snackbar";
 
 /**
@@ -48,7 +46,6 @@ const styles = (theme: Theme) => {
 		},
 		content: {
 			flexGrow: 1,
-			padding: theme.spacing(1),
 			paddingTop: "75px",
 			minHeight: "100vh",
 			position: "relative",

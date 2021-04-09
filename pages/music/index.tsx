@@ -109,10 +109,14 @@ const MusicItem = ({
 
     const handleDelete = () => {
         // TODO 删除歌曲
-        fetch(`/api/music/deleteMusic?id=${id}`)
-            .then((res) => res.json())
+        Axios.get(`/api/music/deleteMusic?id=${id}`)
             .then((data) => {
-                switch (data.code) {
+                switch (data.status) {
+                    case 201:
+                        window.snackbar({
+                            message: ""
+                        })
+                        break;
                 }
             });
     };
@@ -121,7 +125,7 @@ const MusicItem = ({
         <>
             <ListItem button>
                 <ListItemText
-                    secondary={reason}
+                    secondary={`投稿理由：${reason}`}
                     primary={`${title} - ${artist}`}
                 />
                 <ListItemSecondaryAction>
@@ -137,13 +141,12 @@ const MusicItem = ({
                             )}
                     </IconButton>
                     <Button
-                        aria-label="vote"
                         onClick={handleVote}
                         startIcon={<ThumbUpAltTwoToneIcon />}
                     >
                         {vote}
                     </Button>
-                    {isAdmin && (
+                    {!!isAdmin && (
                         <IconButton
                             edge="end"
                             aria-label="delete"
@@ -187,43 +190,22 @@ const Page = ({ id, siteConfig, locale, title }) => {
     );
 };
 
-//@ts-expect-error
 const Music = ({ userData = {}, id }: { id: number }) => {
-    const audioDom = useRef<HTMLAudioElement>(null);
     const classes = useStyles();
     const [detail, setDetail] = useState({
         title: "未命名",
         musics: "[]",
+        description: "暂无描述"
     });
     const [currentAudio, setCurrentAudio] = useState(0);
-    const [onPlay, setOnPlay] = useState(false);
 
     useEffect(() => {
-        const res = fetch(`/api/music/getMusicDetail?id=${id}`)
+        fetch(`/api/music/getMusicDetail?id=${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setDetail(data.musicData);
             });
     }, []);
-
-    const handlePlay = (songId) => {
-        if (songId !== currentAudio) {
-            setCurrentAudio(songId);
-            audioDom.current.load();
-        }
-
-        if (onPlay) {
-            audioDom.current.pause();
-        } else {
-            audioDom.current.play();
-        }
-        setOnPlay(!onPlay);
-        console.log(onPlay, currentAudio);
-    };
-
-    const handleAudioEnded = () => {
-        setOnPlay(false);
-    };
 
     const handleVote = (musicId) => {
         Axios.get(
@@ -245,6 +227,10 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 
     const musics = JSON.parse(detail.musics);
 
+    // TODO 根据日期自动判断是否结束
+    // TODO 根据票数排名
+    // FIXME 投票后不更新列表
+
     return (
         <>
             <Paper className={classes.container}>
@@ -264,6 +250,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                         <Chip icon={<AlarmOnIcon />} label="投票已结束" />
                     )}
             </Paper>
+            <br />
             {!!musics.length && (
                 <List component={Paper} aria-label="music list">
                     {musics.map((song, i) => (

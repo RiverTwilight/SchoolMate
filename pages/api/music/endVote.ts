@@ -16,8 +16,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         const { id, userID, token } = req.query;
 
-        // TODO 验证是否为管理员
-
         const update = await sql.update('music', {
             statu: 1
         }, {

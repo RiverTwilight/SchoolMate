@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		const { TOKEN: token } = req.cookies;
 
-		// TODO parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
+		// parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
 		const identify = await sql.get("music_votes", ["musics"], {
 			where: {
 				key: "id",
