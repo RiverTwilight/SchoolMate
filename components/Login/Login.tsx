@@ -191,7 +191,7 @@ class Login extends React.Component<
 					<br></br>
 					<br></br>
 					<FormControl fullWidth>
-						<InputLabel htmlFor="tel">电话</InputLabel>
+						<InputLabel htmlFor="tel">考号</InputLabel>
 						<Input
 							onChange={(e) => {
 								this.setState({
@@ -200,6 +200,7 @@ class Login extends React.Component<
 							}}
 							value={tel}
 							id="tel"
+							placeholder="例如：201908071"
 							startAdornment={
 								<InputAdornment position="start">
 									<CallIcon />

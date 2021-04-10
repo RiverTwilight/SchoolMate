@@ -26,11 +26,11 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const votedUser = JSON.parse(identify[0].votedUser);
 
-        if (votedUser.includes(parseInt(userId))) {
-            return res.status(201).json({
-                message: "重复投票",
-            });
-        }
+        // if (votedUser.includes(parseInt(userId))) {
+        //     return res.status(201).json({
+        //         message: "重复投票",
+        //     });
+        // }
 
         const originMusics = JSON.parse(identify[0].musics);
 

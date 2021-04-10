@@ -218,18 +218,25 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                     })
                     break;
                 default:
-                    detail.musics = data.data.currentMusics;
-                    setDetail(detail)
+                    var newObj = Object.assign({}, detail, {
+                        musics: JSON.stringify(data.data.currentMusics)
+                    });
+                    setDetail(newObj)
             }
 
         });
     };
 
-    const musics = JSON.parse(detail.musics);
+    const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics)
+    
+    musics.sort((a, b)=>{
+        return b.votes - a.votes
+    })
+
+    console.log(musics)
 
     // TODO 根据日期自动判断是否结束
     // TODO 根据票数排名
-    // FIXME 投票后不更新列表
 
     return (
         <>
@@ -267,7 +274,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                             playUrl={song.playUrl}
                             title={song.title}
                             artist={song.artist}
-                            key={song.title}
+                            key={i + song.title}
                         />
                     ))}
                 </List>

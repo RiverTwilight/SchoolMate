@@ -32,24 +32,12 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		const originMusics = JSON.parse(identify[0].musics);
 
 		if (originMusics.map((item) => item.voterToken).includes(token)) {
-			console.log("重复");
 			return res.status(204).json({
 				message: "重复投稿",
 				id,
             });
 		}
-
-		// for (let i of originMusics) {
-		//     if (i.voterToken === token) {
-		//         console.log("重复")
-		//         res.status(204).json({
-		//             message: "重复投稿",
-		//             id
-		//         });
-		//         break;
-		//     }
-		// }
-
+		
 		const musicId = url2id(musicUrl);
 
 		if (!musicId) {
