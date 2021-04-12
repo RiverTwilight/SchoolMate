@@ -44,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             }
         }
 
-        const update = await sql.update('music_votes', {
+        await sql.update('music_votes', {
             musics: JSON.stringify(originMusics),
             votedUser: JSON.stringify([...votedUser, parseInt(userId)])
         }, {

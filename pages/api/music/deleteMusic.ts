@@ -3,41 +3,50 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
     message: string;
+    currentMusics?: any
 }
 
 /**
- * 删除一个投票中的某个歌曲
+ * 给一首歌曲投票
  * @param {string} musicId 音乐ID
+ * @param {string} id 投票session ID
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         const { musicId, id } = req.query;
 
-        const originData = await sql.get('music', ['musics'], {
+        const { TOKEN: token } = req.cookies;
+
+        const identify = await sql.get("music_votes", ["musics"], {
             where: {
-                id: id
+                key: "id",
+                value: `"${id}"`,
             },
-            order: "AESC"
-        })
+        });
 
-        const targetData = JSON.parse(originData)
+        const originMusics = JSON.parse(identify[0].musics);
 
-        for (let i in targetData) {
-            if (targetData[i].id === musicId) {
-                targetData[i].statu = 0
+        for (var i in originMusics) {
+            if (i == musicId) {
+                originMusics[i].statu = 1
+                break;
             }
         }
 
-        const update = await sql.update('music', {
-            musics: JSON.stringify(targetData)
+        await sql.update('music_votes', {
+            musics: JSON.stringify(originMusics),
+        }, {
+            key: "id",
+            value: `'${id}'`
         })
 
-        res.status(200).json({
-            message: "删除成功"
+        return res.status(200).json({
+            message: "删除成功",
+            currentMusics: originMusics
         });
     } catch (err) {
         res.status(201).json({
-            message: "删除失败"
+            message: "投票失败：服务器错误",
         });
     }
 

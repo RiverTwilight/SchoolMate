@@ -3,12 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import url2id from "../../../utils/url2id";
 
 type Data = {
-	/**
-	 * 新的投票ID
-	 */
-	id?: unknown;
-	message?: string;
-	newMusic?: any;
+    /**
+     * 新的投票ID
+     */
+    id?: unknown;
+    message?: string;
+    newMusic?: any;
 };
 
 /**
@@ -16,72 +16,68 @@ type Data = {
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	try {
-		const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
+    try {
+        const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
 
-		const { TOKEN: token } = req.cookies;
+        const { TOKEN: token } = req.cookies;
 
-		// parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
-		const identify = await sql.get("music_votes", ["musics"], {
-			where: {
-				key: "id",
-				value: `"${id}"`,
-			},
-		});
+        // parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
+        const identify = await sql.get("music_votes", ["musics"], {
+            where: {
+                key: "id",
+                value: `"${id}"`,
+            },
+        });
 
-		const originMusics = JSON.parse(identify[0].musics);
+        const originMusics = JSON.parse(identify[0].musics);
 
-		if (originMusics.map((item) => item.voterToken).includes(token)) {
-			return res.status(204).json({
-				message: "重复投稿",
-				id,
+        if (originMusics.map((item) => item.voterToken).includes(token)) {
+            return res.status(204).json({
+                message: "重复投稿",
+                id,
             });
-		}
-		
-		const musicId = url2id(musicUrl);
+        }
 
-		if (!musicId) {
-			return res.status(204).json({
-				message: "链接不合法",
-				id,
-			});
-		}
+        const musicId = url2id(musicUrl);
 
-		const playUrl = `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`;
+        var playUrl = musicId
+            ? `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`
+            : musicUrl;
 
-		const newMusic = {
-			musicUrl,
-			playUrl,
-			reason,
-			artist,
-			title,
-			vote: 0,
-			voterToken: token,
-		};
+        const newMusic = {
+            musicUrl,
+            playUrl,
+            reason,
+            artist,
+            title,
+            vote: 0,
+            voterToken: token,
+            statu: 0,
+        };
 
-		originMusics.push(newMusic);
+        originMusics.push(newMusic);
 
-		const add = await sql.update(
-			"music_votes",
-			{
-				musics: JSON.stringify(originMusics),
-			},
-			{
-				key: "id",
-				value: id,
-			}
-		);
+        const add = await sql.update(
+            "music_votes",
+            {
+                musics: JSON.stringify(originMusics),
+            },
+            {
+                key: "id",
+                value: id,
+            }
+        );
 
-		console.log(add);
+        console.log(add);
 
-		res.status(200).json({
-			message: "投稿成功",
-			newMusic,
-			id,
-		});
-	} catch (err) {
-		res.status(301).json({
-			message: err,
-		});
-	}
+        res.status(200).json({
+            message: "投稿成功",
+            newMusic,
+            id,
+        });
+    } catch (err) {
+        res.status(301).json({
+            message: err,
+        });
+    }
 };

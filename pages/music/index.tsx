@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
             position: "fixed",
         },
         container: {
-            padding: theme.spacing(2)
-        }
-    }
-    ));
+            padding: theme.spacing(2),
+        },
+    })
+);
 
 export async function getServerSideProps(context: { query: { id: any } }) {
     const { id } = context.query;
@@ -62,7 +62,8 @@ const MusicItem = ({
     isAdmin,
     musicId,
     handlePlayIndexChange,
-    handleVote
+    handleVote,
+    handleDelete,
 }: {
     title: string;
     vote: number;
@@ -75,7 +76,8 @@ const MusicItem = ({
     musicId: number;
     currentIndex: number;
     handlePlayIndexChange: (index: number) => void;
-    handleVote: (musicId: number) => void
+    handleVote: (musicId: number) => void;
+    handleDelete: (musicId: number) => void;
 }) => {
     const audioDom = useRef<HTMLAudioElement>(null);
     const classes = useStyles();
@@ -107,20 +109,6 @@ const MusicItem = ({
         setOnPlay(true);
     };
 
-    const handleDelete = () => {
-        // TODO 删除歌曲
-        Axios.get(`/api/music/deleteMusic?id=${id}`)
-            .then((data) => {
-                switch (data.status) {
-                    case 201:
-                        window.snackbar({
-                            message: ""
-                        })
-                        break;
-                }
-            });
-    };
-
     return (
         <>
             <ListItem button>
@@ -137,8 +125,8 @@ const MusicItem = ({
                         {onPlay && currentIndex === index ? (
                             <PauseCircleFilledTwoToneIcon />
                         ) : (
-                                <PlayArrowTwoToneIcon />
-                            )}
+                            <PlayArrowTwoToneIcon />
+                        )}
                     </IconButton>
                     <Button
                         onClick={handleVote}
@@ -148,7 +136,6 @@ const MusicItem = ({
                     </Button>
                     {!!isAdmin && (
                         <IconButton
-                            edge="end"
                             aria-label="delete"
                             onClick={handleDelete}
                         >
@@ -165,8 +152,8 @@ const MusicItem = ({
                 ref={audioDom}
             >
                 <source src={playUrl} type="audio/mpeg" />
-				Your browser does not support the audio tag.
-			</audio>
+                Your browser does not support the audio tag.
+            </audio>
         </>
     );
 };
@@ -195,7 +182,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
     const [detail, setDetail] = useState({
         title: "未命名",
         musics: "[]",
-        description: "暂无描述"
+        description: "暂无描述",
     });
     const [currentAudio, setCurrentAudio] = useState(0);
 
@@ -214,36 +201,57 @@ const Music = ({ userData = {}, id }: { id: number }) => {
             switch (data.status) {
                 case 201:
                     window.snackbar({
-                        message: "X " + data.data.message
-                    })
+                        message: "X " + data.data.message,
+                    });
                     break;
                 default:
                     var newObj = Object.assign({}, detail, {
-                        musics: JSON.stringify(data.data.currentMusics)
+                        musics: JSON.stringify(data.data.currentMusics),
                     });
-                    setDetail(newObj)
+                    setDetail(newObj);
             }
-
         });
     };
 
-    const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics)
-    
-    musics.sort((a, b)=>{
-        return b.votes - a.votes
-    })
+    const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics);
 
-    console.log(musics)
+    musics.sort((a, b) => {
+        return b.vote - a.vote;
+    });
+
+    console.log(musics);
 
     // TODO 根据日期自动判断是否结束
-    // TODO 根据票数排名
+
+    const handleDelete = (musicId) => {
+        // TODO 删除歌曲
+        Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
+            (data) => {
+                switch (data.status) {
+                    case 201:
+                        window.snackbar({
+                            message: "",
+                        });
+                        break;
+                    case 200:
+                        var newObj = Object.assign({}, detail, {
+                            musics: JSON.stringify(data.data.currentMusics),
+                        });
+                        setDetail(newObj);
+                        break;
+                }
+            }
+        );
+    };
 
     return (
         <>
             <Paper className={classes.container}>
                 <Typography variant="h5">{detail.title}</Typography>
                 {!!detail.description && (
-                    <Typography variant="body1">{detail.description}</Typography>
+                    <Typography variant="body1">
+                        {detail.description}
+                    </Typography>
                 )}
                 {detail.statu == 0 ? (
                     <Chip
@@ -251,35 +259,43 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                         icon={<AlarmOnIcon />}
                         label={`进行中 - 截止日期：${
                             detail.deadline.split("T")[0]
-                            }`}
+                        }`}
                     />
                 ) : (
-                        <Chip icon={<AlarmOnIcon />} label="投票已结束" />
-                    )}
+                    <Chip icon={<AlarmOnIcon />} label="投票已结束" />
+                )}
             </Paper>
             <br />
             {!!musics.length && (
                 <List component={Paper} aria-label="music list">
-                    {musics.map((song, i) => (
-                        <MusicItem
-                            isAdmin={userData ? userData.isAdmin : false}
-                            index={i}
-                            id={id}
-                            musicId={i}
-                            vote={song.vote}
-                            reason={song.reason}
-                            currentIndex={currentAudio}
-                            handlePlayIndexChange={setCurrentAudio}
-                            handleVote={() => handleVote(i)}
-                            playUrl={song.playUrl}
-                            title={song.title}
-                            artist={song.artist}
-                            key={i + song.title}
-                        />
-                    ))}
+                    {musics.map((song, i) => {
+                        if (song.statu === 0) {
+                            return (
+                                <MusicItem
+                                    isAdmin={
+                                        userData ? userData.isAdmin : false
+                                    }
+                                    index={i}
+                                    id={id}
+                                    musicId={i}
+                                    vote={song.vote}
+                                    reason={song.reason}
+                                    currentIndex={currentAudio}
+                                    handlePlayIndexChange={setCurrentAudio}
+                                    handleVote={() => handleVote(i)}
+                                    handleDelete={() => handleDelete(i)}
+                                    playUrl={song.playUrl}
+                                    title={song.title}
+                                    artist={song.artist}
+                                    key={i + song.title}
+                                />
+                            );
+                        }
+                        return null
+                    })}
                 </List>
             )}
-            {!!!musics.length && (<Loader />)}
+            {!!!musics.length && <Loader />}
             <Link href={`/music/add?id=${id}&title=${detail.title}`}>
                 <Fab
                     className={classes.addBtn}
