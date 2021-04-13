@@ -8,8 +8,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import ActiveLink from "../../utils/AcitiveLink"
-import GitHubIcon from '@material-ui/icons/GitHub';
+import ActiveLink from "../../utils/AcitiveLink";
+import GitHubIcon from "@material-ui/icons/GitHub";
 
 interface DrawerProps {}
 
@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     }, // necessary for content to be below app bar
-    toolbar: theme.mixins.toolbar,
 }));
 
 const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
@@ -51,26 +50,32 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
             <div className={classes.toolbar} />
             <Divider />
             <List>
-                {["起床铃投票"].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{<InboxIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
+                {[{
+                    text: "起床铃投票"
+                }].map((item, index) => (
+                    <ActiveLink href="/" activeClassName="Mui-selected">
+                        <ListItem button key={item.text}>
+                            <ListItemIcon>{<InboxIcon />}</ListItemIcon>
+                            <ListItemText primary={item.text} />
+                        </ListItem>
+                    </ActiveLink>
                 ))}
             </List>
             <Divider />
-			<List>
-				{[{
-					link: "https://github.com/rivertwilight/cflsgxmate",
-					text: "开放源代码",
-					icon: <GitHubIcon />
-				}].map((item, index) => (
+            <List>
+                {[
+                    {
+                        link: "https://github.com/rivertwilight/cflsgxmate",
+                        text: "开放源代码",
+                        icon: <GitHubIcon />,
+                    },
+                ].map((item, index) => (
                     <ListItem component="a" button href={item.link} key={index}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
                         <ListItemText primary={item.text} />
                     </ListItem>
                 ))}
-			</List>
+            </List>
         </div>
     );
 

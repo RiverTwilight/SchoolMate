@@ -269,7 +269,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
             {!!musics.length && (
                 <List component={Paper} aria-label="music list">
                     {musics.map((song, i) => {
-                        if (song.statu === 0) {
+                        if (song.statu !== 1) {
                             return (
                                 <MusicItem
                                     isAdmin={

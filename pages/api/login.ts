@@ -11,7 +11,7 @@ type Data = {
  * 登录
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { name, tel, token, password, grade, classNum } = req.body;
+	const { name, tel, password, grade, classNum } = req.body;
 
 	var originToken = generateToken(name, classNum, grade);
 
@@ -45,9 +45,9 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 			);
 		}
 
-		res.status(200).json({
+		return res.status(200).json({
 			message: "登录成功",
-			token: data[0].token || generateToken(name, tel),
+			token: data[0].token || originToken,
 		});
 	} else {
 		res.status(202).json({

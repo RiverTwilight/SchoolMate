@@ -2,7 +2,6 @@ import * as React from "react";
 import Logo from "../../static/logo.svg";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "../Drawer"
-import ActiveLink from "../../utils/AcitiveLink";
 import Link from "next/link";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -14,10 +13,6 @@ import Button from "@material-ui/core/Button";
 import MenuTwoToneIcon from "@material-ui/icons/MenuTwoTone";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import clsx from "clsx";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { useRouter } from "next/router";
 
@@ -57,8 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
-        // necessary for content to be below app bar
-        toolbar: theme.mixins.toolbar,
     })
 );
 

@@ -103,16 +103,16 @@ const HomePage = ({ userData }) => {
         isLoading: true,
     });
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1); // TODO 分页
     const [sort, setSort] = useState("createDate");
-	
+
     const handleSortChange = (e) => {
-		setSort(e.target.value);
+        setSort(e.target.value);
     };
-	
+
     // See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
     useEffect(() => {
-		// TODO 分页
+        // TODO 分页
         (async () => {
             const res = await fetcher(`/api/music/getMusicList?page=${page}`);
             setData(res.data);
@@ -160,11 +160,13 @@ const HomePage = ({ userData }) => {
                 </Typography>
             )}
             {!!data.isLoading && (
-                <Grid xs={12} sm={6} item>
+                <Grid container spacing={3}>
                     {Array(4)
                         .fill(0)
                         .map(() => (
-                            <Loader />
+                            <Grid xs={12} sm={6} item>
+                                <Loader />
+                            </Grid>
                         ))}
                 </Grid>
             )}
