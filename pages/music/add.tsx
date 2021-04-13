@@ -17,12 +17,15 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Axios from "axios";
 import LinkIcon from "@material-ui/icons/Link";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
-            padding: theme.spacing(2),
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
         },
         menuButton: {
             marginRight: theme.spacing(2),
@@ -35,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export async function getServerSideProps(context) {
     const config = await import(`../../data/config.json`);
-    console.log(context);
     const { id, title } = context.query;
     return {
         props: {
@@ -58,33 +60,25 @@ const AddMusic = ({ userData, id, title }) => {
         setIsLoading(true);
         //@ts-expect-error
         const formData = new FormData(e.target);
-        //api /pages/api/uploadMusic
-        fetch("/api/music/uploadMusic", {
-            method: "POST",
-            body: JSON.stringify(
-                Object.assign(
-                    { id },
-                    parseFormData(
-                        ["musicUrl", "reason", "title", "artist"],
-                        formData
-                    )
+        Axios.post(
+            "/api/music/uploadMusic",
+            Object.assign(
+                { id },
+                parseFormData(
+                    ["musicUrl", "reason", "title", "artist"],
+                    formData
                 )
-            ),
-        })
+            )
+        )
             .then((res) => {
-                switch (res.status) {
-                    case 204:
-                        window.snackbar({
-                            message: res.json().message,
-                        });
-                        break;
-                    case 200:
-                        return res.json();
+                if (res.status == 200) {
+                    setIsLoading(false);
+                    router.push(`/music?id=${res.data.id}`);
+                } else {
+                    window.snackbar({
+                        message: res.data.message,
+                    });
                 }
-            })
-            .then((data) => {
-                setIsLoading(false);
-                // router.push(`/music?id=${data.id}`)
             })
             .catch(function (error) {
                 console.warn(error);

@@ -15,6 +15,7 @@ type Data = {
  * 创建投票
  */
 
+// FIXME 投稿出错
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
@@ -31,6 +32,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const originMusics = JSON.parse(identify[0].musics);
 
+        console.log(originMusics)
+
         if (originMusics.map((item) => item.voterToken).includes(token)) {
             return res.status(204).json({
                 message: "重复投稿",
@@ -43,6 +46,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         var playUrl = musicId
             ? `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`
             : musicUrl;
+
+        console.log(playUrl);
 
         const newMusic = {
             musicUrl,

@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		value: `'${name}', '${classNum}', '${grade}'`,
 	};
 
-	const data = await sql.get("user", ["*"], {
+	var data = await sql.get("user", ["*"], {
 		where: condition
 	});
 

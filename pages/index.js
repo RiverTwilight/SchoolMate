@@ -87,7 +87,7 @@ const MusicItem = ({ title, description, id, statu }) => {
                     >
                         {
                             {
-                                0: "投票",
+                                0: "参与",
                                 1: "已结束",
                             }[statu]
                         }
@@ -103,7 +103,7 @@ const HomePage = ({ userData }) => {
         isLoading: true,
     });
 
-    const [page, setPage] = useState(1); // TODO 分页
+    const [page, setPage] = useState(1);
     const [sort, setSort] = useState("createDate");
 
     const handleSortChange = (e) => {
