@@ -18,7 +18,8 @@ type Data = {
 // FIXME 投稿出错
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
-        const { musicUrl, id, reason, title, artist } = JSON.parse(req.body);
+        // TODO 防SQL注入
+        const { musicUrl, id, reason, title, artist } = req.body;
 
         const { TOKEN: token } = req.cookies;
 

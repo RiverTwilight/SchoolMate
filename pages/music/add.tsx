@@ -71,6 +71,7 @@ const AddMusic = ({ userData, id, title }) => {
             )
         )
             .then((res) => {
+                console.log(res)
                 if (res.status == 200) {
                     setIsLoading(false);
                     router.push(`/music?id=${res.data.id}`);
