@@ -20,10 +20,10 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         const { page, order } = req.query;
 
         const result = await sql.get("music_votes", ["*"], {
-            order:
-                {
-                    createDate: "createDate",
-                }[order] || "createDate",
+            // order:
+            //     {
+            //         createDate: "createDate",
+            //     }[order + ""] || "createDate",
             // sort: "DESC",
             // limit: page * 8
         });

@@ -116,7 +116,7 @@ const HomePage = ({ userData }) => {
             const res = await fetcher(
                 `/api/music/getMusicList?page=${page}$sort=${sort}`
             );
-            setData(res.data);
+            res.data && setData(res.data);
         })();
     }, [sort, page]);
 
