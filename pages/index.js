@@ -111,8 +111,11 @@ const HomePage = ({ userData }) => {
     // See https://stackoverflow.com/questions/63570597/typeerror-func-apply-is-not-a-function
     useEffect(() => {
         // TODO 分页
+        // TODO 防止返回数据异常 TypeError: Cannot read property 'length' of undefined
         (async () => {
-            const res = await fetcher(`/api/music/getMusicList?page=${page}$sort=${sort}`);
+            const res = await fetcher(
+                `/api/music/getMusicList?page=${page}$sort=${sort}`
+            );
             setData(res.data);
         })();
     }, [sort, page]);

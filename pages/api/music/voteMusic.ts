@@ -1,4 +1,4 @@
-import sql from "../../../utils/db"
+import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         const identify = await sql.get("music_votes", ["musics, votedUser"], {
             where: {
                 key: "id",
-                value: `"${id}"`,
+                value: `"${SqlString.escape(id)}"`,
             },
         });
 

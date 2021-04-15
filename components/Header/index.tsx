@@ -1,5 +1,5 @@
 import * as React from "react";
-import Logo from "../../static/logo.svg";
+import Logo from "../../public/static/logo.svg";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "../Drawer"
 import Link from "next/link";

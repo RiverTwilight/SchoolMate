@@ -46,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
 
     } catch (err) {
-        res.status(400).json({
+        return res.status(400).json({
             message: err,
         });
     }

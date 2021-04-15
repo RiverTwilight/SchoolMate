@@ -51,6 +51,12 @@ export async function getServerSideProps(context: { query: { id: any } }) {
     };
 }
 
+const editModule = () => {
+    return(
+        <Button></Button>
+    )
+}
+
 const MusicItem = ({
     title,
     index,
@@ -257,9 +263,8 @@ const Music = ({ userData = {}, id }: { id: number }) => {
                     <Chip
                         color="primary"
                         icon={<AlarmOnIcon />}
-                        label={`进行中 - 截止日期：${
-                            detail.deadline.split("T")[0]
-                        }`}
+                        label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
+                            }`}
                     />
                 ) : (
                     <Chip icon={<AlarmOnIcon />} label="投票已结束" />
