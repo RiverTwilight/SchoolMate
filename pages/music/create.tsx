@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
 import { useRouter } from 'next/router'
+import Axios from "axios"
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +31,8 @@ export async function getStaticProps(context) {
  */
 
 const CreateVote = ({ userData }) => {
-    const router = useRouter()
+    const router = useRouter();
+    const today = new Date();
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //@ts-expect-error
@@ -49,42 +49,30 @@ const CreateVote = ({ userData }) => {
             });
             return res;
         };
-        fetch("/api/music/createVote", {
-            method: "POST",
-            body: JSON.stringify(
-                Object.assign(
-                    { musics: "[]" },
-                    parseFormData(
-                        ["title", "deadline", "description"],
-                        formData
-                    )
+        Axios.post("/api/music/createVote",
+            Object.assign(
+                { musics: "[]", createDate: today.toISOString() },
+                parseFormData(
+                    ["title", "deadline", "description"],
+                    formData
                 )
-            ),
-        })
+            )
+        )
             .then((res) => {
                 switch (res.status) {
-                    case 301:
+                    case 400:
                         window.snackbar({
-                            message: "服务器错误"
-                        });
-                        break;
-                    case 205:
-                         window.snackbar({
-                            message: res.json().message
+                            message: res.data.message
                         });
                         break;
                     case 200:
-                        return res.json()
+                        router.push(`/music?id=${res.data.id}`)
                 }
-            })
-            .then((data) => {
-                router.push(`/music?id=${data.id}`)
             })
             .catch(function (error) {
                 console.warn(error);
             });
     };
-    const today = new Date();
     const classes = useStyles();
     return (
         <Paper
@@ -114,8 +102,7 @@ const CreateVote = ({ userData }) => {
             <FormControl fullWidth>
                 <TextField
                     label="截止日期"
-                    defaultValue={`${
-                        today.getMonth() + 1
+                    defaultValue={`${today.getMonth() + 1
                         }-${today.getDate()}-${today.getFullYear()}`}
                     type="date"
                     name="deadline"

@@ -10,9 +10,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Loader from "../components/Loader";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
@@ -79,7 +77,7 @@ const MusicItem = ({ title, description, id, statu }) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Link href={`/music?id=${id}`}>
+                <Link href={`/music?id=${id}&title=${title}`}>
                     <Button
                         disabled={statu != 0}
                         variant="outlined"
@@ -114,10 +112,10 @@ const HomePage = ({ userData }) => {
     useEffect(() => {
         // TODO 分页
         (async () => {
-            const res = await fetcher(`/api/music/getMusicList?page=${page}`);
+            const res = await fetcher(`/api/music/getMusicList?page=${page}$sort=${sort}`);
             setData(res.data);
         })();
-    }, []);
+    }, [sort, page]);
 
     const classes = useStyles();
 

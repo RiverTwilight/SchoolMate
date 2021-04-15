@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             value: id
         })
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "更新成功"
         });
     } catch (err) {
@@ -33,5 +33,4 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             message: "操作失败"
         });
     }
-
 };

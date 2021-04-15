@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         })
 
         if (!!!identify.length) {
-            return res.status(201).json({
+            return res.status(400).json({
                 message: "需要管理员权限"
             });
         }
@@ -46,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
 
     } catch (err) {
-        res.status(301).json({
+        res.status(400).json({
             message: err,
         });
     }

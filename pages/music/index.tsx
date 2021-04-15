@@ -39,13 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export async function getServerSideProps(context: { query: { id: any } }) {
-    const { id } = context.query;
+    const { id, title } = context.query;
     const config = await import(`../../data/config.json`);
 
     return {
         props: {
             siteConfig: config.default,
             id,
+            title
         },
     };
 }
@@ -224,7 +225,6 @@ const Music = ({ userData = {}, id }: { id: number }) => {
     // TODO 根据日期自动判断是否结束
 
     const handleDelete = (musicId) => {
-        // TODO 删除歌曲
         Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
             (data) => {
                 switch (data.status) {

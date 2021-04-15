@@ -1,10 +1,11 @@
-import sql from "../../../utils/db"
-import type { NextApiRequest, NextApiResponse } from 'next'
+import sql from "../../../utils/db";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
     message: string;
-    currentMusics?: any
-}
+    currentMusics?: any;
+    deletedMusic?: any;
+};
 
 /**
  * 给一首歌曲投票
@@ -26,28 +27,35 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const originMusics = JSON.parse(identify[0].musics);
 
+        var deletedMusic;
+
         for (var i in originMusics) {
             if (i == musicId) {
-                originMusics[i].statu = 1
+                originMusics[i].statu = 1;
+                deletedMusic = originMusics[i];
                 break;
             }
         }
 
-        await sql.update('music_votes', {
-            musics: JSON.stringify(originMusics),
-        }, {
-            key: "id",
-            value: `'${id}'`
-        })
+        await sql.update(
+            "music_votes",
+            {
+                musics: JSON.stringify(originMusics),
+            },
+            {
+                key: "id",
+                value: `'${id}'`,
+            }
+        );
 
         return res.status(200).json({
             message: "删除成功",
-            currentMusics: originMusics
+            currentMusics: originMusics,
+            deletedMusic,
         });
     } catch (err) {
         res.status(201).json({
             message: "投票失败：服务器错误",
         });
     }
-
 };

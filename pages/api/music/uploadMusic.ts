@@ -76,7 +76,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         console.log(add);
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "投稿成功",
             newMusic,
             id,
