@@ -1,5 +1,7 @@
 import sql from "../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
+import verifyJWT from "../../utils/verifyJWT";
+import process from "process";
 
 type Data = {
 	message: string;
@@ -7,23 +9,31 @@ type Data = {
 };
 
 /**
- * 登录
+ * 获取用户信息
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { TOKEN: token } = req.cookies;
-	
+	const { TOKEN: token } = req.cookies;
+
 	if (!!!token) {
-		return res.status(205).json({
-			message: "A token is required",
-        });
-    }
-    
+		return res.status(203).json({
+			message: "TOKEN不存在",
+		});
+	}
+	
+	const verification = verifyJWT(token);
+
+	if (!!!verification) {
+		return res.status(203).json({
+			message: "TOKEN无效",
+		});
+	}
+
 	const data = await sql.get("user", ["*"], {
 		where: {
-			key: "token",
-			value: `'${token}'`
+			key: "id",
+			value: `'${verification.id}'`,
 		},
-		limit: 1
+		limit: 1,
 	});
 
 	if (!!!data.length) {
@@ -37,4 +47,3 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		message: "登录成功",
 	});
 };
- 

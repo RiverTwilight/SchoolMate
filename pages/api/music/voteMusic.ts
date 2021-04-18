@@ -1,65 +1,76 @@
 import sql from "../../../utils/db";
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
+import verifyJWT from "../../../utils/verifyJWT";
 
 type Data = {
-    message: string;
-    currentMusics?: any
-}
+	message: string;
+	currentMusics?: any;
+};
 
 /**
  * 给一首歌曲投票
  * @param {string} musicId 音乐ID
  * @param {string} id 投票session ID
+ * @param {number} vote 投票数量 +1 or 0
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    try {
-        const { musicId, id, userId } = req.query;
+	try {
+		const { musicId, id, vote } = req.query;
 
-        const { TOKEN: token } = req.cookies;
+		const { TOKEN: token } = req.cookies;
 
-        const identify = await sql.get("music_votes", ["musics, votedUser"], {
-            where: {
-                key: "id",
-                value: `"${SqlString.escape(id)}"`,
-            },
-        });
+		const verification = verifyJWT(token);
 
-        const votedUser = JSON.parse(identify[0].votedUser);
-
-        // if (votedUser.includes(parseInt(userId))) {
-        //     return res.status(201).json({
-        //         message: "重复投票",
-        //     });
-        // }
+		const identify = await sql.get("music_votes", ["musics"], {
+			where: {
+				key: "id",
+				value: `"${id}"`,
+			},
+		});
 
         const originMusics = JSON.parse(identify[0].musics);
+        
+        
+		var currentVote = 0;
+        
+		for (var i in originMusics) {
+			if (i == musicId) {
+				if (parseInt(vote) > 0) {
+                    console.log("+1")
+					currentVote = originMusics[i].vote + 1;
+					originMusics[i].vote = currentVote;
+					originMusics[i].voterId.push(verification.id);
+				} else {
+                    console.log("-1")
 
-        var currentVote = 0;
-
-        for (var i in originMusics) {
-            if (i == musicId) {
-                currentVote = originMusics[i].vote + 1;
-                originMusics[i].vote = currentVote;
-                break;
-            }
+					currentVote = originMusics[i].vote - 1;
+					originMusics[i].vote = currentVote;
+					originMusics[i].voterId.slice(originMusics[i].voterId.indexOf(verification.id), 1);
+				}
+				break;
+			}
         }
+        
 
-        await sql.update('music_votes', {
-            musics: JSON.stringify(originMusics),
-            votedUser: JSON.stringify([...votedUser, parseInt(userId)])
-        }, {
-            key: "id",
-            value: `'${id}'`
-        })
+		await sql.update(
+			"music_votes",
+			{
+				musics: JSON.stringify(originMusics),
+			},
+			{
+				key: "id",
+				value: `'${id}'`,
+			}
+		);
 
-        return res.status(200).json({
-            message: "投票成功",
-            currentMusics: originMusics
-        });
-    } catch (err) {
-        res.status(201).json({
-            message: "投票失败：服务器错误",
-        });
-    }
-
+		return res.status(200).json({
+			message: "投票成功",
+			currentMusics: originMusics,
+		});
+	} catch (err) {
+		console.log(err);
+		res.status(201).json({
+			message: "投票失败：服务器错误",
+		});
+	}
 };

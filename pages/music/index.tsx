@@ -23,146 +23,148 @@ import Axios from "axios";
 import Loader from "../../components/Loader";
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        audio: {
-            display: "none",
-        },
-        addBtn: {
-            right: "20px",
-            bottom: "20px",
-            position: "fixed",
-        },
-        container: {
-            padding: theme.spacing(2),
-        },
-    })
+	createStyles({
+		audio: {
+			display: "none",
+		},
+		addBtn: {
+			right: "20px",
+			bottom: "20px",
+			position: "fixed",
+		},
+		container: {
+			padding: theme.spacing(2),
+		},
+	})
 );
 
 export async function getServerSideProps(context: { query: { id: any } }) {
-    const { id, title } = context.query;
-    const config = await import(`../../data/config.json`);
+	const { id, title } = context.query;
+	const config = await import(`../../data/config.json`);
 
-    return {
-        props: {
-            siteConfig: config.default,
-            id,
-            title
-        },
-    };
+	return {
+		props: {
+			siteConfig: config.default,
+			id,
+			title,
+		},
+	};
 }
 
 const editModule = () => {
-    return(
-        <Button></Button>
-    )
-}
+	return <Button></Button>;
+};
 
 const MusicItem = ({
-    title,
-    index,
-    id,
-    currentIndex,
-    playUrl,
-    vote,
-    artist,
-    reason,
-    isAdmin,
-    musicId,
-    handlePlayIndexChange,
-    handleVote,
-    handleDelete,
+	title,
+	index,
+	id,
+	currentIndex,
+	playUrl,
+	vote,
+	artist,
+	reason,
+	isAdmin,
+	musicId,
+	handlePlayIndexChange,
+	handleVote,
+	handleDelete,
+	isVoted,
 }: {
-    title: string;
-    vote: number;
-    artist: string;
-    reason: string;
-    playUrl: string;
-    isAdmin: boolean;
-    index: number;
-    id: number;
-    musicId: number;
-    currentIndex: number;
-    handlePlayIndexChange: (index: number) => void;
-    handleVote: (musicId: number) => void;
-    handleDelete: (musicId: number) => void;
+	title: string;
+	vote: number;
+	artist: string;
+	reason: string;
+	playUrl: string;
+	isAdmin: boolean;
+	index: number;
+	id: number;
+	musicId: number;
+	currentIndex: number;
+	handlePlayIndexChange: (index: number) => void;
+	handleVote: (musicId: number) => void;
+	handleDelete: (musicId: number) => void;
 }) => {
-    const audioDom = useRef<HTMLAudioElement>(null);
-    const classes = useStyles();
-    const [onPlay, setOnPlay] = useState(false);
+	const audioDom = useRef<HTMLAudioElement>(null);
+	const classes = useStyles();
+	const [onPlay, setOnPlay] = useState(false);
 
-    useEffect(() => {
-        if (currentIndex !== index) {
-            audioDom.current.pause();
-        }
-    }, [currentIndex]);
+	console.log(isVoted);
 
-    const handleClick = () => {
-        setOnPlay(!onPlay);
+	useEffect(() => {
+		if (currentIndex !== index) {
+			audioDom.current.pause();
+		}
+	}, [currentIndex]);
 
-        handlePlayIndexChange(index);
+	const handleClick = () => {
+		setOnPlay(!onPlay);
 
-        if (onPlay) {
-            audioDom.current.pause();
-        } else {
-            audioDom.current.play();
-        }
-    };
+		handlePlayIndexChange(index);
 
-    const handleAudioEnded = () => {
-        setOnPlay(false);
-    };
+		if (onPlay) {
+			audioDom.current.pause();
+		} else {
+			audioDom.current.play();
+		}
+	};
 
-    const handleAudioPlay = () => {
-        setOnPlay(true);
-    };
+	const handleAudioEnded = () => {
+		setOnPlay(false);
+	};
 
-    return (
-        <>
-            <ListItem button>
-                <ListItemText
-                    secondary={`投稿理由：${reason}`}
-                    primary={`${title} - ${artist}`}
-                />
-                <ListItemSecondaryAction>
-                    <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={handleClick}
-                    >
-                        {onPlay && currentIndex === index ? (
-                            <PauseCircleFilledTwoToneIcon />
-                        ) : (
-                            <PlayArrowTwoToneIcon />
-                        )}
-                    </IconButton>
-                    <Button
-                        onClick={handleVote}
-                        startIcon={<ThumbUpAltTwoToneIcon />}
-                    >
-                        {vote}
-                    </Button>
-                    {!!isAdmin && (
-                        <IconButton
-                            aria-label="delete"
-                            onClick={handleDelete}
-                        >
-                            <CloseOutlinedIcon />
-                        </IconButton>
-                    )}
-                </ListItemSecondaryAction>
-            </ListItem>
-            <audio
-                onEnded={handleAudioEnded}
-                onPlay={handleAudioPlay}
-                className={classes.audio}
-                controls={true}
-                ref={audioDom}
-            >
-                <source src={playUrl} type="audio/mpeg" />
-                Your browser does not support the audio tag.
-            </audio>
-        </>
-    );
+	const handleAudioPlay = () => {
+		setOnPlay(true);
+	};
+
+	return (
+		<>
+			<ListItem button>
+				<ListItemText
+					secondary={`投稿理由：${reason}`}
+					primary={`${title} - ${artist}`}
+				/>
+				<ListItemSecondaryAction>
+					<IconButton
+						edge="end"
+						aria-label="delete"
+						onClick={handleClick}
+					>
+						{onPlay && currentIndex === index ? (
+							<PauseCircleFilledTwoToneIcon />
+						) : (
+							<PlayArrowTwoToneIcon />
+						)}
+					</IconButton>
+					<Button
+						onClick={handleVote}
+						startIcon={
+							<ThumbUpAltTwoToneIcon
+								color={isVoted ? "primary" : ""}
+							/>
+						}
+					>
+						{vote}
+					</Button>
+					{!!isAdmin && (
+						<IconButton aria-label="delete" onClick={handleDelete}>
+							<CloseOutlinedIcon />
+						</IconButton>
+					)}
+				</ListItemSecondaryAction>
+			</ListItem>
+			<audio
+				onEnded={handleAudioEnded}
+				onPlay={handleAudioPlay}
+				className={classes.audio}
+				controls={true}
+				ref={audioDom}
+			>
+				<source src={playUrl} type="audio/mpeg" />
+				Your browser does not support the audio tag.
+			</audio>
+		</>
+	);
 };
 
 /**
@@ -170,148 +172,154 @@ const MusicItem = ({
  */
 
 const Page = ({ id, siteConfig, locale, title }) => {
-    return (
-        <Layout
-            currentPage={{
-                text: title || `起床铃投票`,
-                path: "/music/" + id,
-            }}
-            locale={locale}
-            config={siteConfig}
-        >
-            <Music id={id} />
-        </Layout>
-    );
+	return (
+		<Layout
+			currentPage={{
+				text: title || `起床铃投票`,
+				path: "/music/" + id,
+			}}
+			locale={locale}
+			config={siteConfig}
+		>
+			<Music id={id} />
+		</Layout>
+	);
 };
 
 const Music = ({ userData = {}, id }: { id: number }) => {
-    const classes = useStyles();
-    const [detail, setDetail] = useState({
-        title: "未命名",
-        musics: "[]",
-        description: "暂无描述",
-    });
-    const [currentAudio, setCurrentAudio] = useState(0);
+	const classes = useStyles();
+	const [detail, setDetail] = useState({
+		title: "未命名",
+		musics: "[]",
+		description: "暂无描述",
+	});
+	const [currentAudio, setCurrentAudio] = useState(0);
 
-    useEffect(() => {
-        fetch(`/api/music/getMusicDetail?id=${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setDetail(data.musicData);
-            });
-    }, []);
+	useEffect(() => {
+		fetch(`/api/music/getMusicDetail?id=${id}`)
+			.then((res) => res.json())
+			.then((data) => {
+				setDetail(data.musicData);
+			});
+	}, []);
 
-    const handleVote = (musicId) => {
-        Axios.get(
-            `/api/music/voteMusic?id=${id}&musicId=${musicId}&userId=${userData.id}`
-        ).then((data) => {
-            switch (data.status) {
-                case 201:
-                    window.snackbar({
-                        message: "X " + data.data.message,
-                    });
-                    break;
-                default:
-                    var newObj = Object.assign({}, detail, {
-                        musics: JSON.stringify(data.data.currentMusics),
-                    });
-                    setDetail(newObj);
-            }
-        });
-    };
+	// vote等于0表示取消投票
+	const handleVote = (musicId, vote) => {
+		Axios.get(
+			`/api/music/voteMusic?id=${id}&musicId=${musicId}&vote=${vote}`
+		).then((data) => {
+			switch (data.status) {
+				case 201:
+					window.snackbar({
+						message: "X " + data.data.message,
+					});
+					break;
+				default:
+					var newObj = Object.assign({}, detail, {
+						musics: JSON.stringify(data.data.currentMusics),
+					});
+					setDetail(newObj);
+			}
+		});
+	};
 
-    const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics);
+	const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics);
 
-    musics.sort((a, b) => {
-        return b.vote - a.vote;
-    });
+	musics.sort((a, b) => {
+		return b.vote - a.vote;
+	});
 
-    console.log(musics);
+	console.log(musics);
 
-    // TODO 根据日期自动判断是否结束
+	// TODO 根据日期自动判断是否结束
 
-    const handleDelete = (musicId) => {
-        Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
-            (data) => {
-                switch (data.status) {
-                    case 201:
-                        window.snackbar({
-                            message: "",
-                        });
-                        break;
-                    case 200:
-                        var newObj = Object.assign({}, detail, {
-                            musics: JSON.stringify(data.data.currentMusics),
-                        });
-                        setDetail(newObj);
-                        break;
-                }
-            }
-        );
-    };
+	const handleDelete = (musicId) => {
+		Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
+			(data) => {
+				switch (data.status) {
+					case 201:
+						window.snackbar({
+							message: "",
+						});
+						break;
+					case 200:
+						var newObj = Object.assign({}, detail, {
+							musics: JSON.stringify(data.data.currentMusics),
+						});
+						setDetail(newObj);
+						break;
+				}
+			}
+		);
+	};
 
-    return (
-        <>
-            <Paper className={classes.container}>
-                <Typography variant="h5">{detail.title}</Typography>
-                {!!detail.description && (
-                    <Typography variant="body1">
-                        {detail.description}
-                    </Typography>
-                )}
-                {detail.statu == 0 ? (
-                    <Chip
-                        color="primary"
-                        icon={<AlarmOnIcon />}
-                        label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
-                            }`}
-                    />
-                ) : (
-                    <Chip icon={<AlarmOnIcon />} label="投票已结束" />
-                )}
-            </Paper>
-            <br />
-            {!!musics.length && (
-                <List component={Paper} aria-label="music list">
-                    {musics.map((song, i) => {
-                        if (song.statu !== 1) {
-                            return (
-                                <MusicItem
-                                    isAdmin={
-                                        userData ? userData.isAdmin : false
-                                    }
-                                    index={i}
-                                    id={id}
-                                    musicId={i}
-                                    vote={song.vote}
-                                    reason={song.reason}
-                                    currentIndex={currentAudio}
-                                    handlePlayIndexChange={setCurrentAudio}
-                                    handleVote={() => handleVote(i)}
-                                    handleDelete={() => handleDelete(i)}
-                                    playUrl={song.playUrl}
-                                    title={song.title}
-                                    artist={song.artist}
-                                    key={i + song.title}
-                                />
-                            );
-                        }
-                        return null
-                    })}
-                </List>
-            )}
-            {!!!musics.length && <Loader />}
-            <Link href={`/music/add?id=${id}&title=${detail.title}`}>
-                <Fab
-                    className={classes.addBtn}
-                    color="primary"
-                    aria-label="add"
-                >
-                    <AddIcon />
-                </Fab>
-            </Link>
-        </>
-    );
+	return (
+		<>
+			<Paper className={classes.container}>
+				<Typography variant="h5">{detail.title}</Typography>
+				{!!detail.description && (
+					<Typography variant="body1">
+						{detail.description}
+					</Typography>
+				)}
+				{detail.statu == 0 ? (
+					<Chip
+						color="primary"
+						icon={<AlarmOnIcon />}
+						label={`进行中 - 截止日期：${
+							detail.deadline.split("T")[0]
+						}`}
+					/>
+				) : (
+					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
+				)}
+			</Paper>
+			<br />
+			{!!musics.length && (
+				<List component={Paper} aria-label="music list">
+					{musics.map((song, i) => {
+						if (song.statu !== 1) {
+							let isVoted = song.voterId.includes(userData.id);
+							return (
+								<MusicItem
+									isAdmin={
+										userData ? userData.isAdmin : false
+									}
+									isVoted={isVoted}
+									index={i}
+									id={id}
+									musicId={i}
+									vote={song.vote}
+									reason={song.reason}
+									currentIndex={currentAudio}
+									handlePlayIndexChange={setCurrentAudio}
+									handleVote={() =>
+										handleVote(i, isVoted ? 0 : 1)
+									}
+									handleDelete={() => handleDelete(i)}
+									playUrl={song.playUrl}
+									title={song.title}
+									artist={song.artist}
+									key={i + song.title}
+								/>
+							);
+						}
+						return null;
+					})}
+				</List>
+			)}
+			{!!!musics.length && <Loader />}
+			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
+				<Fab
+					className={classes.addBtn}
+					color="primary"
+					aria-label="add"
+				>
+					<AddIcon />
+				</Fab>
+			</Link>
+		</>
+	);
 };
 
 export default Page;

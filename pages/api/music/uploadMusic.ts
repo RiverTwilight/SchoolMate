@@ -1,6 +1,7 @@
 import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import url2id from "../../../utils/url2id";
+import verifyJWT from "../../../utils/verifyJWT";
 
 type Data = {
     /**
@@ -23,6 +24,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const { TOKEN: token } = req.cookies;
 
+        const userData = verifyJWT(token)
+
         // parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
         const identify = await sql.get("music_votes", ["musics"], {
             where: {
@@ -35,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         console.log(originMusics)
 
-        if (originMusics.map((item) => item.voterToken).includes(token)) {
+        if (originMusics.map((item) => item.uploaderId).includes(userData.id)) {
             return res.status(204).json({
                 message: "重复投稿",
                 id,
@@ -45,10 +48,10 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         const musicId = url2id(musicUrl);
 
         var playUrl = musicId
-            ? `http://music.163.com/song/media/outer/url?id=${musicId}.mp3`
+            ? `https://music.163.com/song/media/outer/url?id=${musicId}.mp3`
             : musicUrl;
 
-        console.log(playUrl);
+        console.log(playUrl, musicId);
 
         const newMusic = {
             musicUrl,
@@ -57,7 +60,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             artist,
             title,
             vote: 0,
-            voterToken: token,
+            uploaderId: token,
+            voterId: [],
             statu: 0,
         };
 

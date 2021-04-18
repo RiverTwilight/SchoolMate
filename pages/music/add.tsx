@@ -74,7 +74,7 @@ const AddMusic = ({ userData, id, title }) => {
                 console.log(res)
                 if (res.status == 200) {
                     setIsLoading(false);
-                    router.push(`/music?id=${res.data.id}`);
+                    router.push(`/music?id=${res.data.id}&title=${title}`);
                 } else {
                     window.snackbar({
                         message: res.data.message,
