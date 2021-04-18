@@ -28,29 +28,30 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 			},
 		});
 
-        const originMusics = JSON.parse(identify[0].musics);
-        
-        
+		const originMusics = JSON.parse(identify[0].musics);
+
 		var currentVote = 0;
-        
+
 		for (var i in originMusics) {
 			if (i == musicId) {
 				if (parseInt(vote) > 0) {
-                    console.log("+1")
+					console.log("+1");
 					currentVote = originMusics[i].vote + 1;
 					originMusics[i].vote = currentVote;
 					originMusics[i].voterId.push(verification.id);
 				} else {
-                    console.log("-1")
-
+					console.log("-1");
+					// FIXME 取消投票后删除USER ID
 					currentVote = originMusics[i].vote - 1;
 					originMusics[i].vote = currentVote;
-					originMusics[i].voterId.slice(originMusics[i].voterId.indexOf(verification.id), 1);
+					originMusics[i].voterId.slice(
+						originMusics[i].voterId.indexOf(verification.id),
+						1
+					);
 				}
 				break;
 			}
-        }
-        
+		}
 
 		await sql.update(
 			"music_votes",

@@ -279,7 +279,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 				<List component={Paper} aria-label="music list">
 					{musics.map((song, i) => {
 						if (song.statu !== 1) {
-							let isVoted = song.voterId.includes(userData.id);
+							let isVoted = song.voterId.includes(userData.id || 0);
 							return (
 								<MusicItem
 									isAdmin={
