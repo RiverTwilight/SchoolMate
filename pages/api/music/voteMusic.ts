@@ -32,19 +32,19 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		var currentVote = 0;
 
+		console.log("before", originMusics)
+
 		for (var i in originMusics) {
-			if (i == musicId) {
+			if (i === musicId) {
 				if (parseInt(vote) > 0) {
-					console.log("+1");
 					currentVote = originMusics[i].vote + 1;
 					originMusics[i].vote = currentVote;
 					originMusics[i].voterId.push(verification.id);
 				} else {
-					console.log("-1");
 					// FIXME 取消投票后删除USER ID
 					currentVote = originMusics[i].vote - 1;
 					originMusics[i].vote = currentVote;
-					originMusics[i].voterId.slice(
+					originMusics[i].voterId.splice(
 						originMusics[i].voterId.indexOf(verification.id),
 						1
 					);
@@ -52,6 +52,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 				break;
 			}
 		}
+
+		console.log("after",originMusics)
 
 		await sql.update(
 			"music_votes",

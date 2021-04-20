@@ -62,7 +62,7 @@ export default (props: any) => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const handleClickUser = () => {
-        if (!!userData) {
+        if (!!userData.name) {
             router.push("/user");
         } else {
             handleLogin && handleLogin();
@@ -122,7 +122,7 @@ export default (props: any) => {
                             size="large"
                             onClick={handleClickUser}
                         >
-                            {!!userData ? userData.name : "登录"}
+                            {!!userData.name ? userData.name : "登录"}
                         </Button>
                     </Toolbar>
                     <Divider />

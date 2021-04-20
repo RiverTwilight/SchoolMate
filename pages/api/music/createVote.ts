@@ -51,6 +51,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		return res.status(200).json({
 			message: "创建成功",
 			id: add.insertId,
+			title,
 		});
 	} catch (err) {
 		return res.status(500).json({

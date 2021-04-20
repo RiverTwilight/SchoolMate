@@ -17,6 +17,14 @@ type userInfoFromLocal = {
     admin: boolean
 }
 
+interface IUserData {
+    id?: any;
+    grade?: string;
+    classNum?: string;
+    tel?: number | string;
+    isAdmin?: number | boolean;
+}
+
 interface userInfoFromCloud extends userInfoFromLocal {
     token: string;
 }

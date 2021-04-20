@@ -66,7 +66,7 @@ const CreateVote = ({ userData }) => {
                         });
                         break;
                     case 200:
-                        router.push(`/music?id=${res.data.id}`)
+                        router.push(`/music?id=${res.data.id}&title=${res.data.title}`)
                 }
             })
             .catch(function (error) {

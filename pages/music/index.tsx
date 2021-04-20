@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 );
 
-export async function getServerSideProps(context: { query: { id: any } }) {
+export async function getServerSideProps(context: { query: { id: any, title: string } }) {
 	const { id, title } = context.query;
 	const config = await import(`../../data/config.json`);
 
@@ -186,12 +186,13 @@ const Page = ({ id, siteConfig, locale, title }) => {
 	);
 };
 
-const Music = ({ userData = {}, id }: { id: number }) => {
+const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
 		title: "未命名",
 		musics: "[]",
 		description: "暂无描述",
+		isInitial: true
 	});
 	const [currentAudio, setCurrentAudio] = useState(0);
 
@@ -204,7 +205,9 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 	}, []);
 
 	// vote等于0表示取消投票
-	const handleVote = (musicId, vote) => {
+	const handleVote = (musicId: number, vote) => {
+		console.log(musicId)
+
 		Axios.get(
 			`/api/music/voteMusic?id=${id}&musicId=${musicId}&vote=${vote}`
 		).then((data) => {
@@ -225,15 +228,13 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 
 	const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics);
 
-	musics.sort((a, b) => {
-		return b.vote - a.vote;
-	});
-
-	console.log(musics);
+	// musics.sort((a, b) => {
+	// 	return b.vote - a.vote;
+	// });
 
 	// TODO 根据日期自动判断是否结束
 
-	const handleDelete = (musicId) => {
+	const handleDelete = (musicId: number) => {
 		Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
 			(data) => {
 				switch (data.status) {
@@ -266,9 +267,8 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${
-							detail.deadline.split("T")[0]
-						}`}
+						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
+							}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
@@ -278,6 +278,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 			{!!musics.length && (
 				<List component={Paper} aria-label="music list">
 					{musics.map((song, i) => {
+						console.log(song, i)
 						if (song.statu !== 1) {
 							let isVoted = song.voterId.includes(userData.id || 0);
 							return (
@@ -308,7 +309,7 @@ const Music = ({ userData = {}, id }: { id: number }) => {
 					})}
 				</List>
 			)}
-			{!!!musics.length && <Loader />}
+			{musics.isInitial && <Loader />}
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
 					className={classes.addBtn}

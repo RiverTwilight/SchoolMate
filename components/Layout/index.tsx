@@ -63,14 +63,14 @@ class Layout extends React.Component<
 		classes: any;
 	},
 	{
-		userData: undefined;
+		userData: IUserData;
 		openLogin: boolean;
 	}
 > {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userData: null,
+			userData: {},
 			openLogin: false,
 		};
 	}
@@ -78,6 +78,7 @@ class Layout extends React.Component<
 		fetch(`/api/getUserInfo`)
 			.then((res) => res.json())
 			.then((data) => {
+				console.log(data)
 				if (data.user) {
 					this.setState({ userData: data.user });
 				} else {
