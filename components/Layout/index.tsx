@@ -48,17 +48,17 @@ class Layout extends React.Component<
 		const { locale, currentPage, siteConfig } = this.props;
 		const { description, author } = siteConfig;
 
-		const childrenWithProps = React.Children.map(
-			this.props.children,
-			(child) => {
-				// checking isValidElement is the safe way and avoids a typescript error too
-				const props = { locale };
-				if (React.isValidElement(child)) {
-					return React.cloneElement(child, props);
-				}
-				return child;
-			}
-		);
+		// const childrenWithProps = React.Children.map(
+		// 	this.props.children,
+		// 	(child) => {
+		// 		// checking isValidElement is the safe way and avoids a typescript error too
+		// 		const props = { locale };
+		// 		if (React.isValidElement(child)) {
+		// 			return React.cloneElement(child, props);
+		// 		}
+		// 		return child;
+		// 	}
+		// );
 
 		const formedTitle = `${currentPage ? `${currentPage.title} - ` : ""}${siteConfig.title}`;
 
@@ -92,7 +92,7 @@ class Layout extends React.Component<
 					<meta name="theme-color" content="#ffffff"></meta>
 					<title>{formedTitle}</title>
 				</Head>
-				{childrenWithProps}
+				{this.props.children}
 				<GlobalSnackbar />
 			</ThemeProvider>
 		);

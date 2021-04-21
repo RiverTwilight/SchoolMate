@@ -178,9 +178,9 @@ const HomePage = ({ userData }) => {
     );
 };
 
-const Page = ({ siteConfig, locale, currentPage }) => (
+const Page = ({ siteConfig, locale, currentPage, userData }) => (
     <Layout siteConfig={siteConfig} locale={locale} currentPage={currentPage}>
-        <HomePage />
+        <HomePage userData={userData} />
     </Layout>
 );
 

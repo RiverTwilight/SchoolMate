@@ -175,14 +175,14 @@ const MusicItem = ({
  * 投票详情
  */
 
-const Page = ({ id, siteConfig, locale, currentPage }) => {
+const Page = ({ id, siteConfig, locale, currentPage, userData }) => {
 	return (
 		<Layout
 			currentPage={currentPage}
 			locale={locale}
 			siteConfig={siteConfig}
 		>
-			<Music id={id} />
+			<Music id={id} userData={userData} />
 		</Layout>
 	);
 };

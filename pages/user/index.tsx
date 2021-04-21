@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { clearCookie } from "../../utils/cookies";
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
     const config = await import(`../../data/config.json`);
 
     return {
@@ -75,14 +75,14 @@ const User = ({ userData }) => {
     )
 }
 
-const Page = ({ siteConfig, locale, currentPage }) => {
+const Page = ({ siteConfig, locale, currentPage, userData }) => {
     return (
         <Layout
             currentPage={currentPage}
             locale={locale}
             siteConfig={siteConfig}
         >
-            <User />
+            <User userData={userData} />
         </Layout>
     );
 };

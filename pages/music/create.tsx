@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
     const config = await import(`../../data/config.json`);
 
     return {
@@ -121,13 +121,13 @@ const CreateVote = ({ userData }) => {
     );
 };
 
-const Page = ({ siteConfig, locale, currentPage }) => (
+const Page = ({ siteConfig, locale, currentPage, userData }) => (
     <Layout
         currentPage={currentPage}
         locale={locale}
         siteConfig={siteConfig}
     >
-        <CreateVote />
+        <CreateVote userData={userData} />
     </Layout>
 )
 

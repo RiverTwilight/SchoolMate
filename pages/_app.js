@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
                 <main className={classes.root}>
                     <div className={classes.toolbar} />
                     <div className={classes.content}>
-                        <Component {...pageProps} />
+                        <Component userData={userData} {...pageProps} />
                     </div>
                 </main>
             </GlobalContext.Provider>
