@@ -47,6 +47,10 @@ export async function getServerSideProps(context: { query: { id: any, title: str
 			siteConfig: config.default,
 			id,
 			title,
+			currentPage: {
+				title: title || `起床铃投票`,
+				path: "/music/" + id,
+			}
 		},
 	};
 }
@@ -171,15 +175,12 @@ const MusicItem = ({
  * 投票详情
  */
 
-const Page = ({ id, siteConfig, locale, title }) => {
+const Page = ({ id, siteConfig, locale, currentPage }) => {
 	return (
 		<Layout
-			currentPage={{
-				text: title || `起床铃投票`,
-				path: "/music/" + id,
-			}}
+			currentPage={currentPage}
 			locale={locale}
-			config={siteConfig}
+			siteConfig={siteConfig}
 		>
 			<Music id={id} />
 		</Layout>

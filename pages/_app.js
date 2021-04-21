@@ -3,9 +3,28 @@ import Header from "../components/Header";
 import Login from "../components/Login";
 import GlobalContext from "../components/GlobalContext";
 import { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: "flex",
+        justifyContent: "center",
+        background: "#f6f6f6",
+    },
+    content: {
+        flexGrow: 1,
+        paddingTop: "75px",
+        minHeight: "100vh",
+        position: "relative",
+        maxWidth: "1000px",
+    },
+    toolbar: theme.mixins.toolbar,
+}));
 
 function MyApp({ Component, pageProps }) {
-    console.log(Component);
+    const { currentPage, siteConfig } = pageProps;
+    console.log(currentPage)
+    const classes = useStyles();
     const [userData, setUserData] = useState({});
     const [open, setOpen] = useState(false);
     useEffect(() => {
@@ -32,14 +51,19 @@ function MyApp({ Component, pageProps }) {
                 <Header
                     userData={userData}
                     handleLogin={handleLogin}
-                    // {...this.props}
+                    title={currentPage.title}
                 />
                 <Login
-                    cbUrl={`${123}`}
+                    cbUrl={`${currentPage.path}`}
                     onClose={handleLoginClose}
                     open={open}
                 />
-                <Component {...pageProps} />
+                <main className={classes.root}>
+                    <div className={classes.toolbar} />
+                    <div className={classes.content}>
+                        <Component {...pageProps} />
+                    </div>
+                </main>
             </GlobalContext.Provider>
         </>
     );

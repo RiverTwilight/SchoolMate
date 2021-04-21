@@ -79,7 +79,7 @@ const Page = ({ id, siteConfig, locale, title }) => {
                 path: "/user",
             }}
             locale={locale}
-            config={siteConfig}
+            siteConfig={siteConfig}
         >
             <User />
         </Layout>

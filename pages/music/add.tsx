@@ -44,6 +44,10 @@ export async function getServerSideProps(context) {
             siteConfig: config.default,
             id,
             title,
+            currentPage: {
+                title: "歌曲投稿",
+                path: "/music/add"
+            }
         },
     };
 }
@@ -166,12 +170,9 @@ const AddMusic = ({ userData, id, title }) => {
 
 const Page = (props) => (
     <Layout
-        currentPage={{
-            text: "歌曲投稿",
-            path: "/music/add",
-        }}
+        currentPage={props.currentPage}
         locale={props.locale}
-        config={props.siteConfig}
+        siteConfig={props.siteConfig}
     >
         <AddMusic {...props} />
     </Layout>

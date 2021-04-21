@@ -58,8 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default (props: any) => {
-    const { handleLogin, open, currentPage = { text: "Asdfaf" } } = props;
-    const { userData } = useContext(GlobalContext)
+    const { handleLogin, open, title } = props;
+    const { userData } = useContext(GlobalContext);
+
     const classes = useStyles();
     const router = useRouter();
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -109,7 +110,7 @@ export default (props: any) => {
                             variant="h6"
                             className={classes.title}
                         >
-                            &nbsp;{currentPage.text}
+                            &nbsp;{title}
                             {/* {""}
                         <Hidden xsDown>
                             <ActiveLink activeClassName="" href="/">
