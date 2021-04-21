@@ -191,7 +191,7 @@ class Login extends React.Component<
 					<br></br>
 					<br></br>
 					<FormControl fullWidth>
-						<InputLabel htmlFor="tel">考号</InputLabel>
+						<InputLabel htmlFor="tel">考号（可选）</InputLabel>
 						<Input
 							onChange={(e) => {
 								this.setState({
