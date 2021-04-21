@@ -16,6 +16,10 @@ export async function getStaticProps(context) {
     return {
         props: {
             siteConfig: config.default,
+            currentPage: {
+                title: "用户中心",
+                path: "/user",
+            }
         },
     };
 }
@@ -71,13 +75,10 @@ const User = ({ userData }) => {
     )
 }
 
-const Page = ({ id, siteConfig, locale, title }) => {
+const Page = ({ siteConfig, locale, currentPage }) => {
     return (
         <Layout
-            currentPage={{
-                text: "用户中心",
-                path: "/user",
-            }}
+            currentPage={currentPage}
             locale={locale}
             siteConfig={siteConfig}
         >

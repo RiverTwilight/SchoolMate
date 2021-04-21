@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export async function getServerSideProps(context) {
     const config = await import(`../../data/config.json`);
     const { id, title } = context.query;
+    
     return {
         props: {
             siteConfig: config.default,

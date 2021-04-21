@@ -22,6 +22,10 @@ export async function getStaticProps(context) {
     return {
         props: {
             siteConfig: config.default,
+            currentPage: {
+                title: "创建投票",
+                path: "/music/create"
+            }
         },
     };
 }
