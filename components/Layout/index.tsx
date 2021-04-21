@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import Header from "../Header";
-import Login from "../Login";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../../utils/theme";
@@ -86,16 +84,6 @@ class Layout extends React.Component<
 				}
 			});
 	};
-	handleLogin = () => {
-		this.setState({
-			openLogin: true,
-		});
-	};
-	handleLoginClose = () => {
-		this.setState({
-			openLogin: false,
-		});
-	};
 	render() {
 		const { config, currentPage, catalog, locale, classes } = this.props;
 		const { openLogin, userData } = this.state;
@@ -140,95 +128,10 @@ class Layout extends React.Component<
 						name="viewport"
 						content="width=device-width,initial-scale=1,maximum-scale=1,user-scaleable=0"
 					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="57x57"
-						href="/static/icon/apple-icon-57x57.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="60x60"
-						href="/static/icon/apple-icon-60x60.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="72x72"
-						href="/static/icon/apple-icon-72x72.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="76x76"
-						href="/static/icon/apple-icon-76x76.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="114x114"
-						href="/static/icon/apple-icon-114x114.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="120x120"
-						href="/static/icon/apple-icon-120x120.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="144x144"
-						href="/static/icon/apple-icon-144x144.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="152x152"
-						href="/static/icon/apple-icon-152x152.png"
-					/>
-					<link
-						rel="apple-touch-icon"
-						sizes="180x180"
-						href="/static/icon/apple-icon-180x180.png"
-					/>
-					<link
-						rel="icon"
-						type="image/png"
-						sizes="192x192"
-						href="/static/icon/android-icon-192x192.png"
-					/>
-					<link
-						rel="icon"
-						type="image/png"
-						sizes="32x32"
-						href="/static/icon/favicon-32x32.png"
-					/>
-					<link
-						rel="icon"
-						type="image/png"
-						sizes="96x96"
-						href="/static/icon/favicon-96x96.png"
-					/>
-					<link
-						rel="icon"
-						type="image/png"
-						sizes="16x16"
-						href="/static/icon/favicon-16x16.png"
-					/>
-					<link rel="manifest" href="/static/icon/manifest.json" />
-					<meta name="msapplication-TileColor" content="#ffffff" />
-					<meta
-						name="msapplication-TileImage"
-						content="/ms-icon-144x144.png"
-					/>
+					
 					<meta name="theme-color" content="#ffffff"></meta>
 					<title>{showTitle}</title>
 				</Head>
-				<Header
-					userData={userData}
-					handleLogin={this.handleLogin}
-					lang={locale}
-					{...this.props}
-				/>
-				<Login
-					cbUrl={`${currentPage.path}`}
-					onClose={this.handleLoginClose}
-					open={openLogin}
-				/>
 				<main className={classes.root}>
 					<div className={classes.toolbar} />
 					<div className={classes.content}>{childrenWithProps}</div>

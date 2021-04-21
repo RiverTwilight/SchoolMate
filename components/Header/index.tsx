@@ -15,6 +15,8 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import clsx from "clsx";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { useRouter } from "next/router";
+import { useContext } from 'react';
+import GlobalContext from '../GlobalContext';
 
 function ElevationScroll(props: Props) {
     const { children } = props;
@@ -56,7 +58,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default (props: any) => {
-    const { handleLogin, open, currentPage, userData } = props;
+    const { handleLogin, open, currentPage = { text: "Asdfaf" } } = props;
+    const { userData } = useContext(GlobalContext)
     const classes = useStyles();
     const router = useRouter();
     const [mobileOpen, setMobileOpen] = React.useState(false);

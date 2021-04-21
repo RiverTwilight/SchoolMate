@@ -41,7 +41,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 					originMusics[i].vote = currentVote;
 					originMusics[i].voterId.push(verification.id);
 				} else {
-					// FIXME 取消投票后删除USER ID
 					currentVote = originMusics[i].vote - 1;
 					originMusics[i].vote = currentVote;
 					originMusics[i].voterId.splice(
