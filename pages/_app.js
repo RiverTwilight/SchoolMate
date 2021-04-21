@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MyApp({ Component, pageProps }) {
-    const { currentPage, siteConfig } = pageProps;
+    const { currentPage = {
+        title: "404"
+    }, siteConfig } = pageProps;
     console.log(currentPage)
     const classes = useStyles();
     const [userData, setUserData] = useState({});

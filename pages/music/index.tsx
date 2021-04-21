@@ -81,6 +81,7 @@ const MusicItem = ({
 	reason: string;
 	playUrl: string;
 	isAdmin: boolean;
+	isVoted: boolean;
 	index: number;
 	id: number;
 	musicId: number;
@@ -168,22 +169,6 @@ const MusicItem = ({
 				Your browser does not support the audio tag.
 			</audio>
 		</>
-	);
-};
-
-/**
- * 投票详情
- */
-
-const Page = ({ id, siteConfig, locale, currentPage, userData }) => {
-	return (
-		<Layout
-			currentPage={currentPage}
-			locale={locale}
-			siteConfig={siteConfig}
-		>
-			<Music id={id} userData={userData} />
-		</Layout>
 	);
 };
 
@@ -321,6 +306,23 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 				</Fab>
 			</Link>
 		</>
+	);
+};
+
+
+/**
+ * 投票详情
+ */
+
+const Page = ({ id, siteConfig, locale, currentPage, userData }) => {
+	return (
+		<Layout
+			currentPage={currentPage}
+			locale={locale}
+			siteConfig={siteConfig}
+		>
+			<Music id={id} userData={userData} />
+		</Layout>
 	);
 };
 
