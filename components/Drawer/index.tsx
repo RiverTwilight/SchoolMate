@@ -7,11 +7,12 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ActiveLink from "../../utils/AcitiveLink";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
-interface DrawerProps {}
+interface DrawerProps { }
 
 interface DrawerState {
     open: boolean;
@@ -20,9 +21,6 @@ interface DrawerState {
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
     drawer: {
         [theme.breakpoints.up("sm")]: {
             width: drawerWidth,
@@ -32,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
     drawerPaper: {
         width: drawerWidth,
     },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-    }, // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
+    copyright: {
+        position: "absolute",
+        bottom: "20px"
+    }
 }));
 
 const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
@@ -77,11 +75,14 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
                     </ListItem>
                 ))}
             </List>
+            <Typography color="textSecondary" className={classes.copyright} align="center">
+                Made With RiverTwilight, Grade 2019
+            </Typography>
         </div>
     );
 
     return (
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        <nav className={classes.drawer} aria-label="drawer">
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="css">
                 <Drawer
