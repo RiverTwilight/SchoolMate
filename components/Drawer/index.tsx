@@ -50,9 +50,13 @@ const LeftMenu = ({ mobileOpen, setMobileOpen }) => {
             <Divider />
             <List>
                 {[{
-                    text: "起床铃投票"
+                    text: "投票",
+                    href: "/"
+                }, {
+                    text: "文章",
+                    href: "/post"
                 }].map((item, index) => (
-                    <ActiveLink href="/" activeClassName="Mui-selected">
+                    <ActiveLink href={item.href} activeClassName="Mui-selected">
                         <ListItem button key={item.text}>
                             <ListItemIcon>{<InboxIcon />}</ListItemIcon>
                             <ListItemText primary={item.text} />
