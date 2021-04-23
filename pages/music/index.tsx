@@ -9,14 +9,19 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
+import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
+import Fab from "@material-ui/core/Fab";
+
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
 import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
 import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
-import Fab from "@material-ui/core/Fab";
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
+import MusicIcon from "../../public/static/Music.svg";
+
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
 import Axios from "axios";
@@ -34,11 +39,31 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		container: {
 			padding: theme.spacing(2),
+			position: "relative",
+			minHeight: "100px"
+		},
+		sessionTitle: {
+			lineHeight: "40px",
+		},
+		action: {
+			display: "flex",
+			flexDirection: "row-reverse",
+			marginTop: theme.spacing(1),
+		},
+		titleIcon: {
+			position: "absolute",
+			right: "20px",
+			opacity: 0.5,
+			bottom: "30px",
+			width: "100px",
+			height: " 100px",
 		},
 	})
 );
 
-export async function getServerSideProps(context: { query: { id: any, title: string } }) {
+export async function getServerSideProps(context: {
+	query: { id: any; title: string };
+}) {
 	const { id, title } = context.query;
 	const config = await import(`../../data/config.json`);
 
@@ -50,7 +75,7 @@ export async function getServerSideProps(context: { query: { id: any, title: str
 			currentPage: {
 				title: title || `起床铃投票`,
 				path: "/music/" + id,
-			}
+			},
 		},
 	};
 }
@@ -172,13 +197,15 @@ const MusicItem = ({
 	);
 };
 
-const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
+const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
 		title: "未命名",
 		musics: "[]",
 		description: "暂无描述",
-		isInitial: true
+		isInitial: true,
+		statu: 0,
+		deadline: "",
 	});
 	const [currentAudio, setCurrentAudio] = useState(0);
 
@@ -192,7 +219,7 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 
 	// vote等于0表示取消投票
 	const handleVote = (musicId: number, vote) => {
-		console.log(musicId)
+		console.log(musicId);
 
 		Axios.get(
 			`/api/music/voteMusic?id=${id}&musicId=${musicId}&vote=${vote}`
@@ -243,9 +270,11 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 	return (
 		<>
 			<Paper className={classes.container}>
-				<Typography variant="h5">{detail.title}</Typography>
+				<Typography className={classes.sessionTitle} variant="h5">
+					{detail.title}
+				</Typography>
 				{!!detail.description && (
-					<Typography variant="body1">
+					<Typography color="textSecondary" variant="body1">
 						{detail.description}
 					</Typography>
 				)}
@@ -253,20 +282,27 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
-							}`}
+						label={`进行中 - 截止日期：${
+							detail.deadline.split("T")[0]
+						}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
 				)}
+				<div className={classes.action}>
+					<Button variant="outlined">分享</Button>
+				</div>
+				<MusicIcon className={classes.titleIcon} />
 			</Paper>
 			<br />
 			{!!musics.length && (
 				<List component={Paper} aria-label="music list">
 					{musics.map((song, i) => {
-						console.log(song, i)
+						console.log(song, i);
 						if (song.statu !== 1) {
-							let isVoted = song.voterId.includes(userData.id || 0);
+							let isVoted = song.voterId.includes(
+								userData.id || 0
+							);
 							return (
 								<MusicItem
 									isAdmin={
@@ -293,8 +329,14 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 						}
 						return null;
 					})}
+					{!!!musics.filter((music) => music.statu == 0).length && (
+						<Typography variant="h6" align="center">
+							暂时没有音乐，赶快投稿吧
+						</Typography>
+					)}
 				</List>
 			)}
+
 			{musics.isInitial && <Loader />}
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
@@ -308,7 +350,6 @@ const Music = ({ userData = {}, id }: { id: number, userData: IUserData }) => {
 		</>
 	);
 };
-
 
 /**
  * 投票详情

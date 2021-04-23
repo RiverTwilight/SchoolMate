@@ -10,6 +10,7 @@ type Data = {
 
 /**
  * 获取用户信息
+ * // FIXME jwt过期处理
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { TOKEN: token } = req.cookies;
