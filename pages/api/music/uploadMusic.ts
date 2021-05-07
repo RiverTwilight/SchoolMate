@@ -12,9 +12,7 @@ type Data = {
     newMusic?: INewMusic;
 };
 
-interface INewMusic {
-
-}
+interface INewMusic {}
 
 /**
  * 创建投票
@@ -22,13 +20,13 @@ interface INewMusic {
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-const process163 = async (id: string | number) => {
-    const lyrics = await fetcher(
-        "https://music.163.com/api/song/lyric?id=65800&lv=1&kv=1&tv=-1"
-    );
-    console.log(lyrics);
+const process163 = async (id: string | number | boolean) => {
+    // const lyrics = await fetcher(
+    //     "https://music.163.com/api/song/lyric?id=65800&lv=1&kv=1&tv=-1"
+    // );
+    // console.log(lyrics.lrc.lyric);
     return {
-        lyrics,
+        lyrics: `https://music.163.com/api/song/lyric?id=${id}&lv=1&kv=1&tv=-1`,
         playUrl: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
     };
 };
@@ -63,19 +61,19 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             });
         }
 
-        var musicType: "163" | "qq" | "kugou" | "custom" =  "163";
+        var musicType: "163" | "qq" | "kugou" | "custom" = "163";
 
-        const { lyrics, playUrl } = await {
+        const { lyrics: lyricsUrl, playUrl } = await {
             "163": process163,
             custom: processCustom,
-        }[musicType](musicUrl);
+        }[musicType](url2id(musicUrl));
 
         const newMusic: INewMusic = {
             musicUrl,
             playUrl,
             reason,
             artist,
-            lyrics,
+            lyricsUrl,
             title,
             vote: 0,
             uploaderId: token,

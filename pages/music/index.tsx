@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import Layout from "../../components/Layout";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -9,9 +8,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
-import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
@@ -21,6 +23,7 @@ import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import MusicIcon from "../../public/static/Music.svg";
+import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
 
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
@@ -84,6 +87,32 @@ const editModule = () => {
 	return <Button></Button>;
 };
 
+const Lyrics = ({ onClose, open, lyricsUrl, title }: {
+	lyricsUrl: string;
+	open: boolean;
+	title: string;
+	onClose: () => void
+}) => {
+	const [lyrics, setLyrics] = useState("");
+	console.log(lyricsUrl)
+	useEffect(() => {
+		open && lyrics === "" && lyricsUrl !== "" && Axios.get(lyricsUrl, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+			},
+		}).then(res => {
+			console.log(res)
+			// setLyrics(res)
+		})
+	}, []);
+	return (
+		<Dialog onClose={onClose} aria-labelledby="simple-dialog-title" open={open}>
+			<DialogTitle id="simple-dialog-title">歌词 - {title}</DialogTitle>
+			{lyrics}
+		</Dialog>
+	)
+}
+
 const MusicItem = ({
 	title,
 	index,
@@ -99,6 +128,7 @@ const MusicItem = ({
 	handleVote,
 	handleDelete,
 	isVoted,
+	lyricsUrl
 }: {
 	title: string;
 	vote: number;
@@ -107,6 +137,7 @@ const MusicItem = ({
 	playUrl: string;
 	isAdmin: boolean;
 	isVoted: boolean;
+	lyricsUrl: string;
 	index: number;
 	id: number;
 	musicId: number;
@@ -118,8 +149,9 @@ const MusicItem = ({
 	const audioDom = useRef<HTMLAudioElement>(null);
 	const classes = useStyles();
 	const [onPlay, setOnPlay] = useState(false);
+	const [openLyrics, setOpenLyrics] = useState(false);
 
-	console.log(isVoted);
+	// console.log(isVoted);
 
 	useEffect(() => {
 		if (currentIndex !== index) {
@@ -147,8 +179,21 @@ const MusicItem = ({
 		setOnPlay(true);
 	};
 
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+	const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleCloseMenu = () => {
+		setAnchorEl(null);
+	};
+
 	return (
 		<>
+			<Lyrics lyricsUrl={lyricsUrl} title={title} open={openLyrics} onClose={() => {
+				setOpenLyrics(false)
+			}} />
 			<ListItem button>
 				<ListItemText
 					secondary={`投稿理由：${reason}`}
@@ -176,8 +221,22 @@ const MusicItem = ({
 					>
 						{vote}
 					</Button>
+					<IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClickMenu}>
+						<MoreVertOutlinedIcon />
+					</IconButton>
+					<Menu
+						id="simple-menu"
+						anchorEl={anchorEl}
+						keepMounted
+						open={Boolean(anchorEl)}
+						onClose={handleCloseMenu}
+					>
+						<MenuItem onClick={() => {
+							setOpenLyrics(true)
+						}}>查看歌词</MenuItem>
+					</Menu>
 					{!!isAdmin && (
-						<IconButton aria-label="delete" onClick={handleDelete}>
+						<IconButton onClick={handleDelete}>
 							<CloseOutlinedIcon />
 						</IconButton>
 					)}
@@ -207,6 +266,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 		isInitial: true,
 		statu: 0,
 		deadline: "",
+		lyrics: ""
 	});
 	const [currentAudio, setCurrentAudio] = useState(0);
 
@@ -314,6 +374,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 									musicId={i}
 									vote={song.vote}
 									reason={song.reason}
+									lyricsUrl={song.lyricsUrl}
 									currentIndex={currentAudio}
 									handlePlayIndexChange={setCurrentAudio}
 									handleVote={() =>
@@ -338,6 +399,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 			)}
 
 			{musics.isInitial && <Loader />}
+
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
 					className={classes.addBtn}
