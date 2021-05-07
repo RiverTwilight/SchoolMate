@@ -32,7 +32,8 @@ const GlobalSnackbar = () => {
 
 const Layout = (props: {
 	currentPage: ICurrentPage;
-	siteConfig: ISiteConfig
+	siteConfig: ISiteConfig;
+	children: JSX.Element[] | JSX.Element
 }) => {
 	const { currentPage, siteConfig } = props;
 	const { description, author, root } = siteConfig;

@@ -9,12 +9,31 @@ type Data = {
      */
     id?: unknown;
     message?: string;
-    newMusic?: any;
+    newMusic?: INewMusic;
 };
+
+interface INewMusic {
+
+}
 
 /**
  * 创建投票
  */
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const process163 = async (id: string | number) => {
+    const lyrics = await fetcher(
+        "https://music.163.com/api/song/lyric?id=65800&lv=1&kv=1&tv=-1"
+    );
+    console.log(lyrics);
+    return {
+        lyrics,
+        playUrl: `https://music.163.com/song/media/outer/url?id=${id}.mp3`,
+    };
+};
+
+const processCustom = async () => {};
 
 // FIXME 投稿出错
 // TODO 网易云音乐解析
@@ -25,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const { TOKEN: token } = req.cookies;
 
-        const userData = verifyJWT(token)
+        const userData = verifyJWT(token);
 
         // parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
         const identify = await sql.get("music_votes", ["musics"], {
@@ -37,8 +56,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const originMusics = JSON.parse(identify[0].musics);
 
-        console.log(originMusics)
-
         if (originMusics.map((item) => item.uploaderId).includes(userData.id)) {
             return res.status(204).json({
                 message: "重复投稿",
@@ -46,19 +63,19 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             });
         }
 
-        const musicId = url2id(musicUrl);
+        var musicType: "163" | "qq" | "kugou" | "custom" =  "163";
 
-        var playUrl = musicId
-            ? `https://music.163.com/song/media/outer/url?id=${musicId}.mp3`
-            : musicUrl;
+        const { lyrics, playUrl } = await {
+            "163": process163,
+            custom: processCustom,
+        }[musicType](musicUrl);
 
-        console.log(playUrl, musicId);
-
-        const newMusic = {
+        const newMusic: INewMusic = {
             musicUrl,
             playUrl,
             reason,
             artist,
+            lyrics,
             title,
             vote: 0,
             uploaderId: token,
@@ -87,7 +104,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             id,
         });
     } catch (err) {
-        res.status(301).json({
+        return res.status(301).json({
             message: err,
         });
     }

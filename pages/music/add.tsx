@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -88,6 +87,7 @@ const AddMusic = ({ userData, id, title }) => {
             })
             .catch(function (error) {
                 console.warn(error);
+                setIsLoading(false);
             });
     };
     const handleBack = () => {
@@ -169,14 +169,4 @@ const AddMusic = ({ userData, id, title }) => {
     );
 };
 
-const Page = (props) => (
-    <Layout
-        currentPage={props.currentPage}
-        locale={props.locale}
-        siteConfig={props.siteConfig}
-    >
-        <AddMusic {...props} />
-    </Layout>
-);
-
-export default Page;
+export default AddMusic;

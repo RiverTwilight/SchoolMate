@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -75,16 +74,4 @@ const User = ({ userData }) => {
     )
 }
 
-const Page = ({ siteConfig, locale, currentPage, userData }) => {
-    return (
-        <Layout
-            currentPage={currentPage}
-            locale={locale}
-            siteConfig={siteConfig}
-        >
-            <User userData={userData} />
-        </Layout>
-    );
-};
-
-export default Page;
+export default User;

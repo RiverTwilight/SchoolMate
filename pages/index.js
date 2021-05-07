@@ -178,10 +178,4 @@ const HomePage = ({ userData }) => {
     );
 };
 
-const Page = ({ siteConfig, locale, currentPage, userData }) => (
-    <Layout siteConfig={siteConfig} locale={locale} currentPage={currentPage}>
-        <HomePage userData={userData} />
-    </Layout>
-);
-
-export default Page;
+export default HomePage;

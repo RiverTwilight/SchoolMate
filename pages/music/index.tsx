@@ -197,6 +197,7 @@ const MusicItem = ({
 	);
 };
 
+// TODO 查看歌词功能
 const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
@@ -282,9 +283,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${
-							detail.deadline.split("T")[0]
-						}`}
+						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
+							}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
@@ -351,20 +351,4 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	);
 };
 
-/**
- * 投票详情
- */
-
-const Page = ({ id, siteConfig, locale, currentPage, userData }) => {
-	return (
-		<Layout
-			currentPage={currentPage}
-			locale={locale}
-			siteConfig={siteConfig}
-		>
-			<Music id={id} userData={userData} />
-		</Layout>
-	);
-};
-
-export default Page;
+export default Music;

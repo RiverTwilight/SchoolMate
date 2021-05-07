@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -121,15 +120,4 @@ const CreateVote = ({ userData }) => {
     );
 };
 
-const Page = ({ siteConfig, locale, currentPage, userData }) => (
-    <Layout
-        currentPage={currentPage}
-        locale={locale}
-        siteConfig={siteConfig}
-    >
-        <CreateVote userData={userData} />
-    </Layout>
-)
-
-
-export default Page;
+export default CreateVote;
