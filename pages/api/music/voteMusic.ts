@@ -19,7 +19,13 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		const { TOKEN: token } = req.cookies;
 
-		const verification = verifyJWT(token);
+		const verification = verifyJWT(token, res);
+
+		if (!verification) {
+			return res.status(204).json({
+				message: "未登录",
+			});
+		}
 
 		const identify = await sql.get("music_votes", ["musics"], {
 			where: {
@@ -32,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		var currentVote = 0;
 
-		console.log("before", originMusics)
+		console.log("before", originMusics);
 
 		for (var i in originMusics) {
 			if (i === musicId) {
@@ -52,7 +58,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 			}
 		}
 
-		console.log("after",originMusics)
+		console.log("after", originMusics);
 
 		await sql.update(
 			"music_votes",
@@ -71,7 +77,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		});
 	} catch (err) {
 		console.log(err);
-		res.status(201).json({
+		res.status(500).json({
 			message: "投票失败：服务器错误",
 		});
 	}

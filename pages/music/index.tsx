@@ -2,28 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
 
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import PlayArrowTwoToneIcon from "@material-ui/icons/PlayArrowTwoTone";
-import PauseCircleFilledTwoToneIcon from "@material-ui/icons/PauseCircleFilledTwoTone";
-import ThumbUpAltTwoToneIcon from "@material-ui/icons/ThumbUpAltTwoTone";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import MusicItem from "../../components/MusicItem";
+
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import MusicIcon from "../../public/static/Music.svg";
-import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
 
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
@@ -32,9 +20,6 @@ import Loader from "../../components/Loader";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		audio: {
-			display: "none",
-		},
 		addBtn: {
 			right: "20px",
 			bottom: "20px",
@@ -85,175 +70,6 @@ export async function getServerSideProps(context: {
 
 const editModule = () => {
 	return <Button></Button>;
-};
-
-const Lyrics = ({ onClose, open, lyricsUrl, title }: {
-	lyricsUrl: string;
-	open: boolean;
-	title: string;
-	onClose: () => void
-}) => {
-	const [lyrics, setLyrics] = useState("");
-	console.log(lyricsUrl)
-	useEffect(() => {
-		open && lyrics === "" && lyricsUrl !== "" && Axios.get(lyricsUrl, {
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-			},
-		}).then(res => {
-			console.log(res)
-			// setLyrics(res)
-		})
-	}, []);
-	return (
-		<Dialog onClose={onClose} aria-labelledby="simple-dialog-title" open={open}>
-			<DialogTitle id="simple-dialog-title">歌词 - {title}</DialogTitle>
-			{lyrics}
-		</Dialog>
-	)
-}
-
-const MusicItem = ({
-	title,
-	index,
-	id,
-	currentIndex,
-	playUrl,
-	vote,
-	artist,
-	reason,
-	isAdmin,
-	musicId,
-	handlePlayIndexChange,
-	handleVote,
-	handleDelete,
-	isVoted,
-	lyricsUrl
-}: {
-	title: string;
-	vote: number;
-	artist: string;
-	reason: string;
-	playUrl: string;
-	isAdmin: boolean;
-	isVoted: boolean;
-	lyricsUrl: string;
-	index: number;
-	id: number;
-	musicId: number;
-	currentIndex: number;
-	handlePlayIndexChange: (index: number) => void;
-	handleVote: (musicId: number) => void;
-	handleDelete: (musicId: number) => void;
-}) => {
-	const audioDom = useRef<HTMLAudioElement>(null);
-	const classes = useStyles();
-	const [onPlay, setOnPlay] = useState(false);
-	const [openLyrics, setOpenLyrics] = useState(false);
-
-	// console.log(isVoted);
-
-	useEffect(() => {
-		if (currentIndex !== index) {
-			audioDom.current.pause();
-		}
-	}, [currentIndex]);
-
-	const handleClick = () => {
-		setOnPlay(!onPlay);
-
-		handlePlayIndexChange(index);
-
-		if (onPlay) {
-			audioDom.current.pause();
-		} else {
-			audioDom.current.play();
-		}
-	};
-
-	const handleAudioEnded = () => {
-		setOnPlay(false);
-	};
-
-	const handleAudioPlay = () => {
-		setOnPlay(true);
-	};
-
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-	const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleCloseMenu = () => {
-		setAnchorEl(null);
-	};
-
-	return (
-		<>
-			<Lyrics lyricsUrl={lyricsUrl} title={title} open={openLyrics} onClose={() => {
-				setOpenLyrics(false)
-			}} />
-			<ListItem button>
-				<ListItemText
-					secondary={`投稿理由：${reason}`}
-					primary={`${title} - ${artist}`}
-				/>
-				<ListItemSecondaryAction>
-					<IconButton
-						edge="end"
-						aria-label="delete"
-						onClick={handleClick}
-					>
-						{onPlay && currentIndex === index ? (
-							<PauseCircleFilledTwoToneIcon />
-						) : (
-							<PlayArrowTwoToneIcon />
-						)}
-					</IconButton>
-					<Button
-						onClick={handleVote}
-						startIcon={
-							<ThumbUpAltTwoToneIcon
-								color={isVoted ? "primary" : ""}
-							/>
-						}
-					>
-						{vote}
-					</Button>
-					<IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClickMenu}>
-						<MoreVertOutlinedIcon />
-					</IconButton>
-					<Menu
-						id="simple-menu"
-						anchorEl={anchorEl}
-						keepMounted
-						open={Boolean(anchorEl)}
-						onClose={handleCloseMenu}
-					>
-						<MenuItem onClick={() => {
-							setOpenLyrics(true)
-						}}>查看歌词</MenuItem>
-					</Menu>
-					{!!isAdmin && (
-						<IconButton onClick={handleDelete}>
-							<CloseOutlinedIcon />
-						</IconButton>
-					)}
-				</ListItemSecondaryAction>
-			</ListItem>
-			<audio
-				onEnded={handleAudioEnded}
-				onPlay={handleAudioPlay}
-				className={classes.audio}
-				controls={true}
-				ref={audioDom}
-			>
-				<source src={playUrl} type="audio/mpeg" />
-				Your browser does not support the audio tag.
-			</audio>
-		</>
-	);
 };
 
 // TODO 查看歌词功能

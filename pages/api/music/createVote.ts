@@ -7,6 +7,10 @@ type Data = {
 	 * 新的投票ID
 	 */
 	id?: unknown;
+	/**
+	 * 新创建的投票标题
+	 */
+	title? :string;
 	message: string;
 };
 
@@ -36,7 +40,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		});
 
 		if (!!!identify.length || !!!identify[0].isAdmin) {
-			return res.status(201).json({
+			return res.status(204).json({
 				message: "需要管理员权限",
 			});
 		}
@@ -48,7 +52,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 			description,
 		});
 
-		return res.status(200).json({
+		return res.status(201).json({
 			message: "创建成功",
 			id: add.insertId,
 			title,
