@@ -46,11 +46,16 @@ npm run dev
 
 #### musics
 
-存放上传的歌曲信息，单向映射到music_votes
+存放上传的歌曲信息，单向映射到 music_votes
 
 -   **statu**: 0 正常 1 删除 2 中标
 -   **playUrl**: 播放链接
 -   **vote**：票数
+-   **voter**: 投票者 ID
+-   **vote_id**: 对应的 session id
+-   **lyrics** : 歌词
+-   **reason**： 投票理由
+-   **artist**: 歌手
 
 #### user
 
