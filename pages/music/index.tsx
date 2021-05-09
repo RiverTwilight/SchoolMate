@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -10,7 +10,6 @@ import Fab from "@material-ui/core/Fab";
 import MusicItem from "../../components/MusicItem";
 
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
-import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import MusicIcon from "../../public/static/Music.svg";
 
 import Link from "next/link";
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		addBtn: {
 			right: "20px",
-			bottom: "20px",
+			bottom: "30px",
 			position: "fixed",
 		},
 		container: {
