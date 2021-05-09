@@ -53,11 +53,9 @@ export async function getServerSideProps(context: {
 	query: { id: any; title: string };
 }) {
 	const { id, title } = context.query;
-	const config = await import(`../../data/config.json`);
 
 	return {
 		props: {
-			siteConfig: config.default,
 			id,
 			title,
 			currentPage: {

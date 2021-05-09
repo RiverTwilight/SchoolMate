@@ -64,12 +64,10 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export async function getServerSideProps(context) {
-	const config = await import(`../../data/config.json`);
 	const { id, title } = context.query;
 
 	return {
 		props: {
-			siteConfig: config.default,
 			id,
 			title,
 			currentPage: {
@@ -90,7 +88,7 @@ const Platform = ({
 	selected: boolean;
 	text: string;
 	icon: string;
-	disabled: boolean;
+	disabled?: boolean;
 	onClick: () => void;
 }) => {
 	const classes = useStyles();
@@ -186,7 +184,7 @@ const AddMusic = ({ userData, id, title }) => {
 				])
 					.then(
 						Axios.spread((...res) => {
-                            console.log(res)
+							console.log(res);
 							setSongTitle(res[1].data.songs[0].name);
 							setSongAr(
 								res[1].data.songs[0].ar
@@ -254,7 +252,7 @@ const AddMusic = ({ userData, id, title }) => {
 			</Typography>
 
 			<Grid container spacing={3}>
-				<Grid item xs={6}>
+				<Grid item xs={6} sm={4}>
 					<Platform
 						onClick={() => {
 							setPlatform(0);
@@ -264,7 +262,7 @@ const AddMusic = ({ userData, id, title }) => {
 						text="网易云音乐"
 					/>
 				</Grid>
-				<Grid item xs={6}>
+				<Grid item xs={6} sm={4}>
 					<Platform
 						onClick={() => {
 							setPlatform(1);
