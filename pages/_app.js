@@ -10,12 +10,22 @@ import {
 	Theme as AugmentedTheme,
 	ThemeProvider,
 } from "@material-ui/core/styles";
-import { orange } from "@material-ui/core/colors";
 import theme from "../components/theme";
 import Layout from "../components/Layout";
-import "./App.css";
+import "./App.css"
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		display: "flex",
+		background: "#f6f6f6",
+	},
+	content: {
+		flexGrow: 1,
+		padding: "8px 12px",
+		minHeight: "100vh",
+		position: "relative",
+		maxWidth: "1000px",
+	},
 	toolbar: theme.mixins.toolbar,
 }));
 
@@ -50,13 +60,6 @@ function MyApp({ Component, pageProps }) {
 	const handleLogin = () => {
 		setOpen(true);
 	};
-	// React.useEffect(() => {
-	// 	// Remove the server-side injected CSS.
-	// 	const jssStyles = document.querySelector("#jss-server-side");
-	// 	if (jssStyles) {
-	// 		jssStyles.parentElement.removeChild(jssStyles);
-	// 	}
-	// }, []);
 	return (
 		<>
 			<GlobalContext.Provider value={{ userData }}>
@@ -65,20 +68,19 @@ function MyApp({ Component, pageProps }) {
 					locale={locale}
 					currentPage={currentPage}
 				>
-					<div className="root">
-						<Login
-							cbUrl={`${currentPage.path}`}
-							onClose={handleLoginClose}
-							open={open}
-						/>
+					<div className={classes.root}>
 						<Header
 							userData={userData}
 							handleLogin={handleLogin}
 							title={currentPage.title}
 						/>
-
-						<main className="content">
-							<div className="toolbar" />
+						<Login
+							cbUrl={`${currentPage.path}`}
+							onClose={handleLoginClose}
+							open={open}
+						/>
+						<main className={classes.content}>
+							<div className={classes.toolbar} />
 							<Component userData={userData} {...pageProps} />
 						</main>
 					</div>
