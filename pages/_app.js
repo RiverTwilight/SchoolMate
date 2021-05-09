@@ -82,12 +82,7 @@ function MyApp({ Component, pageProps }) {
 							/>
 							<main className={classes.content}>
 								<div className={classes.toolbar} />
-								<div className={classes.content}>
-									<Component
-										userData={userData}
-										{...pageProps}
-									/>
-								</div>
+								<Component userData={userData} {...pageProps} />
 							</main>
 						</div>
 					</Layout>

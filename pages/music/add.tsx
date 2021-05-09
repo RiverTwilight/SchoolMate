@@ -20,7 +20,6 @@ import Typography from "@material-ui/core/Typography";
 import url2id from "../../utils/url2id";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Axios from "axios";
-import LinkIcon from "@material-ui/icons/Link";
 
 const useStyles = makeStyles((theme: Theme) => {
 	console.log(theme, theme.palette.primary);
