@@ -29,7 +29,7 @@ interface userInfoFromCloud extends userInfoFromLocal {
     token: string;
 }
 
-interface IMusics {
+interface IMusic {
     id: number;
     playUrl: string;
     statu: number;

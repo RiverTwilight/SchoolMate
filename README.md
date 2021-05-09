@@ -16,11 +16,11 @@
 
 ## 特性 | Features
 
-- [x] 学生、管理员可一键登录账号（无需注册）
-- [x] 管理员可发布起床铃投票，支持设置截止日期，到期自动关闭投票。
-- [x] 学生可为起床铃待选歌曲投票（一人只能投一票），或者投稿歌曲
-- [-] 投票支持解析网易云音乐、QQ音乐链接
-- [-] 食堂菜品投票
+-   [x] 学生、管理员可一键登录账号（无需注册）
+-   [x] 管理员可发布起床铃投票，支持设置截止日期，到期自动关闭投票。
+-   [x] 学生可为起床铃待选歌曲投票（一人只能投一票），或者投稿歌曲
+-   [-] 投票支持解析网易云音乐、QQ 音乐链接
+-   [-] 食堂菜品投票
 
 ## 贡献 | Contribution
 
@@ -32,39 +32,36 @@ npm run dev
 
 ### 数据库结构
 
-使用MySql作为数据库
+使用 MySql 作为数据库
 
-#### music
+#### music_votes
 
-存放所有投票session
+存放所有投票(vote)session
 
-* **id**: session id
-* **title**: 投票标题
-* **deadline**: 结束日期(ISO Date)
-* **createDate**: 创建日期(ISO Date)
-* **statu**: 投票状态，0为正常， 1为已结束
-* **musics**: 歌曲，用JSON格式存储。statu: 0正常 1删除 2中标
-```json
-[
-    {
-        "id": 0,
-        "playUrl": "...",
-        "vote": 5,
-        "statu": 0 
-    }
-]
-```
+-   **id**: session id
+-   **title**: 投票标题
+-   **deadline**: 结束日期(ISO Date)
+-   **createDate**: 创建日期(ISO Date)
+-   **statu**: 投票状态，0 为正常， 1 为已结束
+
+#### musics
+
+存放上传的歌曲信息，单向映射到music_votes
+
+-   **statu**: 0 正常 1 删除 2 中标
+-   **playUrl**: 播放链接
+-   **vote**：票数
 
 #### user
 
 存放用户信息
 
-* id
-* grade 年级
-* class 班级
-* name 名字
-* tel 考号
-* token 用户令牌，首次登陆后激活
+-   **id**
+-   **grade** 年级
+-   **class** 班级
+-   **name** 名字
+-   **tel** 考号
+-   **token** 用户令牌，首次登陆后激活
 
 ## LICENSE
 

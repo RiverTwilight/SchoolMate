@@ -117,7 +117,7 @@ const HomePage = ({ userData }) => {
         // TODO 防止返回数据异常 TypeError: Cannot read property 'length' of undefined
         (async () => {
             const res = await fetcher(
-                `/api/music/getMusicList?page=${page}$sort=${sort}`
+                `/api/music/getVoteList?page=${page}$sort=${sort}`
             );
             res.data && setData(res.data);
         })();

@@ -5,18 +5,13 @@ import sql from "../../../utils/db";
 // const env = process.env.NODE_ENV;
 
 type Data = {
-	musicData?: {
+	data?: {
 		title: string;
 		description: string;
 		/** 0.正在进行 1.已结束 */
 		statu: number;
-		musics: {
-			name: string;
-			playUrl: string;
-			id: number;
-		}[];
-    };
-    message: string
+	};
+	message: string;
 };
 
 // const MOCK_DATA = {
@@ -51,11 +46,11 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { id: musicId } = req.query;
 	const musicData = await sql.get("music_votes", ["*"], {
-        where: { key: "id", value: musicId },
+		where: { key: "id", value: musicId },
 		limit: 1,
 	});
 	res.status(200).json({
-		musicData: musicData[0],
+		data: musicData[0],
 		message: "Get successfully",
 	});
 };

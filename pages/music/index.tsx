@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 		container: {
 			padding: theme.spacing(2),
 			position: "relative",
-			minHeight: "100px"
+			minHeight: "100px",
 		},
 		sessionTitle: {
 			lineHeight: "40px",
@@ -77,21 +77,21 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
 		title: "未命名",
-		musics: "[]",
 		description: "暂无描述",
 		isInitial: true,
 		statu: 0,
 		deadline: "",
-		lyrics: ""
 	});
+	const [musicList, setMusicList] = useState([]);
 	const [currentAudio, setCurrentAudio] = useState(0);
 
 	useEffect(() => {
-		fetch(`/api/music/getMusicDetail?id=${id}`)
-			.then((res) => res.json())
-			.then((data) => {
-				setDetail(data.musicData);
-			});
+		Axios.get(`/api/music/getVoteDetail?id=${id}`).then((res) => {
+			setDetail(res.data.data);
+		});
+		Axios.get(`/api/music/getVoteMusics?vote_id=${id}`).then((res) => {
+			setMusicList(res.data.musicData);
+		});
 	}, []);
 
 	// vote等于0表示取消投票
@@ -115,8 +115,6 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 			}
 		});
 	};
-
-	const musics = detail.musics === "[]" ? [] : JSON.parse(detail.musics);
 
 	// musics.sort((a, b) => {
 	// 	return b.vote - a.vote;
@@ -159,8 +157,9 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
-							}`}
+						label={`进行中 - 截止日期：${
+							detail.deadline.split("T")[0]
+						}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
@@ -171,9 +170,9 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				<MusicIcon className={classes.titleIcon} />
 			</Paper>
 			<br />
-			{!!musics.length && (
+			{!!musicList.length && (
 				<List component={Paper} aria-label="music list">
-					{musics.map((song, i) => {
+					{musicList.map((song, i) => {
 						console.log(song, i);
 						if (song.statu !== 1) {
 							let isVoted = song.voterId.includes(
@@ -206,7 +205,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 						}
 						return null;
 					})}
-					{!!!musics.filter((music) => music.statu == 0).length && (
+					{!!!musicList.filter((music) => music.statu == 0)
+						.length && (
 						<Typography variant="h6" align="center">
 							暂时没有音乐，赶快投稿吧
 						</Typography>
@@ -214,7 +214,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				</List>
 			)}
 
-			{musics.isInitial && <Loader />}
+			{/* {musics.isInitial && <Loader />} */}
 
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
