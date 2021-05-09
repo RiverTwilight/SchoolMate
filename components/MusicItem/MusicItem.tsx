@@ -38,7 +38,7 @@ export default ({
 	handleVote,
 	handleDelete,
 	isVoted,
-	lyricsUrl,
+	lyrics,
 }: {
 	title: string;
 	vote: number;
@@ -47,7 +47,7 @@ export default ({
 	playUrl: string;
 	isAdmin: boolean;
 	isVoted: boolean;
-	lyricsUrl: string;
+	lyrics: string;
 	index: number;
 	id: number;
 	musicId: number;
@@ -102,7 +102,7 @@ export default ({
 	return (
 		<>
 			<Lyrics
-				lyricsUrl={lyricsUrl}
+				lyrics={lyrics}
 				title={title}
 				open={openLyrics}
 				onClose={() => {

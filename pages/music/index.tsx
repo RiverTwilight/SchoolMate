@@ -72,7 +72,6 @@ const editModule = () => {
 	return <Button></Button>;
 };
 
-// TODO 查看歌词功能
 const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const classes = useStyles();
 	const [detail, setDetail] = useState({
@@ -86,12 +85,15 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const [currentAudio, setCurrentAudio] = useState(0);
 
 	useEffect(() => {
-		Axios.get(`/api/music/getVoteDetail?id=${id}`).then((res) => {
-			setDetail(res.data.data);
-		});
-		Axios.get(`/api/music/getVoteMusics?vote_id=${id}`).then((res) => {
-			setMusicList(res.data.musicData);
-		});
+		Axios.all([
+			Axios.get(`/api/music/getVoteDetail?id=${id}`),
+			Axios.get(`/api/music/getVoteMusics?vote_id=${id}`),
+		]).then(
+			Axios.spread((...res) => {
+				setDetail(res[0].data.data);
+				setMusicList(res[1].data.musicData);
+			})
+		);
 	}, []);
 
 	// vote等于0表示取消投票
@@ -175,9 +177,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					{musicList.map((song, i) => {
 						console.log(song, i);
 						if (song.statu !== 1) {
-							let isVoted = song.voterId.includes(
-								userData.id || 0
-							);
+							let isVoted = song.voter_id == userData.id || 0;
+
 							return (
 								<MusicItem
 									isAdmin={
@@ -186,10 +187,10 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 									isVoted={isVoted}
 									index={i}
 									id={id}
-									musicId={i}
+									musicId={song.id}
 									vote={song.vote}
 									reason={song.reason}
-									lyricsUrl={song.lyricsUrl}
+									lyrics={song.lyrics}
 									currentIndex={currentAudio}
 									handlePlayIndexChange={setCurrentAudio}
 									handleVote={() =>

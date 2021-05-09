@@ -8,7 +8,7 @@ type Data = {
 };
 
 /**
- * 给一首歌曲投票
+ * // TODO 给一首歌曲投票
  * @param {string} musicId 音乐ID
  * @param {string} id 投票session ID
  * @param {number} vote 投票数量 +1 or 0
@@ -19,22 +19,20 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		const { TOKEN: token } = req.cookies;
 
-		const verification = verifyJWT(token, res);
+		const userData = verifyJWT(token, res);
 
-		if (!verification) {
+		if (!!!userData) {
 			return res.status(204).json({
 				message: "未登录",
 			});
 		}
 
-		const identify = await sql.get("music_votes", ["musics"], {
+		const identify = await sql.get("musics", ["musics"], {
 			where: {
-				key: "id",
-				value: `"${id}"`,
+				key: `(id)`,
+				value: `('${musicId}')`,
 			},
 		});
-
-		const originMusics = JSON.parse(identify[0].musics);
 
 		var currentVote = 0;
 
