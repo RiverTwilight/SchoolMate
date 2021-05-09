@@ -14,6 +14,9 @@ type Data = {
 
 interface INewMusic {}
 
+// 每人可以上传多少歌曲
+const MAX_UPLOAD_PER_USER = 1;
+
 /**
  * 创建投票
  */
@@ -47,12 +50,12 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		// parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
 		const identify = await sql.get("musics", ["voter"], {
 			where: {
-				key: "voter",
-				value: `"${userData.id}"`,
+				key: `(voter, vote_id)`,
+				value: `('${userData.id}', '${id}')`,
 			},
 		});
 
-		if (identify.length > 0) {
+		if (identify.length >= MAX_UPLOAD_PER_USER) {
 			return res.status(200).json({
 				message: "重复投稿",
 				id,
@@ -75,7 +78,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 			title,
 			lyrics,
 			vote: 0,
-            vote_id: id,
+			vote_id: id,
 			voter: userData.id,
 			statu: 0,
 		};
@@ -84,13 +87,13 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 		console.log(add);
 
-		return res.status(200).json({
+		return res.status(201).json({
 			message: "投稿成功",
 			newMusic,
 			id: add.insertId,
 		});
 	} catch (err) {
-		return res.status(301).json({
+		return res.status(500).json({
 			message: err,
 		});
 	}

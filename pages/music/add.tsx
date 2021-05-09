@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => {
 			width: "100%",
 			fontSize: "1.2rem",
 			borderRadius: "5px",
+			paddingLeft: "40px",
 		},
 		platformSelected: {
 			fontWeight: "bold",
@@ -84,10 +85,12 @@ const Platform = ({
 	icon,
 	selected,
 	onClick,
+	disabled,
 }: {
 	selected: boolean;
 	text: string;
 	icon: string;
+	disabled: boolean;
 	onClick: () => void;
 }) => {
 	const classes = useStyles();
@@ -96,6 +99,7 @@ const Platform = ({
 			onClick={() => {
 				onClick && onClick();
 			}}
+			disabled={disabled}
 			className={clsx(classes.platform, {
 				[classes.platformSelected]: selected,
 			})}
@@ -115,6 +119,10 @@ const AddMusic = ({ userData, id, title }) => {
 	const [isParsing, setIsParsing] = useState(false);
 	const [platform, setPlatform] = useState(0);
 
+	const [songTitle, setSongTitle] = useState("");
+	const [songAr, setSongAr] = useState("");
+	const [songLrc, setSongLrc] = useState("");
+
 	const router = useRouter();
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -132,15 +140,15 @@ const AddMusic = ({ userData, id, title }) => {
 			)
 		)
 			.then((res) => {
-				console.log(res);
-
-				if (res.status == 200) {
-					setIsLoading(false);
-					router.push(`/music?id=${res.data.id}&title=${title}`);
-				} else {
-					window.snackbar({
-						message: res.data.message,
-					});
+				switch (res.status) {
+					case 200:
+						window.snackbar({
+							message: res.data.message,
+						});
+						break;
+					case 201:
+						router.push(`/music?id=${res.data.id}&title=${title}`);
+						break;
 				}
 			})
 			.catch(function (error) {
@@ -153,35 +161,50 @@ const AddMusic = ({ userData, id, title }) => {
 	const handleBack = () => {
 		router.back();
 	};
- 
+
 	const parseUrl = async () => {
-        const formData = new FormData(form.current);
+		const formData = new FormData(form.current);
 		const musicUrl = formData.get("musicUrl");
-		if (platform === 0) {
-            setIsParsing(true);
-            console.log(form);
-			const lyrics = await Axios.get(
-				`https://netease-cloud-music-api-wine-alpha.vercel.app/lyric?id=${url2id(
-					musicUrl
-				)}`
-			);
+		const musicId = url2id(musicUrl);
+		if (!musicId) {
+			window.snackbar({ message: "链接不合法" });
+		} else {
+			if (platform === 0) {
+				setIsParsing(true);
 
-			const details = await Axios.get(
-				`https://netease-cloud-music-api-wine-alpha.vercel.app/song/detail?ids=${url2id(
-					musicUrl
-				)}`
-			);
-
-			// debugger;
-
-			form.current[7].value = details.data.songs[0].name;
-			form.current[8].value = details.data.songs[0].ar
-				.map((ar) => ar.name)
-				.join("/");
-			form.current[9].value = lyrics.data.nolyric
-				? "暂无歌词"
-				: lyrics.data.lrc.lyric;
-			setIsParsing(false);
+				Axios.all([
+					Axios.get(
+						`https://netease-cloud-music-api-wine-alpha.vercel.app/lyric?id=${url2id(
+							musicUrl
+						)}`
+					),
+					Axios.get(
+						`https://netease-cloud-music-api-wine-alpha.vercel.app/song/detail?ids=${url2id(
+							musicUrl
+						)}`
+					),
+				])
+					.then(
+						Axios.spread((...res) => {
+                            console.log(res)
+							setSongTitle(res[1].data.songs[0].name);
+							setSongAr(
+								res[1].data.songs[0].ar
+									.map((ar) => ar.name)
+									.join("/")
+							);
+							setSongLrc(
+								res[0].data.nolyric
+									? "暂无歌词"
+									: res[0].data.lrc.lyric
+							);
+						})
+					)
+					.catch((err) => {})
+					.then(() => {
+						setIsParsing(false);
+					});
+			}
 		}
 	};
 
@@ -246,6 +269,7 @@ const AddMusic = ({ userData, id, title }) => {
 						onClick={() => {
 							setPlatform(1);
 						}}
+						disabled
 						selected={platform === 1}
 						icon="/static/qq_music.png"
 						text="QQ音乐"
@@ -261,7 +285,7 @@ const AddMusic = ({ userData, id, title }) => {
 							label="歌曲平台链接"
 							required
 							name="musicUrl"
-							helperText="可通过分享-复制链接获得"
+							// helperText="可通过分享-复制链接获得"
 						></TextField>
 					</FormControl>
 				</Grid>
@@ -278,13 +302,33 @@ const AddMusic = ({ userData, id, title }) => {
 			</Grid>
 
 			<FormControl fullWidth>
-				<TextField label="歌曲名称" name="title" required></TextField>
-			</FormControl>
-			<FormControl fullWidth>
-				<TextField type="text" label="歌手" name="artist"></TextField>
+				<TextField
+					value={songTitle}
+					onChange={(e) => {
+						setSongTitle(e.target.value);
+					}}
+					label="歌曲名称"
+					name="title"
+					required
+				></TextField>
 			</FormControl>
 			<FormControl fullWidth>
 				<TextField
+					value={songAr}
+					onChange={(e) => {
+						setSongAr(e.target.value);
+					}}
+					type="text"
+					label="歌手"
+					name="artist"
+				></TextField>
+			</FormControl>
+			<FormControl fullWidth>
+				<TextField
+					value={songLrc}
+					onChange={(e) => {
+						setSongLrc(e.target.value);
+					}}
 					multiline
 					type="text"
 					label="歌词"
