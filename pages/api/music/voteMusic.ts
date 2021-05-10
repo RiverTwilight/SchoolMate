@@ -4,7 +4,8 @@ import verifyJWT from "../../../utils/verifyJWT";
 
 type Data = {
     message: string;
-    currentMusics?: any;
+    currentVote?: number;
+    currentVoter?: string[];
 };
 
 /**
@@ -20,57 +21,47 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const userData = verifyJWT(token);
 
+        console.log(userData);
+
         const condition = {
             key: `(id)`,
             value: `('${musicId}')`,
         };
 
         if (!!!userData) {
-            return res.status(204).json({
+            return res.status(200).json({
                 message: "未登录",
             });
         }
 
-        const defaultData = await sql.get("musics", ["musics"], {
+        const defaultData = await sql.get("musics", ["vote", "voter"], {
             where: condition,
         });
 
-        var currentVote = defaultData[0].vote;
+        const defaultVoter = JSON.parse(defaultData[0].voter);
 
-        // for (var i in originMusics) {
-        // 	if (i === musicId) {
-        // 		if (parseInt(vote) > 0) {
-        // 			currentVote = originMusics[i].vote + 1;
-        // 			originMusics[i].vote = currentVote;
-        // 			originMusics[i].voterId.push(verification.id);
-        // 		} else {
-        // 			currentVote = originMusics[i].vote - 1;
-        // 			originMusics[i].vote = currentVote;
-        // 			originMusics[i].voterId.splice(
-        // 				originMusics[i].voterId.indexOf(verification.id),
-        // 				1
-        // 			);
-        // 		}
-        // 		break;
-        // 	}
-        // }
+        if (defaultVoter.includes(userData.id)) {
+            return res.status(200).json({
+                message: "重复投票",
+            });
+        }
 
-		console.log(defaultData[0])
+        const currentVote = parseInt(defaultData[0].vote + vote);
+        const currentVoter = [...defaultVoter, userData.id];
 
         await sql.update(
             "musics",
             {
-                vote: currentVote + vote,
-                voter_id: JSON.stringify([
-                    ...JSON.parse(defaultData[0].voter_id),
-                    userData.id,
-                ]),
+                vote: currentVote,
+                voter: JSON.stringify(currentVoter),
             },
             condition
         );
 
-        return res.status(200).json({
+        return res.status(201).json({
             message: "投票成功",
+            currentVote,
+            currentVoter,
         });
     } catch (err) {
         console.log(err);

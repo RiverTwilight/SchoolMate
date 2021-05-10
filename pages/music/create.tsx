@@ -58,15 +58,15 @@ const CreateVote = ({ userData }) => {
 		)
 			.then((res) => {
 				switch (res.status) {
-					case 400:
+					case 201:
+						router.push(
+							`/music?id=${res.data.id}&title=${res.data.title}`
+						);
+					default:
 						window.snackbar({
 							message: res.data.message,
 						});
 						break;
-					case 200:
-						router.push(
-							`/music?id=${res.data.id}&title=${res.data.title}`
-						);
 				}
 			})
 			.catch(function (error) {
@@ -102,9 +102,8 @@ const CreateVote = ({ userData }) => {
 			<FormControl fullWidth>
 				<TextField
 					label="截止日期"
-					defaultValue={`${
-						today.getMonth() + 1
-					}-${today.getDate()}-${today.getFullYear()}`}
+					defaultValue={`${today.getMonth() + 1
+						}-${today.getDate()}-${today.getFullYear()}`}
 					type="date"
 					name="deadline"
 				></TextField>

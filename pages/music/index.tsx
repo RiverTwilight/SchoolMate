@@ -59,7 +59,7 @@ export async function getServerSideProps(context: {
 			title,
 			currentPage: {
 				title: title || `起床铃投票`,
-				path: "/music/" + id,
+				path: "/music?id=" + id,
 			},
 		},
 	};
@@ -97,18 +97,24 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const handleVote = (musicId: number, vote) => {
 		Axios.get(
 			`/api/music/voteMusic?musicId=${musicId}&vote=${vote}`
-		).then((data) => {
-			switch (data.status) {
+		).then((res) => {
+			switch (res.status) {
 				case 201:
+					var newList = [...musicList];
+					for(const music of newList){
+						if(music.id = musicId){
+							newList[music.id].voter = res.data.currentVoter
+							newList[music.id].vote = res.data.currentVote;
+							break
+						}
+					}
+					console.log(newList)
+					setMusicList(newList);
+				default:
 					window.snackbar({
-						message: "X " + data.data.message,
+						message: "X " + res.data.message,
 					});
 					break;
-				default:
-					var newObj = Object.assign({}, detail, {
-						musics: JSON.stringify(data.data.currentMusics),
-					});
-					setDetail(newObj);
 			}
 		});
 	};
@@ -154,9 +160,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${
-							detail.deadline.split("T")[0]
-						}`}
+						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
+							}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
@@ -171,7 +176,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				<List component={Paper} aria-label="music list">
 					{musicList.map((song, i) => {
 						if (song.statu !== 1) {
-							let isVoted = 0 ;// JSON.parse(song.voter_id).include(userData.id) || 0;
+							let isVoted = 0;// JSON.parse(song.voter_id).include(userData.id) || 0;
 
 							return (
 								<MusicItem
@@ -188,7 +193,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 									currentIndex={currentAudio}
 									handlePlayIndexChange={setCurrentAudio}
 									handleVote={() =>
-										handleVote(i, isVoted ? 0 : 1)
+										handleVote(song.id, isVoted ? 0 : 1)
 									}
 									handleDelete={() => handleDelete(i)}
 									playUrl={song.playUrl}
@@ -202,10 +207,10 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					})}
 					{!!!musicList.filter((music) => music.statu == 0)
 						.length && (
-						<Typography variant="h6" align="center">
-							暂时没有音乐，赶快投稿吧
-						</Typography>
-					)}
+							<Typography variant="h6" align="center">
+								暂时没有音乐，赶快投稿吧
+							</Typography>
+						)}
 				</List>
 			)}
 
