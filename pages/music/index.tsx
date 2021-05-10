@@ -95,10 +95,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 
 	// vote等于0表示取消投票
 	const handleVote = (musicId: number, vote) => {
-		console.log(musicId);
-
 		Axios.get(
-			`/api/music/voteMusic?id=${id}&musicId=${musicId}&vote=${vote}`
+			`/api/music/voteMusic?musicId=${musicId}&vote=${vote}`
 		).then((data) => {
 			switch (data.status) {
 				case 201:
@@ -172,9 +170,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 			{!!musicList.length && (
 				<List component={Paper} aria-label="music list">
 					{musicList.map((song, i) => {
-						console.log(song, i);
 						if (song.statu !== 1) {
-							let isVoted = song.voter_id == userData.id || 0;
+							let isVoted = 0 ;// JSON.parse(song.voter_id).include(userData.id) || 0;
 
 							return (
 								<MusicItem
