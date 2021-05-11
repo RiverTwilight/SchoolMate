@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             },
         });
 
-        if (identify.length >= MAX_UPLOAD_PER_USER) {
+        if (identify.length >= process.env.MAX_UPLOAD_PER_USER) {
             return res.status(200).json({
                 message: "重复投稿",
                 id,

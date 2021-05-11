@@ -221,15 +221,17 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				</List>
 			)}
 
-			{/* {musics.isInitial && <Loader />} */}
+			{!!!musicList.length && <Loader />}
 
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
 					className={classes.addBtn}
 					color="primary"
-					aria-label="add"
+					aria-label="上传音乐"
+					variant="extended"
 				>
 					<AddIcon />
+					上传音乐
 				</Fab>
 			</Link>
 		</>

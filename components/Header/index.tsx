@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             flexGrow: 1,
         },
+        noWarp: {
+            whiteSpace: "nowrap"
+        },
         appBar: {
             [theme.breakpoints.up('sm')]: {
                 width: `calc(100% - ${drawerWidth}px)`,
@@ -108,7 +111,7 @@ export default (props: any) => {
                         <Typography
                             color="primary"
                             variant="h6"
-                            className={classes.title}
+                            className={clsx(classes.title, classes.noWarp)}
                         >
                             &nbsp;{title}
                             {/* {""}
@@ -124,6 +127,7 @@ export default (props: any) => {
                             aria-haspopup="true"
                             startIcon={<AccountCircle />}
                             size="large"
+                            className={classes.noWarp}
                             onClick={handleClickUser}
                         >
                             {!!userData.name ? userData.name : "登录"}

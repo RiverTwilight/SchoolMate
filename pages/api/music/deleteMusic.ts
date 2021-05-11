@@ -4,10 +4,11 @@ import verifyJWT from "../../../utils/verifyJWT";
 
 type Data = {
     message: string;
+    deleteId?: string;
 };
-
+  
 /**
- * 给一首歌曲投票
+ * 删除某一首歌曲
  * @param {string} musicId 音乐ID
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
@@ -37,6 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         return res.status(200).json({
             message: "删除成功",
+            deleteId: musicId
         });
     } catch (err) {
         res.status(201).json({

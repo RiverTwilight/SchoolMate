@@ -21,8 +21,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const userData = verifyJWT(token);
 
-        console.log(userData);
-
         const condition = {
             key: `(id)`,
             value: `('${musicId}')`,
@@ -40,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const defaultVoter = JSON.parse(defaultData[0].voter);
 
-        if (defaultVoter.includes(userData.id)) {
+        if (!!process.env.NO_REVOTE && defaultVoter.includes(userData.id)) {
             return res.status(200).json({
                 message: "重复投票",
             });
