@@ -59,7 +59,7 @@ export async function getServerSideProps(context: {
 			title,
 			currentPage: {
 				title: title || `起床铃投票`,
-				path: "/music?id=" + id,
+				path: `/music?id=${id}&title=${title}`,
 			},
 		},
 	};
@@ -101,10 +101,10 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 			switch (res.status) {
 				case 201:
 					var newList = [...musicList];
-					for(const music of newList){
-						if(music.id = musicId){
-							newList[music.id].voter = res.data.currentVoter
-							newList[music.id].vote = res.data.currentVote;
+					for (const i in newList) {
+						if (newList[i].id = musicId) {
+							newList[i].voter = res.data.currentVoter;
+							newList[i].vote = res.data.currentVote;
 							break
 						}
 					}
@@ -119,6 +119,8 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 		});
 	};
 
+	// TODO 热度排序
+
 	// musics.sort((a, b) => {
 	// 	return b.vote - a.vote;
 	// });
@@ -126,19 +128,24 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	// TODO 根据日期自动判断是否结束
 
 	const handleDelete = (musicId: number) => {
-		Axios.get(`/api/music/deleteMusic?id=${id}&musicId=${musicId}`).then(
-			(data) => {
-				switch (data.status) {
-					case 201:
+		Axios.get(`/api/music/deleteMusic?musicId=${musicId}`).then(
+			(res) => {
+				switch (res.status) {
+					case 202:
+						var newList = [...musicList];
+						for (const i in newList) {
+							if (newList[i].id = musicId) {
+								delete newList[i]
+								break
+							}
+						}
+						console.log(newList)
+						setMusicList(newList);
+						break;
+					default:
 						window.snackbar({
 							message: "",
 						});
-						break;
-					case 200:
-						var newObj = Object.assign({}, detail, {
-							musics: JSON.stringify(data.data.currentMusics),
-						});
-						setDetail(newObj);
 						break;
 				}
 			}

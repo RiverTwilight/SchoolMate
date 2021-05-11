@@ -15,7 +15,7 @@ type Data = {
 interface INewMusic {}
 
 // 每人可以上传多少歌曲
-const MAX_UPLOAD_PER_USER = 3;
+const MAX_UPLOAD_PER_USER = 30;
 
 /**
  * 创建投票
