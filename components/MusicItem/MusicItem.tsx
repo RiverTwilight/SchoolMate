@@ -26,14 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export default ({
 	title,
 	index,
-	id,
 	currentIndex,
 	playUrl,
 	vote,
 	artist,
 	reason,
 	isAdmin,
-	musicId,
 	handlePlayIndexChange,
 	handleVote,
 	handleDelete,
@@ -49,8 +47,6 @@ export default ({
 	isVoted: boolean;
 	lyrics: string;
 	index: number;
-	id: number;
-	musicId: number;
 	currentIndex: number;
 	handlePlayIndexChange: (index: number) => void;
 	handleVote: (musicId: number) => void;

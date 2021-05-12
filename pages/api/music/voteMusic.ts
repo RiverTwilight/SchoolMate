@@ -5,7 +5,7 @@ import verifyJWT from "../../../utils/verifyJWT";
 type Data = {
     message: string;
     currentVote?: number;
-    currentVoter?: string[];
+    currentVoter?: string;
 };
 
 /**
@@ -33,19 +33,29 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         }
 
         const defaultData = await sql.get("musics", ["vote", "voter"], {
-            where: condition,
-        });
+                where: condition,
+            }),
+            defaultVoter = JSON.parse(defaultData[0].voter);
 
-        const defaultVoter = JSON.parse(defaultData[0].voter);
+        const defaultVote = parseInt(defaultData[0].vote);
 
-        if (!!process.env.NO_REVOTE && defaultVoter.includes(userData.id)) {
-            return res.status(200).json({
-                message: "重复投票",
-            });
+        var currentVoter, currentVote;
+
+        if (defaultVote + Number(vote) >= 0) {
+            if (Number(vote) > 0) {
+                currentVoter = [...defaultVoter, userData.id];
+            } else {
+                currentVoter = defaultVoter.filter(
+                    (voter) => voter !== userData.id
+                );
+                console.log("down", currentVoter);
+            }
+            currentVote = defaultVote + Number(vote);
+        } else {
+            currentVote = defaultVote;
         }
 
-        const currentVote = parseInt(defaultData[0].vote + vote);
-        const currentVoter = [...defaultVoter, userData.id];
+        console.log(currentVote, currentVoter);
 
         await sql.update(
             "musics",
@@ -59,7 +69,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         return res.status(201).json({
             message: "投票成功",
             currentVote,
-            currentVoter,
+            currentVoter: JSON.stringify(currentVoter),
         });
     } catch (err) {
         console.log(err);

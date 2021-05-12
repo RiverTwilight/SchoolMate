@@ -80,8 +80,12 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	});
 	const [musicList, setMusicList] = useState([]);
 	const [currentAudio, setCurrentAudio] = useState(0);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const validMusics = musicList.filter((music) => music.statu == 0);
 
 	useEffect(() => {
+		setIsLoading(true)
 		Axios.all([
 			Axios.get(`/api/music/getVoteDetail?id=${id}`),
 			Axios.get(`/api/music/getVoteMusics?vote_id=${id}`),
@@ -90,8 +94,11 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				setDetail(res[0].data.data);
 				setMusicList(res[1].data.musicData);
 			})
-		);
-	}, []);
+		).then(() => {
+			setIsLoading(false)
+
+		});;
+	}, [])
 
 	// vote等于0表示取消投票
 	const handleVote = (musicId: number, vote) => {
@@ -102,13 +109,12 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				case 201:
 					var newList = [...musicList];
 					for (const i in newList) {
-						if (newList[i].id = musicId) {
+						if (newList[i].id === musicId) {
 							newList[i].voter = res.data.currentVoter;
 							newList[i].vote = res.data.currentVote;
 							break
 						}
 					}
-					console.log(newList)
 					setMusicList(newList);
 				default:
 					window.snackbar({
@@ -131,15 +137,14 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 		Axios.get(`/api/music/deleteMusic?musicId=${musicId}`).then(
 			(res) => {
 				switch (res.status) {
-					case 202:
+					case 200:
 						var newList = [...musicList];
 						for (const i in newList) {
-							if (newList[i].id = musicId) {
-								delete newList[i]
+							if (newList[i].id === musicId) {
+								newList[i].statu = 1
 								break
 							}
 						}
-						console.log(newList)
 						setMusicList(newList);
 						break;
 					default:
@@ -179,49 +184,46 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				<MusicIcon className={classes.titleIcon} />
 			</Paper>
 			<br />
-			{!!musicList.length && (
+			{!!validMusics.length && (
 				<List component={Paper} aria-label="music list">
-					{musicList.map((song, i) => {
-						if (song.statu !== 1) {
-							let isVoted = 0;// JSON.parse(song.voter_id).include(userData.id) || 0;
+					{validMusics.map((song, i) => {
+						let isVoted = JSON.parse(song.voter).includes(userData.id) || 0;
 
-							return (
-								<MusicItem
-									isAdmin={
-										userData ? userData.isAdmin : false
-									}
-									isVoted={isVoted}
-									index={i}
-									id={id}
-									musicId={song.id}
-									vote={song.vote}
-									reason={song.reason}
-									lyrics={song.lyrics}
-									currentIndex={currentAudio}
-									handlePlayIndexChange={setCurrentAudio}
-									handleVote={() =>
-										handleVote(song.id, isVoted ? 0 : 1)
-									}
-									handleDelete={() => handleDelete(i)}
-									playUrl={song.playUrl}
-									title={song.title}
-									artist={song.artist}
-									key={i + song.title}
-								/>
-							);
-						}
+						return (
+							<MusicItem
+								isAdmin={
+									userData ? userData.isAdmin : false
+								}
+								isVoted={isVoted}
+								index={i}
+								vote={song.vote}
+								reason={song.reason}
+								lyrics={song.lyrics}
+								currentIndex={currentAudio}
+								handlePlayIndexChange={setCurrentAudio}
+								handleVote={() =>
+									handleVote(song.id, isVoted ? -1 : 1)
+								}
+								handleDelete={() => handleDelete(song.id)}
+								playUrl={song.playUrl}
+								title={song.title}
+								artist={song.artist}
+								key={song.id}
+							/>
+						);
 						return null;
 					})}
-					{!!!musicList.filter((music) => music.statu == 0)
-						.length && (
-							<Typography variant="h6" align="center">
-								暂时没有音乐，赶快投稿吧
-							</Typography>
-						)}
+
 				</List>
 			)}
 
-			{!!!musicList.length && <Loader />}
+			{!!!validMusics.length && !isLoading && (
+				<Typography variant="h6" align="center">
+					暂时没有音乐，赶快投稿吧
+				</Typography>
+			)}
+
+			{isLoading && <Loader />}
 
 			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
 				<Fab
