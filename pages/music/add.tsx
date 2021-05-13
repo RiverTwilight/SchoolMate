@@ -197,7 +197,11 @@ const AddMusic = ({ userData, id, title }) => {
                             );
                         })
                     )
-                    .catch((err) => {})
+                    .catch((err) => {
+                        window.snackbar({
+                            message: "解析出错，请重试"
+                        })
+                    })
                     .then(() => {
                         setIsParsing(false);
                     });

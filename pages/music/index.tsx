@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
@@ -155,6 +156,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				}
 			}
 		);
+
 	};
 
 	return (
@@ -211,7 +213,6 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 								key={song.id}
 							/>
 						);
-						return null;
 					})}
 
 				</List>

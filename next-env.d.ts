@@ -1,11 +1,12 @@
 /// <reference types="next" />
 /// <reference types="next/types/global" />
 
-
 interface Window {
     scrollListener: any;
     snackbar: (config: {
-        message: string
+        message: string;
+        action?: JSX.Element | JSX.Element[];
+        onClose?: () => void
     }) => void;
 }
 
@@ -14,8 +15,8 @@ type userInfoFromLocal = {
     class: string;
     username: string;
     tel: number | string;
-    admin: boolean
-}
+    admin: boolean;
+};
 
 interface IUserData {
     id?: any;
@@ -36,36 +37,36 @@ interface IMusic {
 }
 
 interface ICurrentPage {
-    title: string,
-    path: string
+    title: string;
+    path: string;
 }
 
 // 词典
 type dictionary = {
     [dicIndex: string]: {
-        [langIndex: number]: string
-    }
+        [langIndex: number]: string;
+    };
 };
 
-type lang = 'zh' | 'en' | 'jp'
+type lang = "zh" | "en" | "jp";
 
 interface ISiteConfig {
-    title: string,
-    keywords: string[],
-    description: string,
+    title: string;
+    keywords: string[];
+    description: string;
     /** 网站根目录 */
-    root: string,
+    root: string;
     author: {
-        name: string,
-        image?: string,
+        name: string;
+        image?: string;
         intro: {
-            title: string,
-            content: string
-        }[]
-    }
+            title: string;
+            content: string;
+        }[];
+    };
 }
 
-declare module '*.svg' {
+declare module "*.svg" {
     const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
     export default content;
 }

@@ -25,6 +25,7 @@ const GlobalSnackbar = () => {
 		<Snackbar
 			{...snackbarConfig}
 			open={openSnackbar}
+			autoHideDuration={6000}
 			onClose={handleSnackbarClose}
 		/>
 	);

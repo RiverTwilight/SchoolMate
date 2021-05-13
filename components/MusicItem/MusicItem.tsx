@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import clsx from "clsx";
 import Lyrics from "./Lyrics";
 
 import Menu from "@material-ui/core/Menu";
@@ -17,7 +18,7 @@ import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		audio: {
+		hide: {
 			display: "none",
 		}
 	})
@@ -50,12 +51,13 @@ export default ({
 	currentIndex: number;
 	handlePlayIndexChange: (index: number) => void;
 	handleVote: (musicId: number) => void;
-	handleDelete: (musicId: number) => void;
+	handleDelete: () => void;
 }) => {
 	const audioDom = useRef<HTMLAudioElement>(null);
 	const classes = useStyles();
 	const [onPlay, setOnPlay] = useState(false);
 	const [openLyrics, setOpenLyrics] = useState(false);
+	const [isHide, setIsHide] = useState(false);
 
 	// console.log(isVoted);
 
@@ -105,72 +107,94 @@ export default ({
 					setOpenLyrics(false);
 				}}
 			/>
-			<ListItem button>
-				<ListItemText
-					secondary={`投稿理由：${reason}`}
-					primary={`${title} - ${artist}`}
-				/>
-				<ListItemSecondaryAction>
-					<IconButton
-						edge="end"
-						aria-label="delete"
-						onClick={handleClick}
-					>
-						{onPlay && currentIndex === index ? (
-							<PauseCircleFilledTwoToneIcon />
-						) : (
-							<PlayArrowTwoToneIcon />
-						)}
-					</IconButton>
-					<Button
-						onClick={handleVote}
-						startIcon={
-							<ThumbUpAltTwoToneIcon
-								color={isVoted ? "primary" : ""}
-							/>
-						}
-					>
-						{vote}
-					</Button>
-					<IconButton
-						aria-controls="simple-menu"
-						aria-haspopup="true"
-						onClick={handleClickMenu}
-					>
-						<MoreVertOutlinedIcon />
-					</IconButton>
-					<Menu
-						id="simple-menu"
-						anchorEl={anchorEl}
-						keepMounted
-						open={Boolean(anchorEl)}
-						onClose={handleCloseMenu}
-					>
-						<MenuItem
-							onClick={() => {
-								setOpenLyrics(true);
-							}}
+			<div className={clsx({
+				[classes.hide]: isHide
+			})}>
+				<ListItem button>
+					<ListItemText
+						secondary={`投稿理由：${reason}`}
+						primary={`${title} - ${artist}`}
+					/>
+					<ListItemSecondaryAction>
+						<IconButton
+							edge="end"
+							aria-label="delete"
+							onClick={handleClick}
 						>
-							查看歌词
-						</MenuItem>
-					</Menu>
-					{!!isAdmin && (
-						<IconButton onClick={handleDelete}>
-							<CloseOutlinedIcon />
+							{onPlay && currentIndex === index ? (
+								<PauseCircleFilledTwoToneIcon />
+							) : (
+								<PlayArrowTwoToneIcon />
+							)}
 						</IconButton>
-					)}
-				</ListItemSecondaryAction>
-			</ListItem>
-			<audio
-				onEnded={handleAudioEnded}
-				onPlay={handleAudioPlay}
-				className={classes.audio}
-				controls={true}
-				ref={audioDom}
-			>
-				<source src={playUrl} type="audio/mpeg" />
-				Your browser does not support the audio tag.
-			</audio>
+						<Button
+							onClick={handleVote}
+							startIcon={
+								<ThumbUpAltTwoToneIcon
+									color={isVoted ? "primary" : ""}
+								/>
+							}
+						>
+							{vote}
+						</Button>
+						<IconButton
+							aria-controls="simple-menu"
+							aria-haspopup="true"
+							onClick={handleClickMenu}
+						>
+							<MoreVertOutlinedIcon />
+						</IconButton>
+						<Menu
+							id="simple-menu"
+							anchorEl={anchorEl}
+							keepMounted
+							open={Boolean(anchorEl)}
+							onClose={handleCloseMenu}
+						>
+							<MenuItem
+								onClick={() => {
+									setOpenLyrics(true);
+								}}
+							>
+								查看歌词
+					</MenuItem>
+						</Menu>
+						{!!isAdmin && (
+							<IconButton onClick={() => {
+								setIsHide(true)
+								const deleteTask = setTimeout(() => {
+									handleDelete && handleDelete()
+								}, 9999999)
+								window.snackbar({
+									message: "已删除", action: (
+										<>
+											<Button onClick={() => {
+												clearTimeout(deleteTask);
+												setIsHide(false)
+
+											}} color="secondary" size="small" >
+												UNDO
+						  </Button>
+										</>
+									)
+								})
+							}}>
+								<CloseOutlinedIcon />
+							</IconButton>
+						)}
+					</ListItemSecondaryAction>
+				</ListItem>
+				<audio
+					onEnded={handleAudioEnded}
+					onPlay={handleAudioPlay}
+					className={classes.hide}
+					controls={true}
+					ref={audioDom}
+				>
+					<source src={playUrl} type="audio/mpeg" />
+			Your browser does not support the audio tag.
+		</audio>
+			</div>
 		</>
 	);
 };
