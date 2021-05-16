@@ -8,7 +8,7 @@ type Data = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
-        const { vote_id } = req.query;
+        const { vote_id = 1 } = req.query;
         const musicData = await sql.get("musics", ["*"], {
             where: { key: "vote_id", value: `'${vote_id}'` },
         });
@@ -16,5 +16,9 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             musicData: musicData,
             message: "Get successfully",
         });
-    } catch (err) {}
+    } catch (err) {
+        res.status(500).json({
+            message: "服务器错误"
+        })
+    }
 };

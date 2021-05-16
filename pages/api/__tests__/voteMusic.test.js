@@ -1,11 +1,11 @@
 import http from "http";
 import fetch from "isomorphic-unfetch";
 import listen from "test-listen";
-import { apiResolver } from "next-server/dist/server/api-utils";
-import { handler } from "../home";
+import { apiResolver } from "next/dist/next-server/server/api-utils";
+import handler from "../music/voteMusic";
 
-describe("/ handler", () => {
-	test("responds 200 to authed GET", async () => {
+describe("voteMusic", () => {
+	test("responds 201 to authed GET", async () => {
 		expect.assertions(1);
 		let requestHandler = (req, res) => {
 			res.user = { username: "scooby" };
