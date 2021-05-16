@@ -1,7 +1,6 @@
 import sql from "../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import verifyJWT from "../../utils/verifyJWT";
-import process from "process";
 
 type Data = {
 	message: string;
@@ -10,7 +9,6 @@ type Data = {
 
 /**
  * 获取用户信息
- * // FIXME jwt过期处理
  */
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { TOKEN: token } = req.cookies;
