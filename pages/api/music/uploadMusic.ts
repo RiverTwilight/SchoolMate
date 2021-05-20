@@ -1,6 +1,6 @@
 import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import url2id from "../../../utils/url2id";
+import url2id from "../../../utils/url2id/163";
 import verifyJWT from "../../../utils/verifyJWT";
 
 type Data = {
