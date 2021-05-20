@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "next",
         "build": "next build",
-        "start": "next start -p 3528"
+        "start": "next start -p 3528",
+        "test": "jest ./__tests__ --testPathIgnorePatterns support/*"
     },
     "author": "",
     "license": "MIT",
@@ -17,6 +18,7 @@
         "axios": "^0.21.1",
         "crypto-js": "^4.0.0",
         "glob": "^7.1.6",
+        "isomorphic-unfetch": "^3.1.0",
         "jsonwebtoken": "^8.5.1",
         "md5": "^2.3.0",
         "mockjs": "^1.1.0",
@@ -26,11 +28,13 @@
         "react-content-loader": "^5.0.4",
         "react-dom": "^16.13.1",
         "react-markdown": "^4.3.1",
-        "sqlstring": "^2.3.2"
+        "sqlstring": "^2.3.2",
+        "test-listen": "^1.1.0"
     },
     "devDependencies": {
         "@types/node": "^13.13.4",
         "@types/react": "^16.9.34",
+        "jest": "^26.6.3",
         "typescript": "^3.8.3"
     }
 }

@@ -159,6 +159,9 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 
 	};
 
+	 // PRIORITY 分享
+	 // PRIORITY 投票前隐藏票数
+
 	return (
 		<>
 			<Paper className={classes.container}>
