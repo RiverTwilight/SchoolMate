@@ -7,7 +7,8 @@
         "dev": "next",
         "build": "next build",
         "start": "next start -p 3528",
-        "test": "jest ./__tests__ --testPathIgnorePatterns support/*"
+        "test": "jest ./__tests__ --testPathIgnorePatterns support/*",
+        "test:unit": "jest --verbose"
     },
     "author": "",
     "license": "MIT",
