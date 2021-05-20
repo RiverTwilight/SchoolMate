@@ -1,7 +1,7 @@
 import sql from "../../../utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import url2id from "../../../utils/url2id/163";
-import verifyJWT from "../../../utils/verifyJWT";
+import verifyJWT from "../../../utils/middlewares/verifyJWT";
 
 type Data = {
     /**
@@ -21,7 +21,7 @@ const MAX_UPLOAD_PER_USER = 30;
  * 创建投票
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
         // TODO 防SQL注入
         const { musicUrl, id, reason, title, artist, lyrics } = req.body;
@@ -75,3 +75,5 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
     }
 };
+
+export default verifyJWT(handler)

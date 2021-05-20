@@ -1,19 +1,26 @@
-import sql from "../db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import verifyJWT from "../verifyJWT";
+import jwt from "jsonwebtoken";
 
 export default (handler: (req, res, userData) => void) => {
-	return (req: NextApiRequest, res: NextApiResponse) => {
-		const { TOKEN: token } = req.cookies;
+    return (req: NextApiRequest, res: NextApiResponse) => {
+        const { TOKEN: token } = req.cookies;
 
-		const userData = verifyJWT(token);
+        if (!!!token) {
+            return res.status(200).json({
+                message: "未登录",
+            });
+        }
 
-		if (!!!userData) {
-			return res.status(200).json({
-				message: "未登录",
-			});
-		}
+        const { exp } = jwt.decode(token);
 
-		handler && handler(req, res, userData);
-	};
+        if (Date.now() >= exp * 1000) {
+            return res.status(200).json({
+                message: "登录已过期",
+            });
+        }
+
+        const userData = jwt.verify(token, process.env.JWT_SECRET);
+
+        handler && handler(req, res, userData);
+    };
 };
