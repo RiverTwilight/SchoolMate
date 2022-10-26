@@ -79,6 +79,11 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
 						text: "开放源代码",
 						icon: <GitHubIcon />,
 					},
+					{
+						link: "https://github.com/rivertwilight/cflsgxmate",
+						text: "获取支持",
+						icon: <GitHubIcon />,
+					},
 				].map((item, index) => (
 					<ListItem component="a" button href={item.link} key={index}>
 						<ListItemIcon>{item.icon}</ListItemIcon>

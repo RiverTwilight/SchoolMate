@@ -3,27 +3,32 @@
 		{
 			"text": "高2018级",
 			"value": 2018,
-			"class": 14
+			"class": 14,
+			"hidden": true
 		},
 		{
 			"text": "高2019级",
 			"value": 2019,
-			"class": 15
+			"class": 15,
+			"hidden": true
 		},
 		{
 			"text": "高2020级",
 			"value": 2020,
-			"class": 15
+			"class": 15,
+			"hidden": false
 		},
 		{
 			"text": "高2021级",
 			"value": 2021,
-			"class": 15
+			"class": 15,
+			"hidden": false
 		},
 		{
 			"text": "高2022级",
 			"value": 2022,
-			"class": 15
+			"class": 15,
+			"hidden": false
 		}
 	]
 }

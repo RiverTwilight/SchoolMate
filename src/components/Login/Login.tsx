@@ -58,7 +58,7 @@ class Login extends React.Component<
 		this.state = {
 			name: "",
 			password: /*'123456',*/ "",
-			grade: 2019,
+			grade: 2022,
 			classNum: 8,
 			remember: false,
 			tel: "",
@@ -135,13 +135,16 @@ class Login extends React.Component<
 							value={grade}
 							onChange={this.handleGradeChange}
 						>
-							{Grade.map(({ value, text }) => (
-								<MenuItem key={value} value={value}>
-									{text}
-								</MenuItem>
-							))}
+							{Grade.filter((grade) => !grade.hidden).map(
+								({ value, text }) => (
+									<MenuItem key={value} value={value}>
+										{text}
+									</MenuItem>
+								)
+							)}
 						</Select>
 					</FormControl>
+					&nbsp;
 					<FormControl>
 						<InputLabel id="class-label">班级</InputLabel>
 						<Select

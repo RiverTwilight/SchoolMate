@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
     provider = "sqlite"
-    url      = "file:./db.sqlite"
+    url      = "file:../data/db.sqlite"
 }
 
 model Student {
@@ -30,7 +30,9 @@ model MusicVoteSession {
 model Musics {
     id String @id @default(uuid())
 
-    vote   Int
-    reason String
-    lyrics String
+    vote    Int
+    reason  String
+    lyrics  String
+    artist  String
+    playUrl String
 }
