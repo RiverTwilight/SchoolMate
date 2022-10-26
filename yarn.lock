@@ -1182,6 +1182,18 @@
   "resolved" "https://registry.npmmirror.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-13.0.0.tgz"
   "version" "13.0.0"
 
+"@prisma/client@^4.5.0":
+  "integrity" "sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g=="
+  "resolved" "https://registry.npmmirror.com/@prisma/client/-/client-4.5.0.tgz"
+  "version" "4.5.0"
+  dependencies:
+    "@prisma/engines-version" "4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452"
+
+"@prisma/engines-version@4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452":
+  "integrity" "sha512-o7LyVx8PPJBLrEzLl6lpxxk2D5VnlM4Fwmrbq0NoT6pr5aa1OuHD9ZG+WJY6TlR/iD9bhmo2LNcxddCMr5Rv2A=="
+  "resolved" "https://registry.npmmirror.com/@prisma/engines-version/-/engines-version-4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452.tgz"
+  "version" "4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452"
+
 "@sinonjs/commons@^1.7.0":
   "integrity" "sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ=="
   "resolved" "https://registry.npmmirror.com/@sinonjs/commons/-/commons-1.8.3.tgz"
