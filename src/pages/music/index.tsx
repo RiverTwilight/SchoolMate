@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
 import MusicItem from "../../components/MusicItem";
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
-import MusicIcon from "../../public/static/Music.svg";
+import MusicIcon from "@/public/Music.svg";
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
 import Axios from "axios";
@@ -73,7 +73,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 		title: "未命名",
 		description: "暂无描述",
 		isInitial: true,
-		statu: 0,
+		status: 0,
 		deadline: "",
 	});
 	const [musicList, setMusicList] = useState([]);
@@ -168,7 +168,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 						{detail.description}
 					</Typography>
 				)}
-				{detail.statu == 0 ? (
+				{detail.status == 0 ? (
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
@@ -179,9 +179,9 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
 				)}
-				<div className={classes.action}>
+				{/* <div className={classes.action}>
 					<Button variant="outlined">分享</Button>
-				</div>
+				</div> */}
 				<MusicIcon className={classes.titleIcon} />
 			</Paper>
 			<br />

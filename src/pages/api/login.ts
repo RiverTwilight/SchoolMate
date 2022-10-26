@@ -1,5 +1,6 @@
 import sha256 from "crypto-js/sha256";
 import sql from "../../utils/db";
+import db from "../../utils/prisma";
 import jwt from "jsonwebtoken";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -11,19 +12,26 @@ type Data = {
 	name?: string;
 };
 
-/**
- * 登录
- */
+export type LoginRequestBody = {
+	name: string;
+	password: string;
+	grade: number;
+	classNum: number;
+	tel: string;
+};
+
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { name, tel, password, grade, classNum } = req.body;
+	const { name, tel, password, grade, classNum } =
+		req.body as LoginRequestBody;
 
 	const condition = {
 		key: "name, class, grade",
 		value: `'${name}', '${classNum}', '${grade}'`,
 	};
 
-	var data = await sql.get("user", ["*"], {
+	var data = await db.student.get({
 		where: condition,
+		select: {},
 	});
 
 	if (!!!data.length) {
@@ -35,7 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	}
 
 	if (data[0].password === password) {
-		var token = jwt.sign(
+		let token = jwt.sign(
 			{
 				name,
 				grade,

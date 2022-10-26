@@ -53,7 +53,7 @@ export async function getServerSideProps() {
  * @param {string} description 描述
  * @param {number} id ID
  */
-const MusicItem = ({ title, description, id, statu }) => {
+const MusicItem = ({ title, description, id, status }) => {
 	const classes = useStyles();
 	return (
 		<Card className={classes.root}>
@@ -79,7 +79,7 @@ const MusicItem = ({ title, description, id, statu }) => {
 			<CardActions>
 				<Link href={`/music?id=${id}&title=${title}`}>
 					<Button
-						disabled={statu != 0}
+						disabled={status != 0}
 						variant="outlined"
 						size="large"
 					>
@@ -87,7 +87,7 @@ const MusicItem = ({ title, description, id, statu }) => {
 							{
 								0: "参与",
 								1: "已结束",
-							}[statu]
+							}[status]
 						}
 					</Button>
 				</Link>

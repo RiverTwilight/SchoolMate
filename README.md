@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    <img width="180" src="https://cflsgx-mate.vercel.app/static/logo.svg">
+    <img width="180" src="https://cflsgx-mate.vercel.app/logo.svg">
   </a>
 </p>
 
@@ -33,8 +33,6 @@ npm run dev
 
 ### 数据库结构
 
-使用 MySql 作为数据库
-
 #### music_votes
 
 存放所有投票(vote)session
@@ -57,18 +55,3 @@ npm run dev
 -   **lyrics** : 歌词
 -   **reason**： 投票理由
 -   **artist**: 歌手
-
-#### user
-
-存放用户信息
-
--   **id**
--   **grade** 年级
--   **class** 班级
--   **name** 名字
--   **tel** 考号
--   **token** 用户令牌，首次登陆后激活
-
-## LICENSE
-
-MIT.

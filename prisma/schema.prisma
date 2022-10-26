@@ -1,0 +1,52 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:../data/db.sqlite"
+}
+
+model User {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    name  String
+    class Int
+    grade Int
+    token String?
+
+    active Boolean @default(false)
+    Music  Music[]
+}
+
+// Prisma Data Model Documention:
+// https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
+
+model MusicVoteSession {
+    id String @id @default(uuid())
+
+    title       String
+    description String
+    deadline    DateTime @default(now())
+    musics      Music[]
+
+    status Int @default(0)
+}
+
+model Music {
+    id          String            @id @default(uuid())
+    submitterId String
+    sessionId   String
+    session     MusicVoteSession? @relation(fields: [sessionId], references: [id])
+
+    submitter User   @relation(fields: [submitterId], references: [id])
+    reason    String
+    vote      Int
+    status    Int
+
+    title   String
+    lyrics  String
+    artist  String
+    playUrl String
+}

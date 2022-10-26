@@ -1,5 +1,5 @@
 import * as React from "react";
-import Logo from "@/public/static/logo.svg";
+import Logo from "@/public/logo.svg";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "../Drawer";
 import Link from "next/link";
@@ -105,7 +105,7 @@ export default (props: any) => {
 							</Link>
 						</Hidden>
 						<Hidden xsDown>
-							<img src="/static/image/200x50.png"></img>
+							<img src="/image/200x50.png"></img>
 						</Hidden> */}
 
 						<Typography

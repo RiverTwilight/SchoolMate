@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import sql from "../../../utils/db";
+import db from "../../../utils/prisma";
 
 // var Mock = require("mockjs");
 // const env = process.env.NODE_ENV;
@@ -9,7 +9,7 @@ type Data = {
 		title: string;
 		description: string;
 		/** 0.正在进行 1.已结束 */
-		statu: number;
+		status: number;
 	};
 	message: string;
 };
@@ -45,12 +45,13 @@ type Data = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const { id: musicId } = req.query;
-	const musicData = await sql.get("music_votes", ["*"], {
-		where: { key: "id", value: musicId },
-		limit: 1,
+	const musicData = await db.musicVoteSession.findUnique({
+		where: {
+			id: musicId,
+		},
 	});
 	res.status(200).json({
-		data: musicData[0],
+		data: musicData,
 		message: "Get successfully",
 	});
 };

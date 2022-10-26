@@ -1,4 +1,4 @@
-import sql from "../../../utils/db";
+import db from "../../../utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 // var Mock = require('mockjs');
 // const env = "sad" || process.env.NODE_ENV
@@ -6,8 +6,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 // console.log(env)
 
 type Data = {
-    message: string;
-    data?: any;
+	message: string;
+	data?: any;
 };
 
 /**
@@ -16,25 +16,19 @@ type Data = {
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    try {
-        const { page, order } = req.query;
+	try {
+		const { page, order } = req.query;
 
-        const result = await sql.get("music_votes", ["*"], {
-            // order:
-            //     {
-            //         createDate: "createDate",
-            //     }[order + ""] || "createDate",
-            // sort: "DESC",
-            // limit: page * 8
-        });
+		const result = await db.musicVoteSession.findMany({});
 
-        return res.status(200).json({
-            message: "获取成功",
-            data: result,
-        });
-    } catch (err) {
-        return res.status(201).json({
-            message: "操作失败",
-        });
-    }
+		return res.status(200).json({
+			message: "获取成功",
+			data: result,
+		});
+	} catch (err) {
+		return res.status(201).json({
+			message: "操作失败",
+			err,
+		});
+	}
 };
