@@ -8,13 +8,11 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { clearCookie } from "../../utils/cookies";
+import siteConfig from "@/data/config.json";
 
 export async function getStaticProps() {
-	const config = await import(`../../data/config.json`);
-
 	return {
 		props: {
-			siteConfig: config.default,
 			currentPage: {
 				title: "用户中心",
 				path: "/user",

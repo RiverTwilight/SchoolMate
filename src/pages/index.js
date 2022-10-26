@@ -77,20 +77,20 @@ const MusicItem = ({ title, description, id, status }) => {
 				</Typography>
 			</CardContent>
 			<CardActions>
-				<Link href={`/music?id=${id}&title=${title}`}>
-					<Button
-						disabled={status != 0}
-						variant="outlined"
-						size="large"
-					>
+				<Button
+					component={Link}
+					href={`/music?id=${id}&title=${title}`}
+					disabled={status != 0}
+					variant="outlined"
+					size="large"
+				>
+					{
 						{
-							{
-								0: "参与",
-								1: "已结束",
-							}[status]
-						}
-					</Button>
-				</Link>
+							0: "参与",
+							1: "已结束",
+						}[status]
+					}
+				</Button>
 			</CardActions>
 		</Card>
 	);
