@@ -21,7 +21,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import CallIcon from "@material-ui/icons/Call";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { createStyles, withStyles } from "@material-ui/core/styles";
-import { Grade } from "../../data/school.json";
+import { Grade } from "@/data/school.json";
 import { setCookie, clearCookie } from "../../utils/cookies";
 import sha256 from "crypto-js/sha256";
 import Axios from "axios";
@@ -82,7 +82,7 @@ class Login extends React.Component<
 			},
 		})
 			.then((response) => {
-                var json = JSON.parse(response.request.response);
+				var json = JSON.parse(response.request.response);
 				switch (response.status) {
 					case 202:
 						window.snackbar({ message: json.message });
@@ -122,15 +122,8 @@ class Login extends React.Component<
 	};
 
 	render() {
-		const {
-			password,
-			name,
-			grade,
-			classNum,
-			tel,
-			remember,
-			showPassword,
-		} = this.state;
+		const { password, name, grade, classNum, tel, remember, showPassword } =
+			this.state;
 		return (
 			<>
 				<DialogContent>

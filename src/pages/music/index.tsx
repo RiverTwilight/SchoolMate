@@ -7,12 +7,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
-
 import MusicItem from "../../components/MusicItem";
-
 import AlarmOnIcon from "@material-ui/icons/AlarmOn";
 import MusicIcon from "../../public/static/Music.svg";
-
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
 import Axios from "axios";
@@ -86,44 +83,45 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	const validMusics = musicList.filter((music) => music.statu == 0);
 
 	useEffect(() => {
-		setIsLoading(true)
+		setIsLoading(true);
 		Axios.all([
 			Axios.get(`/api/music/getVoteDetail?id=${id}`),
 			Axios.get(`/api/music/getVoteMusics?vote_id=${id}`),
-		]).then(
-			Axios.spread((...res) => {
-				setDetail(res[0].data.data);
-				setMusicList(res[1].data.musicData);
-			})
-		).then(() => {
-			setIsLoading(false)
-
-		});;
-	}, [])
+		])
+			.then(
+				Axios.spread((...res) => {
+					setDetail(res[0].data.data);
+					setMusicList(res[1].data.musicData);
+				})
+			)
+			.then(() => {
+				setIsLoading(false);
+			});
+	}, []);
 
 	// vote等于0表示取消投票
 	const handleVote = (musicId: number, vote) => {
-		Axios.get(
-			`/api/music/voteMusic?musicId=${musicId}&vote=${vote}`
-		).then((res) => {
-			switch (res.status) {
-				case 201:
-					var newList = [...musicList];
-					for (const i in newList) {
-						if (newList[i].id === musicId) {
-							newList[i].voter = res.data.currentVoter;
-							newList[i].vote = res.data.currentVote;
-							break
+		Axios.get(`/api/music/voteMusic?musicId=${musicId}&vote=${vote}`).then(
+			(res) => {
+				switch (res.status) {
+					case 201:
+						var newList = [...musicList];
+						for (const i in newList) {
+							if (newList[i].id === musicId) {
+								newList[i].voter = res.data.currentVoter;
+								newList[i].vote = res.data.currentVote;
+								break;
+							}
 						}
-					}
-					setMusicList(newList);
-				default:
-					window.snackbar({
-						message: "X " + res.data.message,
-					});
-					break;
+						setMusicList(newList);
+					default:
+						window.snackbar({
+							message: "X " + res.data.message,
+						});
+						break;
+				}
 			}
-		});
+		);
 	};
 
 	// TODO 热度排序
@@ -135,32 +133,29 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 	// TODO 根据日期自动判断是否结束
 
 	const handleDelete = (musicId: number) => {
-		Axios.get(`/api/music/deleteMusic?musicId=${musicId}`).then(
-			(res) => {
-				switch (res.status) {
-					case 200:
-						var newList = [...musicList];
-						for (const i in newList) {
-							if (newList[i].id === musicId) {
-								newList[i].statu = 1
-								break
-							}
+		Axios.get(`/api/music/deleteMusic?musicId=${musicId}`).then((res) => {
+			switch (res.status) {
+				case 200:
+					var newList = [...musicList];
+					for (const i in newList) {
+						if (newList[i].id === musicId) {
+							newList[i].statu = 1;
+							break;
 						}
-						setMusicList(newList);
-						break;
-					default:
-						window.snackbar({
-							message: "",
-						});
-						break;
-				}
+					}
+					setMusicList(newList);
+					break;
+				default:
+					window.snackbar({
+						message: "",
+					});
+					break;
 			}
-		);
-
+		});
 	};
 
-	 // PRIORITY 分享
-	 // PRIORITY 投票前隐藏票数
+	// PRIORITY 分享
+	// PRIORITY 投票前隐藏票数
 
 	return (
 		<>
@@ -177,8 +172,9 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 					<Chip
 						color="primary"
 						icon={<AlarmOnIcon />}
-						label={`进行中 - 截止日期：${detail.deadline.split("T")[0]
-							}`}
+						label={`进行中 - 截止日期：${
+							detail.deadline.split("T")[0]
+						}`}
 					/>
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
@@ -192,13 +188,12 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 			{!!validMusics.length && (
 				<List component={Paper} aria-label="music list">
 					{validMusics.map((song, i) => {
-						let isVoted = JSON.parse(song.voter).includes(userData.id) || 0;
+						let isVoted =
+							JSON.parse(song.voter).includes(userData.id) || 0;
 
 						return (
 							<MusicItem
-								isAdmin={
-									userData ? userData.isAdmin : false
-								}
+								isAdmin={userData ? userData.isAdmin : false}
 								isVoted={isVoted}
 								index={i}
 								vote={song.vote}
@@ -217,7 +212,6 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 							/>
 						);
 					})}
-
 				</List>
 			)}
 

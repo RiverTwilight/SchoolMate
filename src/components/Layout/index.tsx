@@ -3,10 +3,8 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../../utils/theme";
 import Snackbar from "@material-ui/core/Snackbar";
+import siteConfig from "@/data/config.json";
 
-/**
- * 全局snackbar
- */
 const GlobalSnackbar = () => {
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [snackbarConfig, setSnackbarConfig] = useState({
@@ -33,33 +31,9 @@ const GlobalSnackbar = () => {
 
 const Layout = (props: {
 	currentPage: ICurrentPage;
-	siteConfig: ISiteConfig;
 	children: JSX.Element[] | JSX.Element;
 }) => {
-	const {
-		currentPage,
-		siteConfig = {
-			title: "成高生活圈",
-			root: "https://life.cflsgx.com",
-			description: "为成都外国语学校开发的一站式校园生活服务网站。",
-			keywords: [],
-			logo: {
-				large: "/static/image/logo-large.png",
-				small: "/static/image/logo-small.png",
-			},
-			author: {
-				name: "江村暮",
-				image: "/static/image/author.jpg",
-				intro: [
-					{
-						title: "关于作者",
-						content:
-							"一个高中生，坐标蓉城。喜欢写代码、骑车、画画，唱歌。\n\n知乎：@江村暮\n Twitter:@rea1DonandTrump",
-					},
-				],
-			},
-		},
-	} = props;
+	const { currentPage } = props;
 	const { description, author, root } = siteConfig;
 
 	// const childrenWithProps = React.Children.map(

@@ -1,5 +1,7 @@
+import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import { ServerStyleSheets } from "@material-ui/core/styles";
+import siteConfig from "@/data/config.json";
 
 export default class MyDocument extends Document {
 	static async getInitialProps(ctx) {
@@ -15,11 +17,10 @@ export default class MyDocument extends Document {
 
 		// Run the parent `getInitialProps`, it now includes the custom `renderPage`
 		const initialProps = await Document.getInitialProps(ctx);
-		const config = await import(`../data/config.json`);
 
 		return {
 			...initialProps,
-			config: config.default,
+			config: siteConfig,
 		};
 	}
 	render() {
