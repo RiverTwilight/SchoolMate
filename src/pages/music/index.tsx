@@ -179,10 +179,10 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 				) : (
 					<Chip icon={<AlarmOnIcon />} label="投票已结束" />
 				)}
-				{/* <div className={classes.action}>
+				<div className={classes.action}>
 					<Button variant="outlined">分享</Button>
-				</div> */}
-				<MusicIcon className={classes.titleIcon} />
+				</div>
+				{/* <MusicIcon className={classes.titleIcon} /> */}
 			</Paper>
 			<br />
 			{!!validMusics.length && (
@@ -223,7 +223,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
 
 			{isLoading && <Loader />}
 
-			<Link href={`/music/add?id=${id}&title=${detail.title}`}>
+			<Link href={`/music/upload?id=${id}&title=${detail.title}`}>
 				<Fab
 					className={classes.addBtn}
 					color="primary"

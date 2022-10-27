@@ -1,4 +1,5 @@
 import sql from "../../../utils/db";
+import db from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import verifyJWT from "../../../utils/middlewares/verifyJWT";
 

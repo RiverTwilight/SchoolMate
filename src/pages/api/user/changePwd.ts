@@ -7,13 +7,13 @@ type Data = {
 	deleteId?: string;
 };
 
-export type DeleteMusicReqBody = {
-	musicId: string;
+export type ChangePwdReqBody = {
+	oldPwd: string;
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	try {
-		const { musicId } = req.query as DeleteMusicReqBody;
+		const { oldPwd } = req.query as ChangePwdReqBody;
 
 		const { TOKEN: token } = req.cookies;
 

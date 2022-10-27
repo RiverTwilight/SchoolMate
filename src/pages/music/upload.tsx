@@ -236,7 +236,7 @@ const AddMusic = ({ userData, id, title }) => {
 			</AppBar>
 
 			<Typography color="textSecondary" variant="body2">
-				选择你的歌曲的来源平台，将歌曲链接粘贴到输入框中，我们将自动为您解析歌曲信息，无需手动填写
+				将歌曲的平台链接粘贴到输入框中，我们将自动为您解析歌曲信息，无需手动填写。
 			</Typography>
 
 			<Grid container spacing={3}>

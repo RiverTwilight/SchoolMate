@@ -1,9 +1,9 @@
-import sql from "../../../utils/db"
-import type { NextApiRequest, NextApiResponse } from 'next'
+import db from "@/utils/prisma";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
-    message: string;
-}
+	message: string;
+};
 
 /**
  * 结束某个投票
@@ -12,25 +12,33 @@ type Data = {
  * @param {string} token 用户TOKEN
  */
 
+type EndVoteReqBody = {
+	id: string;
+	token: string;
+	userID: string;
+};
+
+// TODO 验证管理员
+
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    try {
-        const { id, userID, token } = req.query;
+	try {
+		const { id, userID, token } = req.query as EndVoteReqBody;
 
-        const update = await sql.update('music', {
-            statu: 1
-        }, {
-            where: {
-                id,
-            }
-        })
+		await db.musicVoteSession.update({
+			data: {
+				status: 1,
+			},
+			where: {
+				id: id,
+			},
+		});
 
-        res.status(200).json({
-            message: "投票已结束"
-        });
-    } catch (err) {
-        res.status(201).json({
-            message: "操作失败"
-        });
-    }
-
+		res.status(200).json({
+			message: "投票已结束",
+		});
+	} catch (err) {
+		res.status(201).json({
+			message: "操作失败",
+		});
+	}
 };
