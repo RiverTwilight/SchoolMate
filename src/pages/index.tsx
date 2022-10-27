@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
+import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import Loader from '../components/Loader'
@@ -11,10 +12,16 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Link from 'next/link'
+import clsx from 'clsx'
 
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
+    },
+    sortOption: {
+        width: '100%',
+        padding: '10px 20px',
+        borderRadius: '5px',
     },
     bullet: {
         display: 'inline-block',
@@ -125,17 +132,19 @@ const HomePage = ({ userData }) => {
                         </Button>
                     </Link>
                 )}
-                <FormControl className={classes.formControl}>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        onChange={handleSortChange}
-                    >
-                        <MenuItem value={'createDate'}>创建日期</MenuItem>
-                        <MenuItem value={'hot'}>热度</MenuItem>
-                    </Select>
-                </FormControl>
+                <div className={clsx(classes.sortOption, 'MuiButton-outlined')}>
+                    <FormControl className={classes.formControl}>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={sort}
+                            onChange={handleSortChange}
+                        >
+                            <MenuItem value={'createDate'}>创建日期</MenuItem>
+                            <MenuItem value={'hot'}>热度</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
             </div>
 
             <br />
