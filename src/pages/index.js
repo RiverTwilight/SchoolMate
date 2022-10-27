@@ -47,12 +47,6 @@ export async function getServerSideProps() {
 	};
 }
 
-/**
- * 投票项目
- * @param {string} title 标题
- * @param {string} description 描述
- * @param {number} id ID
- */
 const MusicItem = ({ title, description, id, status }) => {
 	const classes = useStyles();
 	return (

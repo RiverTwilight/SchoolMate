@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:../data/db.sqlite"
+    provider = "mongodb"
+    url      = env("MONGODB_URL")
 }
 
 model User {
-    id        String   @id @default(uuid())
+    id        String   @id @default(uuid()) @map("_id")
     createdAt DateTime @default(now())
 
     name  String
@@ -24,7 +24,7 @@ model User {
 // https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
 
 model MusicVoteSession {
-    id String @id @default(uuid())
+    id String @id @default(uuid()) @map("_id")
 
     title       String
     description String
@@ -35,7 +35,7 @@ model MusicVoteSession {
 }
 
 model Music {
-    id          String            @id @default(uuid())
+    id          String            @id @default(uuid()) @map("_id")
     submitterId String
     sessionId   String
     session     MusicVoteSession? @relation(fields: [sessionId], references: [id])
