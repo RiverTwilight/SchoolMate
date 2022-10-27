@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">成高生活圈</h1>
+<h1 align="center">生活圈</h1>
 
 <div align="center">
 
@@ -12,7 +12,7 @@
 
 </div>
 
-为成都外国语学校开发的一站式校园生活服务网站。基于 Typescript + NextJS + MaterialUI + 搭建。
+为学校开发的一站式校园生活服务网站。简单易用。基于 Typescript + NextJS + MaterialUI + 搭建。
 
 ## 特性 | Features
 
@@ -23,6 +23,16 @@
 -   [-] 投票支持解析 QQ 音乐链接
 -   [-] 食堂菜品投票
 
+## 部署 | Delopyment
+
+### 配置
+
+配置文件示例
+
+```js
+
+```
+
 ## 贡献 | Contribution
 
 欢迎你提交代码。
@@ -30,28 +40,3 @@
 ```
 npm run dev
 ```
-
-### 数据库结构
-
-#### music_votes
-
-存放所有投票(vote)session
-
--   **id**: session id
--   **title**: 投票标题
--   **deadline**: 结束日期(ISO Date)
--   **createDate**: 创建日期(ISO Date)
--   **statu**: 投票状态，0 为正常， 1 为已结束
-
-#### musics
-
-存放上传的歌曲信息，单向映射到 music_votes
-
--   **statu**: 0 正常 1 删除 2 中标
--   **playUrl**: 播放链接
--   **vote**：票数
--   **voter**: 投票者 ID 组成的数组 JSON
--   **vote_id**: 对应的 session id
--   **lyrics** : 歌词
--   **reason**： 投票理由
--   **artist**: 歌手

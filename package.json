@@ -1,5 +1,5 @@
 {
-	"name": "cflsgxmate",
+	"name": "schoolmate",
 	"version": "1.0.0",
 	"description": "A Responsive, Fast, i18n and Markdown Blog base on Next.js.",
 	"main": "index.js",
