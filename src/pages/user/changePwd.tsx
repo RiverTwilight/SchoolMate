@@ -8,7 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { clearCookie } from "../../utils/cookies";
-import siteConfig from "@/data/config.json";
+import siteConfig from "@/config";
 
 export async function getStaticProps() {
 	return {

@@ -102,7 +102,7 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
 				className={classes.copyright}
 				align="center"
 			>
-				Made With RiverTwilight, Grade 2019
+				Made By RiverTwilight
 			</Typography>
 		</div>
 	);

@@ -20,7 +20,8 @@
 			"@/utils/*": ["src/utils/*"],
 			"@/data/*": ["data/*"],
 			"@/apps/*": ["src/apps/*"],
-			"@/public/*": ["public/*"]
+			"@/public/*": ["public/*"],
+			"@/config/site": ["./site.config.js"]
 		}
 	},
 	"exclude": ["node_modules"],
