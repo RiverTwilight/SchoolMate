@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export async function getServerSideProps() {
+export function getStaticProps() {
 	return {
 		props: {
 			currentPage: {

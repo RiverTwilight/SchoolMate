@@ -9,7 +9,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import ActiveLink from "../../utils/AcitiveLink";
+import ActiveLink from "@/components/AcitiveLink";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
 interface DrawerProps {
@@ -64,7 +64,13 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
 					},
 				].map((item, index) => (
 					<ActiveLink href={item.href} activeClassName="Mui-selected">
-						<ListItem button key={item.text}>
+						<ListItem
+							href={item.href}
+							activeClassName="Mui-selected"
+							component={ActiveLink}
+							button
+							key={item.text}
+						>
 							<ListItemIcon>{<InboxIcon />}</ListItemIcon>
 							<ListItemText primary={item.text} />
 						</ListItem>
