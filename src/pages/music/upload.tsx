@@ -107,13 +107,15 @@ const Platform = ({
         </Button>
     )
 }
-/**
- * 歌曲投稿
- */
 
-const AddMusic = ({ userData, id, title }) => {
+const AddMusic: React.FC<{
+    userData: any
+    id: string
+    title: string
+}> = ({ userData, id, title }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isParsing, setIsParsing] = useState(false)
+    const [showDetailForm, setShowDetailForm] = useState(false)
     const [platform, setPlatform] = useState(0)
 
     const [songTitle, setSongTitle] = useState('')
@@ -171,16 +173,14 @@ const AddMusic = ({ userData, id, title }) => {
                 case 0:
                     setIsParsing(true)
 
+                    let songId = url2id(musicUrl)
+
                     Axios.all([
                         Axios.get(
-                            `https://netease-cloud-music-api-wine-alpha.vercel.app/lyric?id=${url2id(
-                                musicUrl
-                            )}`
+                            `https://netease-cloud-music-api-wine-alpha.vercel.app/lyric?id=${songId}`
                         ),
                         Axios.get(
-                            `https://netease-cloud-music-api-wine-alpha.vercel.app/song/detail?ids=${url2id(
-                                musicUrl
-                            )}`
+                            `https://netease-cloud-music-api-wine-alpha.vercel.app/song/detail?ids=${songId}`
                         ),
                     ])
                         .then(
@@ -201,10 +201,11 @@ const AddMusic = ({ userData, id, title }) => {
                         )
                         .catch((err) => {
                             window.snackbar({
-                                message: '解析出错，请重试',
+                                message: '解析出错，请重试或者手动填写',
                             })
                         })
                         .then(() => {
+                            setShowDetailForm(true)
                             setIsParsing(false)
                         })
                     break
@@ -216,6 +217,7 @@ const AddMusic = ({ userData, id, title }) => {
 
     const classes = useStyles()
     const form = React.createRef()
+
     return (
         <Paper
             component={'form'}
@@ -238,11 +240,10 @@ const AddMusic = ({ userData, id, title }) => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-
-            <Typography color="textSecondary" variant="body2">
+            <Typography color="textSecondary" variant="body1">
                 将歌曲的平台链接粘贴到输入框中，我们将自动为您解析歌曲信息，无需手动填写。
             </Typography>
-
+            <br />
             <Grid container spacing={3}>
                 <Grid item xs={6} sm={4}>
                     <Platform
@@ -259,14 +260,12 @@ const AddMusic = ({ userData, id, title }) => {
                         onClick={() => {
                             setPlatform(1)
                         }}
-                        disabled
                         selected={platform === 1}
                         icon="/image/qq_music.png"
                         text="QQ音乐"
                     />
                 </Grid>
             </Grid>
-
             <Grid container spacing={1}>
                 <Grid item xs={8}>
                     <FormControl fullWidth>
@@ -290,45 +289,49 @@ const AddMusic = ({ userData, id, title }) => {
                     </Button>
                 </Grid>
             </Grid>
-
-            <FormControl fullWidth>
-                <TextField
-                    value={songTitle}
-                    onChange={(e) => {
-                        setSongTitle(e.target.value)
-                    }}
-                    label="歌曲名称"
-                    name="title"
-                    required
-                ></TextField>
-            </FormControl>
-            <FormControl fullWidth>
-                <TextField
-                    value={songAr}
-                    onChange={(e) => {
-                        setSongAr(e.target.value)
-                    }}
-                    type="text"
-                    label="歌手"
-                    name="artist"
-                ></TextField>
-            </FormControl>
-            <FormControl fullWidth>
-                <TextField
-                    value={songLrc}
-                    onChange={(e) => {
-                        setSongLrc(e.target.value)
-                    }}
-                    multiline
-                    type="text"
-                    label="歌词"
-                    rows={4}
-                    name="lyrics"
-                ></TextField>
-            </FormControl>
+            <div
+                style={{
+                    display: showDetailForm ? 'block' : 'none',
+                }}
+            >
+                <FormControl fullWidth>
+                    <TextField
+                        value={songTitle}
+                        onChange={(e) => {
+                            setSongTitle(e.target.value)
+                        }}
+                        label="歌曲名称"
+                        name="title"
+                        required
+                    ></TextField>
+                </FormControl>
+                <FormControl fullWidth>
+                    <TextField
+                        value={songAr}
+                        onChange={(e) => {
+                            setSongAr(e.target.value)
+                        }}
+                        type="text"
+                        label="歌手"
+                        name="artist"
+                    ></TextField>
+                </FormControl>
+                <FormControl fullWidth>
+                    <TextField
+                        value={songLrc}
+                        onChange={(e) => {
+                            setSongLrc(e.target.value)
+                        }}
+                        multiline
+                        type="text"
+                        label="歌词"
+                        rows={4}
+                        name="lyrics"
+                    ></TextField>
+                </FormControl>
+            </div>
             <br />
             <br />
-
             <FormControl fullWidth>
                 <TextField
                     type="text"
@@ -340,10 +343,8 @@ const AddMusic = ({ userData, id, title }) => {
                     variant="outlined"
                 ></TextField>
             </FormControl>
-
             <br />
             <br />
-
             <List>
                 <ListItem>
                     <ListItemIcon>

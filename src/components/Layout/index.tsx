@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
-import theme from '../../utils/theme'
 import Snackbar from '@material-ui/core/Snackbar'
+import theme from '@/utils/theme'
 import siteConfig from '@/config/site'
 
 const GlobalSnackbar = () => {

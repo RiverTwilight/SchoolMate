@@ -27,6 +27,14 @@
 
 ### 配置
 
+在项目根目录下创建 `.env` 文件（或在托管平台的环境变量编辑页面），填入以下内容：
+
+```env
+# 管理员账号
+ADMIN_USERNAME=your_username
+ADMIN_PASSWORD=your_password
+```
+
 配置文件示例
 
 ```js
@@ -40,6 +48,15 @@
 ```
 npm run dev
 ```
+
+### 用户状态码
+
+| Code | Status |
+| ---- | ------ |
+| 0    | Frozen |
+| 1    | Normal |
+| 2    | Owner  |
+| 3    | Admin  |
 
 ### 接口错误码
 

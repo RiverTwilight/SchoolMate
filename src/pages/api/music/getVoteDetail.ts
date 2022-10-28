@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import db from '../../../utils/prisma'
+import db from '@/utils/prisma'
 
 // var Mock = require("mockjs");
 // const env = process.env.NODE_ENV;
