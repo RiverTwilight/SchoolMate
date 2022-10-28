@@ -1,6 +1,6 @@
 <p align="right">
   <a href="#">
-    <img width="180" src="https://mate.cflsgx.top/public/icon/original.png">
+    <img width="180" src="https://mate.cflsgx.top/icon/original.png">
   </a>
 </p>
 
