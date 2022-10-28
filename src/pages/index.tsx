@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
+import Box from '@material-ui/core/Box'
+import CardMedia from '@material-ui/core/CardMedia'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
@@ -13,15 +15,29 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import Link from 'next/link'
 import clsx from 'clsx'
+import zIndex from '@material-ui/core/styles/zIndex'
 
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
+        display: 'flex',
+        justifyContent: 'space-between',
     },
     sortOption: {
         width: '100%',
         padding: '10px 20px',
         borderRadius: '5px',
+    },
+    content: {
+        boxShadow: 'white 9px -1px 11px 3px',
+        zIndex: 2,
+    },
+    cover: {
+        width: 140,
+        zIndex: 1,
+        '& img': {
+            backgroundPosition: 'cover',
+        },
     },
     bullet: {
         display: 'inline-block',
@@ -57,41 +73,48 @@ const MusicItem = ({ title, description, id, status }) => {
     const classes = useStyles()
     return (
         <Card className={classes.root}>
-            <CardContent>
-                <Typography
-                    className={classes.title}
-                    color="textSecondary"
-                    gutterBottom
-                >
-                    由
-                    <Typography variant="inherit" color="primary">
-                        学生会
+            <div className={classes.content}>
+                <CardContent>
+                    <Typography
+                        className={classes.title}
+                        color="textSecondary"
+                        gutterBottom
+                    >
+                        由
+                        <Typography variant="inherit" color="primary">
+                            学生会
+                        </Typography>
+                        发起的
                     </Typography>
-                    发起的
-                </Typography>
-                <Typography variant="h5" component="h2">
-                    {title}
-                </Typography>
-                <Typography variant="body2" component="p">
-                    {description}
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button
-                    component={Link}
-                    href={`/music?id=${id}&title=${title}`}
-                    disabled={status != 0}
-                    variant="outlined"
-                    size="large"
-                >
-                    {
+                    <Typography variant="h5" component="h2">
+                        {title}
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                        {description}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button
+                        component={Link}
+                        href={`/music?id=${id}&title=${title}`}
+                        disabled={status != 0}
+                        variant="outlined"
+                        size="large"
+                    >
                         {
-                            0: '参与',
-                            1: '已结束',
-                        }[status]
-                    }
-                </Button>
-            </CardActions>
+                            {
+                                0: '参与',
+                                1: '已结束',
+                            }[status]
+                        }
+                    </Button>
+                </CardActions>
+            </div>
+            <CardMedia
+                className={classes.cover}
+                image="/illustration/music.svg"
+                title="Live from space album cover"
+            />
         </Card>
     )
 }
