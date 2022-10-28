@@ -1,16 +1,12 @@
-<p align="center">
+<p align="right">
   <a href="#">
-    <img width="180" src="https://cflsgx-mate.vercel.app/logo.svg">
+    <img width="180" src="https://mate.cflsgx.top/public/icon/original.png">
   </a>
 </p>
 
-<h1 align="center">生活圈</h1>
-
-<div align="center">
+# 生活圈
 
 [English](./README-en.md) | 简体中文
-
-</div>
 
 为学校开发的一站式校园生活服务网站。简单易用。基于 Typescript + NextJS + MaterialUI + 搭建。
 

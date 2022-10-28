@@ -14,6 +14,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 import ArticleIcon from '@material-ui/icons/RssFeed'
 import SupportIcon from '@material-ui/icons/ContactSupport'
 import CommentIcon from '@material-ui/icons/Comment'
+import Image from 'next/legacy/image'
 
 interface DrawerProps {
     mobileOpen?: boolean
@@ -57,6 +58,7 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
         <div>
             <div className={classes.toolbar} />
             <Divider />
+            <Image src="/illustration/city.svg" width={200} height={100} />
             <List>
                 {[
                     {
