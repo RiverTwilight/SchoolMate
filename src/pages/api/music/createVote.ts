@@ -1,64 +1,62 @@
-import db from "../../../utils/prisma";
-import verifyJWT from "../../../utils/verifyJWT";
-import type { NextApiRequest, NextApiResponse } from "next";
+import db from '@/utils/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import verifyJWT from '@/utils/middlewares/verifyJWT'
+import { ResponseData } from 'src/types'
 
-type Data = {
-	/**
-	 * 新的投票ID
-	 */
-	id?: unknown;
-	/**
-	 * 新创建的投票标题
-	 */
-	title?: string;
-	message: string;
-};
+interface ICreateVoteRes extends ResponseData {
+    id?: unknown
+    title?: string
+    message: string
+}
+
+export type CreateVoteReqBody = {
+    title: string
+    deadline: string
+    description: string
+}
 
 /**
  * 创建投票
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	try {
-		const { title, deadline, description } = req.body;
+const handler = async (
+    req: NextApiRequest,
+    res: NextApiResponse<ICreateVoteRes>,
+    userData
+) => {
+    try {
+        const { title, deadline, description } = req.body as CreateVoteReqBody
 
-		const { TOKEN: token } = req.cookies;
+        const identify = await db.user.findUniqueOrThrow({
+            where: {
+                id: userData.id,
+            },
+        })
 
-		const verification = verifyJWT(token);
+        if (!!!identify.status !== 3) {
+            return res.status(204).json({
+                errCode: 10004,
+                message: '需要管理员权限',
+            })
+        }
 
-		if (!!!verification) {
-			return res.status(200).json({
-				message: "TOKEN无效",
-			});
-		}
+        await db.musicVoteSession.create({
+            title,
+            deadline,
+            description,
+        })
 
-		const identify = await sql.get("user", ["isAdmin"], {
-			where: {
-				key: "id",
-				value: `"${verification.id}"`,
-			},
-		});
+        return res.status(201).json({
+            message: '创建成功',
+            id: add.insertId,
+            title,
+        })
+    } catch (err) {
+        return res.status(500).json({
+            message: err,
+            errCode: 10020,
+        })
+    }
+}
 
-		if (!!!identify.length || !!!identify[0].isAdmin) {
-			return res.status(204).json({
-				message: "需要管理员权限",
-			});
-		}
-
-		const add = await db.MusicVoteSession.create({
-			title,
-			deadline,
-			description,
-		});
-
-		return res.status(201).json({
-			message: "创建成功",
-			id: add.insertId,
-			title,
-		});
-	} catch (err) {
-		return res.status(500).json({
-			message: err,
-		});
-	}
-};
+export default verifyJWT(handler)

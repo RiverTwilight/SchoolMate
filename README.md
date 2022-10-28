@@ -40,3 +40,10 @@
 ```
 npm run dev
 ```
+
+### 接口错误码
+
+| errCode | Description           |
+| ------- | --------------------- |
+| 10001   | Login                 |
+| 10004   | Need admin to operate |

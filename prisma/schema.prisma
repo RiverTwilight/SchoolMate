@@ -7,14 +7,41 @@ datasource db {
     url      = env("MONGODB_URL")
 }
 
+model SiteConfig {
+    id          String   @id @default(cuid()) @map("_id")
+    siteName    String
+    siteUrl     String
+    siteLogo    String
+    siteFavicon String
+    siteDesc    String
+    siteAuthor  String
+    siteEmail   String
+    sitePhone   String
+    siteAddress String
+    siteCity    String
+    siteState   String
+    siteZip     String
+    siteCountry String
+    siteFooter  String
+    siteTheme   String
+    siteLang    String
+    sitePages   String[]
+    siteSocial  String[]
+    siteMeta    String[]
+    siteCustom  String[]
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
 model User {
     id        String   @id @default(uuid()) @map("_id")
     createdAt DateTime @default(now())
+    token     String?
 
-    name  String
-    class Int
-    grade Int
-    token String?
+    name   String
+    class  Int
+    grade  Int
+    status Int
 
     active Boolean @default(false)
     Music  Music[]
@@ -30,6 +57,7 @@ model MusicVoteSession {
     description String
     deadline    DateTime @default(now())
     musics      Music[]
+    viewTimes   Int      @default(0)
 
     status Int @default(0)
 }

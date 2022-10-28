@@ -1,26 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
+import type { NextApiRequest, NextApiResponse } from 'next'
+import jwt from 'jsonwebtoken'
 
 export default (handler: (req, res, userData) => void) => {
     return (req: NextApiRequest, res: NextApiResponse) => {
-        const { TOKEN: token } = req.cookies;
+        const { TOKEN: token } = req.cookies
 
         if (!!!token) {
             return res.status(200).json({
-                message: "未登录",
-            });
+                errCode: 10001,
+                message: '未登录',
+            })
         }
 
-        const { exp } = jwt.decode(token);
+        const { exp } = jwt.decode(token)
 
         if (Date.now() >= exp * 1000) {
             return res.status(200).json({
-                message: "登录已过期",
-            });
+                message: '登录已过期',
+            })
         }
 
-        const userData = jwt.verify(token, process.env.JWT_SECRET);
+        const userData = jwt.verify(token, process.env.JWT_SECRET)
 
-        handler && handler(req, res, userData);
-    };
-};
+        handler && handler(req, res, userData)
+    }
+}
