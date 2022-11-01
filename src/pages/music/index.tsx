@@ -92,7 +92,7 @@ const Music = ({ userData = {}, id }: { id: number; userData: IUserData }) => {
                 Axios.spread((...res) => {
                     console.log(res)
                     setDetail(res[0].data)
-                    setMusicList(res[1].data)
+                    setMusicList(res[1].data.data)
                 })
             )
             .then(() => {

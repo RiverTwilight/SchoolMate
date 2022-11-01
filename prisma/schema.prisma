@@ -46,7 +46,7 @@ model User {
     tel    Int
 
     active Boolean @default(false)
-    Music  Music[]
+    musics Music[]
 }
 
 // Prisma Data Model Documention:
@@ -65,15 +65,14 @@ model MusicVoteSession {
 }
 
 model Music {
-    id          String            @id @default(uuid()) @map("_id")
-    submitterId String
-    sessionId   String
-    session     MusicVoteSession? @relation(fields: [sessionId], references: [id])
+    id        String            @id @default(uuid()) @map("_id")
+    sessionId String
+    session   MusicVoteSession? @relation(fields: [sessionId], references: [id])
 
-    submitter User   @relation(fields: [submitterId], references: [id])
-    reason    String
-    vote      Int
-    status    Int
+    submitterId User   @relation(fields: [id], references: [id])
+    reason      String
+    vote        Int
+    status      Int
 
     title   String
     lyrics  String

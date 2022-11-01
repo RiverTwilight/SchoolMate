@@ -40,8 +40,6 @@ const handler = async (
         const { musicUrl, id, reason, title, artist, lyrics } =
             req.body as UploadMusicReqBody
 
-        const { TOKEN: token } = req.cookies
-
         // parse url, see https://blog.csdn.net/weixin_33725239/article/details/93425087
         const identify = await db.user.findUnique({
             where: {
@@ -52,7 +50,9 @@ const handler = async (
             },
         })
 
-        if (identify.length >= process.env.MAX_UPLOAD_PER_USER) {
+        console.log(identify.Music)
+
+        if (identify.Music.length >= process.env.MAX_UPLOAD_PER_USER) {
             return res.status(200).json({
                 message: '重复投稿',
                 id,
@@ -67,6 +67,7 @@ const handler = async (
             artist,
             title,
             lyrics,
+            sessionId: id,
             submitterId: userData.id,
             status: 0,
         }
