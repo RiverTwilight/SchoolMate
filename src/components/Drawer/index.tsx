@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/legacy/image'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
@@ -14,7 +15,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 import ArticleIcon from '@material-ui/icons/RssFeed'
 import SupportIcon from '@material-ui/icons/ContactSupport'
 import CommentIcon from '@material-ui/icons/Comment'
-import Image from 'next/legacy/image'
+import siteConfig from '@/config/site'
 
 interface DrawerProps {
     mobileOpen?: boolean
@@ -96,7 +97,7 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
                             icon: <GitHubIcon />,
                         },
                         {
-                            link: 'https://github.com/rivertwilight/cflsgxmate',
+                            link: siteConfig.supportAgent[0].url,
                             text: '获取支持',
                             icon: <SupportIcon />,
                         },

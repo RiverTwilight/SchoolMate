@@ -1,5 +1,5 @@
-import db from '../../../utils/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import db from '@/utils/prisma'
 import url2id from '../../../utils/url2id/163'
 import verifyJWT from '@/utils/middlewares/verifyJWT'
 
@@ -18,6 +18,7 @@ export type UploadMusicReqBody = {
     title: string
     artist: string
     lyrics: string
+    id: string
 }
 
 interface INewMusic {}

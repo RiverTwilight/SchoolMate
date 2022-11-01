@@ -19,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import url2id from '../../utils/url2id/163'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import SubHeader from '@/components/SubHeader'
 import Axios from 'axios'
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -210,6 +211,44 @@ const AddMusic: React.FC<{
                         })
                     break
                 case 1:
+                    // setIsParsing(true)
+
+                    // let songId = url2id(musicUrl)
+
+                    // Axios.all([
+                    //     Axios.get(
+                    //         `https://netease-cloud-music-api-wine-alpha.vercel.app/lyric?id=${songId}`
+                    //     ),
+                    //     Axios.get(
+                    //         `https://netease-cloud-music-api-wine-alpha.vercel.app/song/detail?ids=${songId}`
+                    //     ),
+                    // ])
+                    //     .then(
+                    //         Axios.spread((...res) => {
+                    //             console.log(res)
+                    //             setSongTitle(res[1].data.songs[0].name)
+                    //             setSongAr(
+                    //                 res[1].data.songs[0].ar
+                    //                     .map((ar) => ar.name)
+                    //                     .join('/')
+                    //             )
+                    //             setSongLrc(
+                    //                 res[0].data.nolyric
+                    //                     ? '暂无歌词'
+                    //                     : res[0].data.lrc.lyric
+                    //             )
+                    //         })
+                    //     )
+                    //     .catch((err) => {
+                    //         window.snackbar({
+                    //             message: '解析出错，请重试或者手动填写',
+                    //         })
+                    //     })
+                    //     .then(() => {
+                    //         setShowDetailForm(true)
+                    //         setIsParsing(false)
+                    //     })
+                    break
                 // http://api.qq.jsososo.com/song?songmid=0039MnYb0qxYhV
             }
         }
@@ -225,21 +264,7 @@ const AddMusic: React.FC<{
             className={classes.container}
             onSubmit={handleSubmit}
         >
-            <AppBar elevation={0} color="inherit" position="static">
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        aria-label="open drawer"
-                        onClick={handleBack}
-                    >
-                        <ArrowBackIcon />
-                    </IconButton>
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        {title}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <SubHeader title={title} handleAction={handleBack} />
             <Typography color="textSecondary" variant="body1">
                 将歌曲的平台链接粘贴到输入框中，我们将自动为您解析歌曲信息，无需手动填写。
             </Typography>
