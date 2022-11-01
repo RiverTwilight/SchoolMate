@@ -21,7 +21,7 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey'
 import CallIcon from '@material-ui/icons/Call'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { createStyles, withStyles } from '@material-ui/core/styles'
-import { Grade } from '@/data/school.json'
+import schoolConfig from '@/data/school.json'
 import { setCookie, clearCookie } from '../../utils/cookies'
 import sha256 from 'crypto-js/sha256'
 import Axios from 'axios'
@@ -135,13 +135,13 @@ class Login extends React.Component<
                             value={grade}
                             onChange={this.handleGradeChange}
                         >
-                            {Grade.filter((grade) => !grade.hidden).map(
-                                ({ value, text }) => (
-                                    <MenuItem key={value} value={value}>
-                                        {text}
-                                    </MenuItem>
-                                )
-                            )}
+                            {schoolConfig.Grade.filter(
+                                (grade) => !grade.hidden
+                            ).map(({ value, text }) => (
+                                <MenuItem key={value} value={value}>
+                                    {text}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                     &nbsp;
@@ -154,7 +154,9 @@ class Login extends React.Component<
                             onChange={this.handleClassChange}
                         >
                             {Array(
-                                Grade.filter((g) => g.value === grade)[0].class
+                                schoolConfig.Grade.filter(
+                                    (g) => g.value === grade
+                                )[0].class
                             )
                                 .fill(0)
                                 .map((_, i) => (

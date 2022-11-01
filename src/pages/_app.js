@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
     const [open, setOpen] = useState(false)
     useEffect(() => {
         !!!userData.name &&
-            fetch(`/api/getUserInfo`)
+            fetch(`/api/userInfo`, { method: 'GET' })
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data)
