@@ -59,7 +59,7 @@ const LeftMenu: React.FC<DrawerProps> = ({ mobileOpen, setMobileOpen }) => {
         <div>
             <div className={classes.toolbar} />
             <Divider />
-            <Image src="/illustration/city.svg" width={200} height={100} />
+            <Image src="/illustration/city.svg" width={220} height={100} />
             <List>
                 {[
                     {
