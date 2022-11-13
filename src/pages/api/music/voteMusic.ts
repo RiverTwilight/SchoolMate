@@ -1,77 +1,46 @@
-import sql from "../../../utils/db";
-import db from "@/utils/prisma";
-import type { NextApiRequest, NextApiResponse } from "next";
-import verifyJWT from "../../../utils/middlewares/verifyJWT";
+import db from '@/utils/prisma'
+import verifyJWT from '@/utils/middlewares/verifyJWT'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
-	message: string;
-	currentVote?: number;
-	currentVoter?: string;
-};
+    message: string
+    currentVote?: number
+    currentVoter?: string
+}
 
-/**
- * // TODO 给一首歌曲投票
- * @param {string} musicId 音乐ID
- * @param {number} vote 投票数量 +1 or 0
- */
+export type VoteMusicReqBody = {
+    musicId: string
+    vote: number
+}
+
 export const handler = async (
-	req: NextApiRequest,
-	res: NextApiResponse<Data>,
-	userData
+    req: NextApiRequest,
+    res: NextApiResponse<Data>,
+    userData
 ) => {
-	try {
-		const { musicId, vote } = req.query;
+    try {
+        const { musicId, vote } = req.query as VoteMusicReqBody
 
-		const condition = {
-			key: `(id)`,
-			value: `('${musicId}')`,
-		};
+        await db.music.update({
+            data: {
+                vote: {
+                    increment: 1,
+                },
+            },
+            where: {
+                id: musicId,
+            },
+        })
 
-		const defaultData = await sql.get("musics", ["vote", "voter"], {
-				where: condition,
-			}),
-			defaultVoter = JSON.parse(defaultData[0].voter);
+        return res.status(201).json({
+            message: '投票成功',
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: '投票失败：服务器错误',
+        })
+    }
+}
 
-		const defaultVote = parseInt(defaultData[0].vote);
-
-		var currentVoter, currentVote;
-
-		if (defaultVote + Number(vote) >= 0) {
-			if (Number(vote) > 0) {
-				currentVoter = [...defaultVoter, userData.id];
-			} else {
-				currentVoter = defaultVoter.filter(
-					(voter) => voter !== userData.id
-				);
-				console.log("down", currentVoter);
-			}
-			currentVote = defaultVote + Number(vote);
-		} else {
-			currentVote = defaultVote;
-		}
-
-		console.log(currentVote, currentVoter);
-
-		await sql.update(
-			"musics",
-			{
-				vote: currentVote,
-				voter: JSON.stringify(currentVoter),
-			},
-			condition
-		);
-
-		return res.status(201).json({
-			message: "投票成功",
-			currentVote,
-			currentVoter: JSON.stringify(currentVoter),
-		});
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({
-			message: "投票失败：服务器错误",
-		});
-	}
-};
-
-export default verifyJWT(handler);
+export default verifyJWT(handler)

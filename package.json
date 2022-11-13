@@ -4,11 +4,11 @@
     "description": "A Responsive, Fast, i18n and Markdown Blog base on Next.js.",
     "main": "index.js",
     "scripts": {
-        "dev": "next",
         "build": "next build",
-        "start": "next start -p 3528",
+        "dev": "next",
         "db:update": "prisma db push",
         "db:panel": "prisma studio",
+        "start": "next start -p 3528",
         "test": "jest ./__tests__ --testPathIgnorePatterns support/*",
         "test:unit": "jest --verbose"
     },

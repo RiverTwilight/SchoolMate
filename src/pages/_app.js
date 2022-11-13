@@ -42,10 +42,10 @@ function MyApp({ Component, pageProps }) {
         !!!userData.name &&
             fetch(`/api/userInfo`, { method: 'GET' })
                 .then((res) => res.json())
-                .then((data) => {
+                .then(({ data }) => {
                     console.log(data)
-                    if (data.user) {
-                        setUserData(data.user)
+                    if (data) {
+                        setUserData(data)
                     } else {
                         // setOpen(true);
                     }

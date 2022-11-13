@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import db from '@/utils/prisma'
-import url2id from '../../../utils/url2id/163'
+import url2id from '@/utils/url2id/163'
 import verifyJWT from '@/utils/middlewares/verifyJWT'
 
 type Data = {
@@ -23,12 +23,7 @@ export type UploadMusicReqBody = {
 
 interface INewMusic {}
 
-// 每人可以上传多少歌曲
-const MAX_UPLOAD_PER_USER = 30
-
-/**
- * 创建投票
- */
+const MAX_UPLOAD_NUM_PER_USER = 30
 
 const handler = async (
     req: NextApiRequest,
@@ -36,7 +31,6 @@ const handler = async (
     userData
 ) => {
     try {
-        // TODO 防SQL注入
         const { musicUrl, id, reason, title, artist, lyrics } =
             req.body as UploadMusicReqBody
 
@@ -46,18 +40,18 @@ const handler = async (
                 id: userData.id,
             },
             include: {
-                Music: true,
+                createdMusic: true,
             },
         })
 
-        console.log(identify.Music)
-
-        if (identify.Music.length >= process.env.MAX_UPLOAD_PER_USER) {
+        if (identify.createdMusic.length >= MAX_UPLOAD_NUM_PER_USER) {
             return res.status(200).json({
                 message: '重复投稿',
                 id,
             })
         }
+
+        console.log('First time ')
 
         const newMusic = {
             playUrl: `https://music.163.com/song/media/outer/url?id=${url2id(
@@ -67,14 +61,24 @@ const handler = async (
             artist,
             title,
             lyrics,
+            status: 0,
+            vote: 0,
             sessionId: id,
             submitterId: userData.id,
-            status: 0,
         }
 
-        await db.music.create({
-            data: newMusic,
+        const createMusic = await db.user.update({
+            data: {
+                musics: {
+                    create: [newMusic],
+                },
+            },
+            where: {
+                id: userData.id,
+            },
         })
+
+        console.log('newMusic', createMusic)
 
         return res.status(201).json({
             message: '投稿成功',
@@ -82,6 +86,7 @@ const handler = async (
             id,
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             message: err,
         })

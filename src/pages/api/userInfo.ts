@@ -13,18 +13,36 @@ const handler = async (
     userData
 ) => {
     try {
-        console.log('Asdfasdf')
         switch (req.method) {
             case 'GET':
                 const data = await db.user.findUnique({
                     where: {
                         id: userData.id,
                     },
+                    select: {
+                        id: true,
+                        name: true,
+                        class: true,
+                        status: true,
+                    },
                 })
-                console.log(data)
+
                 return res.status(200).json({
                     message: 'Get successfully',
                     data: data,
+                })
+            case 'PUT':
+                const { name, class: class_, status } = req.body
+                return res.status(200).json({
+                    message: 'Get successfully',
+                })
+            case 'DELETE':
+                return res.status(200).json({
+                    message: 'Get successfully',
+                })
+            case 'UPDATE':
+                return res.status(200).json({
+                    message: 'Get successfully',
                 })
             default:
                 return res.status(200).json({

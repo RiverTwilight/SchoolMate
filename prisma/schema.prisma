@@ -33,24 +33,43 @@ model SiteConfig {
     updatedAt   DateTime @updatedAt
 }
 
+enum Role {
+    USER
+    ADMIN
+}
+
+enum UserStatus {
+    ACTIVE
+    INACTIVE
+    DISABLED
+}
+
 model User {
-    id        String   @id @default(uuid()) @map("_id")
-    createdAt DateTime @default(now())
+    id        String     @id @default(auto()) @map("_id") @db.ObjectId
+    role      Role       @default(USER)
+    createdAt DateTime   @default(now())
     token     String?
-    password  String   @default("de78570e8ceae914850ff37900a35eed8346ff04cd9afd911b7fc0ce0213b786") //mate2022
+    status    UserStatus @default(ACTIVE)
 
-    name   String
-    class  Int
-    grade  Int
-    status Int
-    tel    Int
+    password String @default("de78570e8ceae914850ff37900a35eed8346ff04cd9afd911b7fc0ce0213b786") //mate2022
+    name     String
+    class    Int
+    grade    Int
+    tel      Int?
 
-    active Boolean @default(false)
-    musics Music[]
+    createdMusic            Music[]            @relation("CreatedBy")
+    likedMusic              Music[]            @relation(fields: [likedMusicIDs], references: [id])
+    likedMusicIDs           String[]           @default([]) @db.ObjectId
+    createdMusicVoteSession MusicVoteSession[]
 }
 
 // Prisma Data Model Documention:
 // https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
+
+enum VoteSessionStatus {
+    OPEN
+    CLOSED
+}
 
 model MusicVoteSession {
     id String @id @default(uuid()) @map("_id")
@@ -61,21 +80,33 @@ model MusicVoteSession {
     musics      Music[]
     viewTimes   Int      @default(0)
 
-    status Int @default(0)
+    status   VoteSessionStatus @default(OPEN)
+    author   User?             @relation(fields: [authorId], references: [id])
+    authorId String?           @db.ObjectId
+}
+
+enum MusicStatus {
+    PENDING
+    ACTIVE
+    DISABLED
 }
 
 model Music {
-    id        String            @id @default(uuid()) @map("_id")
-    sessionId String
-    session   MusicVoteSession? @relation(fields: [sessionId], references: [id])
+    id        String           @id @default(uuid()) @map("_id") @db.ObjectId
+    session   MusicVoteSession @relation(fields: [sessionId], references: [id])
+    sessionId String           @unique @db.ObjectId
+    status    MusicStatus      @default(ACTIVE)
 
-    submitterId User   @relation(fields: [id], references: [id])
-    reason      String
-    vote        Int
-    status      Int
+    creator   User?   @relation(name: "CreatedBy", fields: [creatorId], references: [id])
+    creatorId String? @unique @db.ObjectId
+    reason    String
+
+    likeNum  Int?     @default(0)
+    liker    User[]   @relation(fields: [likerIDs], references: [id])
+    likerIDs String[] @db.ObjectId
 
     title   String
     lyrics  String
     artist  String
-    playUrl String
+    playUrl String?
 }
