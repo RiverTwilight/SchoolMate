@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 const VoteItem: React.FC<{
     title: string
     description: string
-    status: number
+    status: 'OPEN' | 'CLOSED'
     id: string
 }> = ({ title, description, id, status }) => {
     const classes = useStyles()
@@ -72,14 +72,14 @@ const VoteItem: React.FC<{
                     <Button
                         component={Link}
                         href={`/music?id=${id}&title=${title}`}
-                        disabled={status != 0}
+                        disabled={status === 'CLOSED'}
                         variant="outlined"
                         size="large"
                     >
                         {
                             {
-                                0: '参与',
-                                1: '已结束',
+                                OPEN: '参与',
+                                CLOSED: '已结束',
                             }[status]
                         }
                     </Button>

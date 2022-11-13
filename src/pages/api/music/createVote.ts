@@ -27,13 +27,7 @@ const handler = async (
     try {
         const { title, deadline, description } = req.body as CreateVoteReqBody
 
-        const identify = await db.user.findUniqueOrThrow({
-            where: {
-                id: userData.id,
-            },
-        })
-
-        if (!!!identify.status !== 3) {
+        if (userData.status !== 'ADMIN') {
             return res.status(204).json({
                 errCode: 10004,
                 message: '需要管理员权限',

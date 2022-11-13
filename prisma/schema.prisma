@@ -72,7 +72,7 @@ enum VoteSessionStatus {
 }
 
 model MusicVoteSession {
-    id String @id @default(uuid()) @map("_id")
+    id String @id @default(auto()) @map("_id") @db.ObjectId
 
     title       String
     description String
@@ -92,7 +92,7 @@ enum MusicStatus {
 }
 
 model Music {
-    id        String           @id @default(uuid()) @map("_id") @db.ObjectId
+    id        String           @id @default(auto()) @map("_id") @db.ObjectId
     session   MusicVoteSession @relation(fields: [sessionId], references: [id])
     sessionId String           @unique @db.ObjectId
     status    MusicStatus      @default(ACTIVE)
