@@ -24,6 +24,7 @@ const handler = async (
                         name: true,
                         class: true,
                         status: true,
+                        role: true,
                     },
                 })
 

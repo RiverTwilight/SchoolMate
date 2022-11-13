@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Loader from '../components/Loader'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -79,14 +80,15 @@ const HomePage = ({ userData }) => {
     return (
         <>
             <div className={classes.actions}>
-                {userData && !!userData.isAdmin && (
-                    <Link href="/music/create">
-                        <Button color="primary" variant="contained">
-                            创建投票
-                        </Button>
-                    </Link>
-                )}
                 <div className={clsx(classes.sortOption, 'MuiButton-outlined')}>
+                    {userData && userData.role === 'ADMIN' && (
+                        <Link legacyBehavior href="/music/create">
+                            <Button color="primary" variant="contained">
+                                创建投票
+                            </Button>
+                        </Link>
+                    )}
+                    &nbsp;
                     <FormControl className={classes.formControl}>
                         <Select
                             labelId="demo-simple-select-label"
@@ -102,7 +104,7 @@ const HomePage = ({ userData }) => {
                     <FormControl className={classes.formControl}>
                         <Select
                             labelId="demo-simple-select-label"
-                            id="demo-simple-select"
+                            id="filter-status"
                             value={sort}
                             onChange={handleSortChange}
                         >
@@ -124,9 +126,15 @@ const HomePage = ({ userData }) => {
                     ))}
             </Grid>
             {JSON.stringify(data) === '[]' && (
-                <Typography align="center" variant="h5" color="textSecondary">
-                    暂时没有投票
-                </Typography>
+                <Box padding={5}>
+                    <Typography
+                        align="center"
+                        variant="h5"
+                        color="textSecondary"
+                    >
+                        暂时没有投票
+                    </Typography>
+                </Box>
             )}
             {!!data.isLoading && (
                 <Grid container spacing={3}>
